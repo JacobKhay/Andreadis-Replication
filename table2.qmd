@@ -1,0 +1,181 @@
+---
+title: "Replication of Table 2"
+format: html
+execute:
+  echo: false
+---
+
+```{r setup}
+library(tidyverse)
+library(fixest)
+library(modelsummary)
+library(kableExtra)
+```
+
+```{r}
+# Step 1: Load data and create derived variables
+data <- read_csv("data.csv")
+
+data <- data %>%
+  mutate(
+    degshare = (udeg + mdeg) / Employed,
+    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),
+    tightness = nads / Unemployed,
+    hpi_ch = hpi_ch / 100,
+    logpop = log(pop),
+    logincome = log(medhhincome),
+    pat_intensity = n_inventors / Employed,
+    patai_intensity = ai_patents / n_patents,
+    large_firms = 1 - (small + medium) / est,
+    information_intensity = information_emp / emp,
+    manuf_intensity = manuf_emp / emp,
+    ai_intensity = ai / nads
+  )
+
+```
+
+```{r}
+# Step 2: Filter years and assign period
+data <- data %>%
+  filter(Year %in% c(2017, 2018, 2022, 2023)) %>%
+  mutate(period = ifelse(Year %in% c(2017, 2018), "early", "late"))
+
+# Step 3: Aggregate by county, period, and state
+summary_data <- data %>%
+  group_by(state, COUNTY_FIPS, period) %>%
+  summarise(across(c(ai_intensity, share_bac, share_black, share_poverty,
+                     logpop, hpi_ch, logincome, tightness, pat_intensity,
+                     patai_intensity, degshare, stemshare, large_firms,
+                     information_intensity, manuf_intensity, TurnOvrS),
+                   \(x) mean(x, na.rm = TRUE)),
+            .groups = "drop")
+
+# Step 4: Pivot to wide format (retain state)
+wide_data <- summary_data %>%
+  pivot_wider(names_from = period, values_from = -c(COUNTY_FIPS, state))
+
+```
+
+```{r}
+# Step 5: Compute differences and retain state
+clean_data <- wide_data %>%
+  mutate(
+    d_ai_intensity = 100 * (ai_intensity_late - ai_intensity_early),  # <- SCALE UP BY 100
+    d_share_bac = share_bac_late - share_bac_early,
+    d_share_black = share_black_late - share_black_early,
+    d_share_poverty = share_poverty_late - share_poverty_early,
+    d_logpop = logpop_late - logpop_early,
+    d_hpi_ch = hpi_ch_late - hpi_ch_early,
+    d_logincome = logincome_late - logincome_early,
+    d_tightness = tightness_late - tightness_early,
+    d_pat_intensity = pat_intensity_late - pat_intensity_early,
+    d_patai_intensity = patai_intensity_late - patai_intensity_early,
+    d_degshare = degshare_late - degshare_early,
+    d_stemshare = stemshare_late - stemshare_early,
+    d_large_firms = large_firms_late - large_firms_early,
+    d_information_intensity = information_intensity_late - information_intensity_early,
+    d_manuf_intensity = manuf_intensity_late - manuf_intensity_early,
+    d_TurnOvrS = TurnOvrS_late - TurnOvrS_early
+  )
+
+
+```
+
+```{r}
+# Step 6: Z-score baseline (early) covariates
+Z <- function(x) (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+
+clean_data <- clean_data %>%
+  mutate(
+    z_share_bac = Z(share_bac_early),
+    z_share_black = Z(share_black_early),
+    z_share_poverty = Z(share_poverty_early),
+    z_logpop = Z(logpop_early),
+    z_hpi_ch = Z(hpi_ch_early),
+    z_logincome = Z(logincome_early),
+    z_tightness = Z(tightness_early),
+    z_pat_intensity = Z(pat_intensity_early),
+    z_patai_intensity = Z(patai_intensity_early),
+    z_degshare = Z(degshare_early),
+    z_stemshare = Z(stemshare_early),
+    z_large_firms = Z(large_firms_early),
+    z_information_intensity = Z(information_intensity_early),
+    z_manuf_intensity = Z(manuf_intensity_early),
+    z_TurnOvrS = Z(TurnOvrS_early)
+  )
+
+```
+
+```{r}
+# Step 7: Run regressions
+mod1 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
+                z_logpop + z_hpi_ch + z_logincome + z_tightness, data = clean_data)
+
+mod2 <- feols(d_ai_intensity ~ z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare, data = clean_data)
+
+mod3 <- feols(d_ai_intensity ~ z_large_firms + z_information_intensity +
+                z_manuf_intensity + z_TurnOvrS, data = clean_data)
+
+mod4 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
+                z_logpop + z_hpi_ch + z_logincome + z_tightness +
+                z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare +
+                z_large_firms + z_information_intensity + z_manuf_intensity + z_TurnOvrS, data = clean_data)
+
+mod5 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
+                z_logpop + z_hpi_ch + z_logincome + z_tightness +
+                z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare +
+                z_large_firms + z_information_intensity + z_manuf_intensity + z_TurnOvrS | state,
+              data = clean_data)
+
+```
+
+```{r}
+# Step 8: Create header and table with nice variable names
+table_header <- tribble(
+  ~term, ~`(1) Demographics`, ~`(2) Innovation`, ~`(3) Industry`, ~`(4) All Controls`, ~`(5) All Controls (State FE)`,
+  "Dependent Variable: Change in AI intensity", "", "", "", "", ""
+)
+
+modelsummary(
+  list(
+    "(1) Demographics" = mod1,
+    "(2) Innovation" = mod2,
+    "(3) Industry" = mod3,
+    "(4) All Controls" = mod4,
+    "(5) All Controls (State FE)" = mod5
+  ),
+  coef_map = c(
+    z_share_bac = "Bachelors, % z-score in 2017",
+    z_share_black = "Black, % z-score in 2017",
+    z_share_poverty = "Poverty, % z-score in 2017",
+    z_logpop = "Pop. Growth",
+    z_hpi_ch = "House Price Growth z-score in 2017",
+    z_logincome = "Income, Log z-score in 2017",
+    z_tightness = "Tightness, z-score in 2017",
+    z_pat_intensity = "Patents per employee z-score in 2017",
+    z_patai_intensity = "AI Patents’ Share z-score in 2017",
+    z_degshare = "Degrees awarded per capita, z-score in 2017",
+    z_stemshare = "Stem Degrees’ share, z-score in 2017",
+    z_large_firms = "Large Establishments, % z-score in 2017",
+    z_information_intensity = "ICT sector Intensity, % z-score in 2017",
+    z_manuf_intensity = "Manufacturing Intensity, % z-score in 2017",
+    z_TurnOvrS = "Turnover Rate, % z-score in 2017"
+  ),
+  stars = TRUE,
+  statistic = "({std.error})",
+  gof_map = c("nobs", "r.squared" = "R²", "within.r.squared" = "Within R²"),
+  output = "kableExtra",
+  add_rows = table_header
+) %>%
+  kable_styling(
+    latex_options = c("striped", "hold_position", "scale_down"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+```
+
+```{r}
+cat("\n**Notes.** Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2016–2023. The table reports the coefficients associated with regressions of the change in share of AI jobs in a county from 2017–18 (average) to 2022–23 (average) on Demographic, Innovation, and Industry characteristics. Observations are unweighted. Standard errors in parentheses. *** p<0.01, ** p<0.05, * p<0.1.")
+
+```

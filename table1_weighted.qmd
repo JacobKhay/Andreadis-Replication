@@ -1,0 +1,158 @@
+---
+title: "Table 1 (Weighted by Population)"
+format: html
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+
+```{r}
+library(tidyverse)      # data manipulation
+library(fixest)         # FE regressions
+library(modelsummary)   # nice tables
+library(kableExtra)
+
+```
+
+```{r}
+# load & preprocess
+data_ai <- read_csv("data.csv", show_col_types=FALSE) |>
+  ungroup() |>
+  mutate(
+    degshare    = (udeg + mdeg) / Employed,
+    stemshare   = (ustemdeg + mstemdeg) / (udeg + mdeg),
+    stemshare2  = replace_na(ustemdeg / udeg, 0),
+    tightness   = nads / Unemployed,
+    hpi_ch      = hpi_ch / 100,
+    logpop      = log(pop),
+    logincome   = log(medhhincome),
+    pat_intensity         = n_inventors / Employed,
+    patai_intensity       = ai_patents / n_patents,
+    large_firms           = 1 - (small + medium) / est,
+    information_intensity = information_emp / emp,
+    manuf_intensity       = manuf_emp / emp,
+    ai_intensity          = ai / nads,
+    lads                  = log1p(nads),
+    state_year            = paste0(state, Year)
+  ) |>
+  filter(emp != 0) |>
+  mutate(
+    share_bac            = scale(share_bac),
+    share_black          = scale(share_black),
+    share_poverty        = scale(share_poverty),
+    logpop_z             = scale(logpop),
+    hpi_ch_z             = scale(hpi_ch),
+    logincome_z          = scale(logincome),
+    tightness_z          = scale(tightness),
+    pat_intensity_z      = scale(pat_intensity),
+    patai_intensity_z    = scale(patai_intensity),
+    degshare_z           = scale(degshare),
+    stemshare_z          = scale(stemshare),
+    large_firms_z        = scale(large_firms),
+    information_intensity_z = scale(information_intensity),
+    manuf_intensity_z    = scale(manuf_intensity),
+    TurnOvrS_z           = scale(TurnOvrS),
+    ai_intensity         = ai_intensity * 100  # percent points
+  )
+
+```
+
+```{r}
+# A: weight = pop
+demog_pop       <- feols(ai_intensity ~ share_bac + share_black + share_poverty + logpop_z + hpi_ch_z + logincome_z + tightness_z
+                         | Year + COUNTY_FIPS,
+                         data = data_ai, cluster="COUNTY_FIPS", weights = ~pop)
+innovation_pop  <- feols(ai_intensity ~ pat_intensity_z + patai_intensity_z + degshare_z + stemshare_z
+                         | Year + COUNTY_FIPS,
+                         data = data_ai, cluster="COUNTY_FIPS", weights = ~pop)
+industry_pop    <- feols(ai_intensity ~ large_firms_z + information_intensity_z + manuf_intensity_z + TurnOvrS_z
+                         | Year + COUNTY_FIPS,
+                         data = data_ai, cluster="COUNTY_FIPS", weights = ~pop)
+all_pop         <- feols(ai_intensity ~ share_bac + share_black + share_poverty + logpop_z + hpi_ch_z + logincome_z + tightness_z +
+                           pat_intensity_z + patai_intensity_z + degshare_z + stemshare_z +
+                           large_firms_z + information_intensity_z + manuf_intensity_z + TurnOvrS_z
+                         | Year + COUNTY_FIPS,
+                         data = data_ai, cluster="COUNTY_FIPS", weights = ~pop)
+all_state_pop   <- feols(ai_intensity ~ share_bac + share_black + share_poverty + logpop_z + hpi_ch_z + logincome_z + tightness_z +
+                           pat_intensity_z + patai_intensity_z + degshare_z + stemshare_z +
+                           large_firms_z + information_intensity_z + manuf_intensity_z + TurnOvrS_z
+                         | state_year + COUNTY_FIPS,
+                         data = data_ai, cluster="COUNTY_FIPS", weights = ~pop)
+
+# B: weight = log(pop)
+demog_logpop       <- feols(ai_intensity ~ share_bac + share_black + share_poverty + logpop_z + hpi_ch_z + logincome_z + tightness_z
+                            | Year + COUNTY_FIPS,
+                            data = data_ai, cluster="COUNTY_FIPS", weights = ~logpop)
+innovation_logpop  <- feols(ai_intensity ~ pat_intensity_z + patai_intensity_z + degshare_z + stemshare_z
+                            | Year + COUNTY_FIPS,
+                            data = data_ai, cluster="COUNTY_FIPS", weights = ~logpop)
+industry_logpop    <- feols(ai_intensity ~ large_firms_z + information_intensity_z + manuf_intensity_z + TurnOvrS_z
+                            | Year + COUNTY_FIPS,
+                            data = data_ai, cluster="COUNTY_FIPS", weights = ~logpop)
+all_logpop         <- feols(ai_intensity ~ share_bac + share_black + share_poverty + logpop_z + hpi_ch_z + logincome_z + tightness_z +
+                              pat_intensity_z + patai_intensity_z + degshare_z + stemshare_z +
+                              large_firms_z + information_intensity_z + manuf_intensity_z + TurnOvrS_z
+                            | Year + COUNTY_FIPS,
+                            data = data_ai, cluster="COUNTY_FIPS", weights = ~logpop)
+all_state_logpop   <- feols(ai_intensity ~ share_bac + share_black + share_poverty + logpop_z + hpi_ch_z + logincome_z + tightness_z +
+                              pat_intensity_z + patai_intensity_z + degshare_z + stemshare_z +
+                              large_firms_z + information_intensity_z + manuf_intensity_z + TurnOvrS_z
+                            | state_year + COUNTY_FIPS,
+                            data = data_ai, cluster="COUNTY_FIPS", weights = ~logpop)
+
+```
+
+```{r}
+labels <- c(
+  share_bac                = "Bachelors’ share, z-score",
+  share_black              = "Black pop, z-score",
+  share_poverty            = "Poverty share, z-score",
+  logpop_z                 = "log(Population), z-score",
+  hpi_ch_z                 = "House Price Growth, z-score",
+  logincome_z              = "log(Median Income), z-score",
+  tightness_z              = "Labor Tightness, z-score",
+  pat_intensity_z          = "Patents per emp., z-score",
+  patai_intensity_z        = "AI patents’ share, z-score",
+  degshare_z               = "Degrees per cap., z-score",
+  stemshare_z              = "STEM share, z-score",
+  large_firms_z            = "Large Estab., z-score",
+  information_intensity_z  = "ICT intensity, z-score",
+  manuf_intensity_z        = "Manufacturing intensity, z-score",
+  TurnOvrS_z               = "Turnover rate, z-score"
+)
+
+# Show population‐weighted results side by side
+# your existing modelsummary(...) call, but pipe into kableExtra:
+modelsummary(
+  list(
+    "Demog (pop)"       = demog_pop,
+    "Innov (pop)"       = innovation_pop,
+    "Industry (pop)"    = industry_pop,
+    "All Ctrl (pop)"    = all_pop,
+    "All+St FE (pop)"   = all_state_pop,
+    "Demog (logpop)"    = demog_logpop,
+    "Innov (logpop)"    = innovation_logpop,
+    "Industry (logpop)" = industry_logpop,
+    "All Ctrl (logpop)" = all_logpop,
+    "All+St FE (logpop)"= all_state_logpop
+  ),
+  coef_map  = labels,
+  stars     = TRUE,
+  statistic = "({std.error})",
+  gof_omit  = "IC|Log|Adj|RMSE",
+  title     = "Table 1: Population‑Weighted Regressions",
+  output    = "kableExtra"
+) %>%
+  # group the 10 model columns into two bands of 5 each
+  add_header_above(c(" " = 1, "Weighted by Population" = 5, "Weighted by log(Population)" = 5)) %>%
+  # center‑align the numbers, stripe rows, make it responsive
+  kable_styling(
+    bootstrap_options = c("striped", "responsive"),
+    full_width        = FALSE,
+    position          = "center",
+    font_size         = 12
+  ) %>%
+  column_spec(1, bold = TRUE)  # bold the variable names column
+```

@@ -1,0 +1,144 @@
+---
+title: "Replication of Table 1"
+format: html
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+
+```{r}
+# Load required libraries
+library(tidyverse)      # for data manipulation
+library(fixest)         # for fixed effects regression models
+library(modelsummary)   # for regression output formatting
+
+# Read in the dataset and preprocess it
+data_ai <- read_csv("data.csv") |>   # Load CSV data
+  ungroup() |>                       # Remove any existing groupings
+  mutate(
+    degshare = (udeg + mdeg) / Employed,            # Degrees awarded per capita
+    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),  # Share of STEM degrees
+    stemshare2 = ustemdeg / udeg,                   # Undergrad STEM degree share
+    stemshare = replace_na(stemshare, 0),           # Replace NA with 0 for stemshare
+    stemshare2 = replace_na(stemshare2, 0),         # Replace NA with 0 for stemshare2
+    tightness = nads / Unemployed,                  # Labor market tightness: job ads / unemployed
+    hpi_ch = hpi_ch / 100,                          # Normalize house price growth to proportion
+    logpop = log(pop),                              # Log of population
+    logincome = log(medhhincome),                   # Log of median household income
+    pat_intensity = n_inventors / Employed,         # Patents per employee
+    patai_intensity = ai_patents / n_patents,       # AI patents share
+    large_firms = 1 - (small + medium) / est,       # Share of large firms
+    information_intensity = information_emp / emp,  # ICT sector employment share
+    manuf_intensity = manuf_emp / emp,              # Manufacturing employment share
+    ai_intensity = ai / nads,                       # AI job share (dependent variable)
+    lads = log(1 + nads),                           # Log(1 + job ads) as weight
+    state_year = paste0(state, Year)                # Interaction term for fixed effects
+  )
+
+# Normalize and scale predictors for z-score regressions
+data_ai_z <- data_ai |> 
+  filter(emp != 0) |>                               # Remove entries with zero employment
+  mutate(
+    share_bac = scale(share_bac),                   # Share with bachelor's degree (z-score)
+    share_black = scale(share_black),               # Black population share (z-score)
+    share_poverty = scale(share_poverty),           # Poverty rate (z-score)
+    logpop = scale(logpop),                         # Log population (z-score)
+    hpi_ch = scale(hpi_ch),                         # House price growth (z-score)
+    logincome = scale(logincome),                   # Log median income (z-score)
+    tightness = scale(tightness),                   # Labor tightness (z-score)
+    unrate = scale(unrate),                         # Unemployment rate (z-score)
+    pat_intensity = scale(pat_intensity),           # Patent intensity (z-score)
+    patai_intensity = scale(patai_intensity),       # AI patent share (z-score)
+    degshare = scale(degshare),                     # Degrees per capita (z-score)
+    stemshare = scale(stemshare),                   # STEM share (z-score)
+    large_firms = scale(large_firms),               # Share of large firms (z-score)
+    information_intensity = scale(information_intensity),  # ICT intensity (z-score)
+    manuf_intensity = scale(manuf_intensity),       # Manufacturing intensity (z-score)
+    TurnOvrS = scale(TurnOvrS),                     # Turnover rate (z-score)
+    ai_intensity = ai_intensity * 100               # Convert AI job share to percentage points
+  )
+
+# Run regressions corresponding to columns (1)–(5) of Table 1
+
+# Column (1): Demographics only
+est_demog_no = feols(
+  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (2): Innovation variables only
+est_innovation_no = feols(
+  ai_intensity ~ pat_intensity + patai_intensity + degshare + stemshare | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (3): Industry variables only
+est_industry_no = feols(
+  ai_intensity ~ large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (4): All controls, fixed effects at year + county level
+est_all = feols(
+  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
+    pat_intensity + patai_intensity + degshare + stemshare + large_firms +
+    information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (5): All controls, now with state × year fixed effects
+est_all_large = feols(
+  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
+    pat_intensity + patai_intensity + degshare + stemshare + large_firms +
+    information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Clean and readable variable labels for output
+labels <- c(
+  "share_bac" = "Bachelors’ share, z-score",
+  "share_black" = "Black pop, z-score",
+  "share_poverty" = "Poverty share, z-score",
+  "logpop" = "log(Population), z-score",
+  "hpi_ch" = "House Price Growth, z-score",
+  "logincome" = "log(Median Income), z-score",
+  "tightness" = "Labor Market Tightness, z-score",
+  "pat_intensity" = "Patents per employee, z-score",
+  "patai_intensity" = "AI patents’ share, z-score",
+  "degshare" = "Degrees awarded per capita, z-score",
+  "stemshare" = "Stem Degrees’ share, z-score",
+  "large_firms" = "Large Establishments, z-score",
+  "information_intensity" = "ICT sector Intensity, z-score",
+  "manuf_intensity" = "Manufacturing Intensity, z-score",
+  "TurnOvrS" = "Turnover Rate, z-score"
+)
+
+# Render the regression table with modelsummary
+modelsummary(
+  list(
+    "(1)" = est_demog_no,
+    "(2)" = est_innovation_no,
+    "(3)" = est_industry_no,
+    "(4)" = est_all,
+    "(5)" = est_all_large
+  ),
+  coef_map = labels,                 # Apply readable labels
+  stars = TRUE,                      # Show significance stars
+  gof_omit = "IC|Log|Adj|RMSE",      # Omit unnecessary fit stats
+  statistic = "({std.error})",       # Show standard errors in parentheses
+  output = "kableExtra",             # Output as HTML table (for nice styling)
+  title = "Table 1: The Correlates of the Share of Artificial Intelligence Jobs"
+)
+```

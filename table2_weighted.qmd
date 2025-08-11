@@ -1,0 +1,173 @@
+---
+title: "Table 2: Change in AI Share – Unweighted vs Weighted"
+format: html
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+
+```{r}
+library(tidyverse)
+library(fixest)
+library(modelsummary)
+library(kableExtra)
+
+```
+
+```{r}
+# 1. Read data and compute variables
+raw <- read_csv("data.csv")
+
+df <- raw %>%
+  mutate(
+    degshare      = (udeg + mdeg) / Employed,
+    stemshare     = (ustemdeg + mstemdeg) / (udeg + mdeg),
+    tightness     = nads / Unemployed,
+    hpi_ch        = hpi_ch / 100,
+    logpop        = log(pop),
+    logincome     = log(medhhincome),
+    pat_intensity = n_inventors / Employed,
+    patai_intensity = ai_patents / n_patents,
+    large_firms   = 1 - (small + medium) / est,
+    information_intensity = information_emp / emp,
+    manuf_intensity = manuf_emp / emp,
+    ai_intensity  = ai / nads
+  ) %>%
+  # 2. Keep only early (2017–18) and late (2022–23)
+  filter(Year %in% c(2017,2018,2022,2023)) %>%
+  mutate(period = ifelse(Year %in% c(2017,2018),"early","late")) %>%
+  # 3. Average by state × county × period
+  group_by(state, COUNTY_FIPS, period) %>%
+  summarise(across(c(
+    ai_intensity, share_bac, share_black, share_poverty,
+    logpop, hpi_ch, logincome, tightness,
+    pat_intensity, patai_intensity, degshare, stemshare,
+    large_firms, information_intensity, manuf_intensity, TurnOvrS
+  ), mean, na.rm=TRUE), .groups="drop") %>%
+  # 4. Pivot wide to get early_*/late_* columns
+  pivot_wider(
+    names_from  = period,
+    values_from = c(
+      ai_intensity, share_bac, share_black, share_poverty,
+      logpop, hpi_ch, logincome, tightness,
+      pat_intensity, patai_intensity, degshare, stemshare,
+      large_firms, information_intensity, manuf_intensity, TurnOvrS
+    )
+  ) %>%
+  # 5. Compute change and add weight vars
+  mutate(
+    d_ai         = 100*(ai_intensity_late - ai_intensity_early),
+    d_share_bac  = share_bac_late  - share_bac_early,
+    d_share_black= share_black_late - share_black_early,
+    d_share_pov  = share_poverty_late - share_poverty_early,
+    d_logpop     = logpop_late     - logpop_early,
+    d_hpi_ch     = hpi_ch_late     - hpi_ch_early,
+    d_logincome  = logincome_late  - logincome_early,
+    d_tightness  = tightness_late  - tightness_early,
+    d_pat_int    = pat_intensity_late - pat_intensity_early,
+    d_patai_int  = patai_intensity_late - patai_intensity_early,
+    d_degshare   = degshare_late   - degshare_early,
+    d_stemshare  = stemshare_late  - stemshare_early,
+    d_large      = large_firms_late - large_firms_early,
+    d_info       = information_intensity_late - information_intensity_early,
+    d_manuf      = manuf_intensity_late - manuf_intensity_early,
+    d_turn       = TurnOvrS_late   - TurnOvrS_early,
+    pop_early    = exp(logpop_early),
+    logpop_early = logpop_early
+  ) -> tbl2
+
+```
+
+```{r}
+# 6. Z‑score all early-period covariates
+Z <- function(x) (x - mean(x, na.rm=TRUE)) / sd(x, na.rm=TRUE)
+
+tbl2 <- tbl2 %>%
+  mutate(across(
+    ends_with("_early"),
+    ~ Z(.),
+    .names = "z_{.col}"
+  ))
+
+```
+
+```{r}
+# Unweighted models
+m1  <- feols(d_ai ~ z_share_bac_early + z_share_black_early + z_share_poverty_early +
+               z_logpop_early + z_hpi_ch_early + z_logincome_early + z_tightness_early,
+             data=tbl2)
+m2  <- feols(d_ai ~ z_pat_intensity_early + z_patai_intensity_early +
+               z_degshare_early + z_stemshare_early,
+             data=tbl2)
+m3  <- feols(d_ai ~ z_large_firms_early + z_information_intensity_early +
+               z_manuf_intensity_early + z_TurnOvrS_early,
+             data=tbl2)
+m4  <- feols(d_ai ~ z_share_bac_early + z_share_black_early + z_share_poverty_early +
+               z_logpop_early + z_hpi_ch_early + z_logincome_early + z_tightness_early +
+               z_pat_intensity_early + z_patai_intensity_early + z_degshare_early + z_stemshare_early +
+               z_large_firms_early + z_information_intensity_early + z_manuf_intensity_early + z_TurnOvrS_early,
+             data=tbl2)
+m5  <- feols(d_ai ~ z_share_bac_early + z_share_black_early + z_share_poverty_early +
+               z_logpop_early + z_hpi_ch_early + z_logincome_early + z_tightness_early +
+               z_pat_intensity_early + z_patai_intensity_early + z_degshare_early + z_stemshare_early +
+               z_large_firms_early + z_information_intensity_early + z_manuf_intensity_early + z_TurnOvrS_early
+             | state,
+             data=tbl2)
+
+# Population-weighted
+mp1 <- update(m1, weights=~pop_early)
+mp2 <- update(m2, weights=~pop_early)
+mp3 <- update(m3, weights=~pop_early)
+mp4 <- update(m4, weights=~pop_early)
+mp5 <- update(m5, weights=~pop_early)
+
+# Log-population-weighted
+ml1 <- update(m1, weights=~logpop_early)
+ml2 <- update(m2, weights=~logpop_early)
+ml3 <- update(m3, weights=~logpop_early)
+ml4 <- update(m4, weights=~logpop_early)
+ml5 <- update(m5, weights=~logpop_early)
+
+```
+
+```{r}
+# Label map for readability
+labs <- c(
+  z_share_bac_early       = "Bachelors, % z‑score (2017)",
+  z_share_black_early     = "Black, % z‑score (2017)",
+  z_share_poverty_early   = "Poverty, % z‑score (2017)",
+  z_logpop_early          = "Pop. Growth z‑score (2017)",
+  z_hpi_ch_early          = "House Price Growth z‑score (2017)",
+  z_logincome_early       = "Income, log z‑score (2017)",
+  z_tightness_early       = "Tightness z‑score (2017)",
+  z_pat_intensity_early   = "Patents/emp z‑score (2017)",
+  z_patai_intensity_early = "AI Patents’ Share z‑score (2017)",
+  z_degshare_early        = "Degrees/capita z‑score (2017)",
+  z_stemshare_early       = "STEM Degrees’ share z‑score (2017)",
+  z_large_firms_early     = "Large Firms % z‑score (2017)",
+  z_information_intensity_early = "ICT Intensity % z‑score (2017)",
+  z_manuf_intensity_early = "Manufacturing % z‑score (2017)",
+  z_TurnOvrS_early        = "Turnover Rate % z‑score (2017)"
+)
+
+modelsummary(
+  list(
+    "Unwt (1)"   = m1,  "Unwt (2)"   = m2,  "Unwt (3)"   = m3,
+    "Unwt (4)"   = m4,  "Unwt (5)"   = m5,
+    "Pop‑wt (1)" = mp1, "Pop‑wt (2)" = mp2, "Pop‑wt (3)" = mp3,
+    "Pop‑wt (4)" = mp4, "Pop‑wt (5)" = mp5,
+    "Logpop‑wt (1)" = ml1, "Logpop‑wt (2)" = ml2, "Logpop‑wt (3)" = ml3,
+    "Logpop‑wt (4)" = ml4, "Logpop‑wt (5)" = ml5
+  ),
+  coef_map = labs,
+  stars    = TRUE,
+  statistic= "({std.error})",
+  gof_map  = c("nobs","r.squared"="R²","within.r.squared"="Within R²"),
+  title    = "**Table 2: Change in AI Share (pp) – Unweighted vs Weighted**",
+  output   = "kableExtra"
+) %>%
+  kable_styling(full_width=FALSE, position="center")
+
+```
