@@ -1,1 +1,5 @@
-# JustReplicationAI-Share
+## Replication Instructions
+
+To replicate our paper, clone this repository and then, from the command line, type:
+
+> quarto render article_summary.qmd\
