@@ -1,29 +1,29 @@
 0) Bcc me on all correspondance.
 
-1) Create `papers` directory in which we will store PDF copies of various papers. Start storing copies of any paper included in the bibliography.
+1) Create `papers` directory in which we will store PDF copies of various papers. Start storing copies of any paper included in the bibliography. Done
 
 2) See if you can find a version of the published PDF of our paper, include it in directory.
-    + You can email the author to ask.
-    + Look online.
+    + You can email the author to ask. Done
+    + Look online. (Have one but it may not be the published pdf)
     + Look at file sharing services like z-lib.
-    + Ask Grok
-    + Ask school librarian
+    + Ask Grok Done
+    + Ask school librarian 
     + Ask town librarian
     + go to local community college
 
-3) Add to README directions as to how to create you PDF. Something like:
+3) Add to README directions as to how to create you PDF. Something like: DONE
 
 To replicate our paper, clone this repository and then, from the command line, type:
 
 > quarto render title.qmd
 
-4) Investigate the data. Contact Becket. Ask for just a sample of the data, say for just Slope County, North Dakota. Explain replication exercise. Provide a link to website. Whatever convenient for him.
+4) Investigate the data. Contact Becket. Ask for just a sample of the data, say for just Slope County, North Dakota. Explain replication exercise. Provide a link to website. Whatever convenient for him. Done, couldn't find email but I messaged through contact form. Beckett no longer works at lightcast so I used other people.
 
 5) Add a paragraph about causal versus predictive.
 
 6) Reread Primer Rubin Causal Model chapter. Get copy of https://www.cs.columbia.edu/~blei/fogm/2020F/readings/Holland1986.pdf. Read it. Cite it in our paper in discussion of causal language. 
 
-7) Only allowed less than 10 headers or subheaders.
+7) Only allowed less than 10 headers or subheaders. test
 
 8) Make the paper look more like published papers.
     + Authors and affiliations.
