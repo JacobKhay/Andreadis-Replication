@@ -1,168 +1,263 @@
 ---
-title: "Replication and Robustness Analysis of Andreadis et al. (2025): Local Predictors of AI Job Concentration in U.S. Counties"
-author:
-  - name: "Jacob Khaykin"
-    affiliation: "Solon High School, Solon, OH, United States"
-    email: "jacobkhaykin27@solonschools.net"
-format:
-  pdf:
-    number-sections: true
-    toc: false
+title: "Replication Summary of Andreadis et al. (2025)"
+author: "Jacob Khaykin"
 bibliography: references.bib
 link-citations: true
-execute:
-  echo: false
-  warning: false
-  message: false
-nocite: '@*'
+format:
+  pdf: default
 ---
-
-
-**JEL:** J23, O33, R11, C18
-**Keywords:** artificial intelligence, local labor markets, replication, robustness analysis, weighting methods
 
 ## Abstract
 
-This paper replicates and extends the analysis of Andreadis et al. (2025), who examine the demographic, innovation, and industry correlates of AI-related employment in U.S. counties from 2014–2023. Using their approach and county-level data, I reproduce the main regression results on AI job share levels and changes. I also identify instances of causal language inconsistent with the observational design, situating this critique within the Rubin Causal Model and the guidance in Holland (1986). As a robustness check, I re-estimate their models using log-population weights. This change dampens leverage from large metropolitan counties and shows that some relationships—especially between educational attainment and AI intensity—are size-sensitive. Labor market tightness remains a robust positive correlate across specifications. The results reinforce the value of robustness checks and careful causal language in policy-relevant work.
+This study replicates and extends the analysis of Andreadis et al. (2025), who examine the determinants of AI-related employment across U.S. counties. I successfully reproduce their core findings regarding the correlations between local demographic, innovation, and industry characteristics with AI job concentration. However, I identify problematic causal language in the original study that overstates the causal nature of these relationships. As a robustness check, I re-estimate their models using log-population weights, which reveals that several key relationships—particularly those involving educational attainment—are sensitive to the influence of large metropolitan areas. The findings suggest these results represent meaningful correlational patterns rather than causal relationships, with important implications for interpreting the geographic distribution of AI employment.
 
 ## Introduction
 
-Andreadis et al. (2025) study local predictors of AI-related job concentration in the United States using county-level data from Lightcast, the U.S. Census ACS, USPTO patent databases, and other sources. They estimate weighted least squares regressions of the AI job share and changes in that share on lagged demographic, innovation, and industry characteristics with county and year fixed effects.
+Recent work by Andreadis et al. (2025) investigates how local economic and innovation factors shape the geography of AI-related employment in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the stated goal of identifying the "drivers" and "determinants" of AI adoption across counties.
 
-Understanding where AI-related jobs concentrate matters for regional inequality and development. As @eloundou2024 note, a large share of the workforce could see meaningful effects on tasks from AI and large language models. Identifying correlates of AI adoption can help anticipate distributional impacts.
+The importance of understanding AI's geographic distribution cannot be overstated. As Eloundou et al. (2024) project that up to 80% of the workforce could see at least 10% of their tasks influenced by AI and large language models, the spatial concentration of AI-related employment has significant implications for regional economic development and inequality. Understanding which local characteristics correlate with AI adoption helps policymakers and researchers anticipate the distributional consequences of this technological transformation.
 
-This replication has two goals. First, verify reproducibility of the original results. Second, probe robustness by replacing the original population weights with log-population weights to reduce leverage from the largest counties.
+The original study employs weighted least squares regression with population weights to account for heteroscedasticity and emphasize results in more populous counties. Their primary regression specifications can be expressed as:
+
+$$AI_{it} = \alpha + \beta_1 Demog_{it-1} + \beta_2 Innov_{it-1} + \beta_3 Industry_{it-1} + \delta_i + \gamma_t + \epsilon_{it}$$
+
+where $AI_{it}$ represents the AI job share in county $i$ at time $t$, $Demog_{it-1}$, $Innov_{it-1}$, and $Industry_{it-1}$ are vectors of lagged demographic, innovation, and industry characteristics, $\delta_i$ and $\gamma_t$ are county and year fixed effects, and $\epsilon_{it}$ is the error term.
+
+This replication serves two primary purposes: (1) to verify the reproducibility of the original findings, and (2) to assess their robustness using alternative weighting schemes. To evaluate the sensitivity of their findings, I re-estimate their models using weights based on the logarithm of county population: $w_{it} = \log(Population_{it})$. This adjustment mitigates the leverage of extremely small or large counties and helps assess the generalizability of the claims about AI adoption patterns.
 
 ## Data
 
-I follow Andreadis et al. (2025) to assemble a county-by-year panel from 2014–2023. The dependent variables are:
+The study utilizes multiple data sources to construct a comprehensive county-level dataset spanning 2014-2023:
 
-* **AI job share:** AI-related job postings divided by total postings in a county-year (percent).
-* **Change in AI job share:** difference between average AI share in 2017–2018 and 2022–2023.
+**AI Employment Data**: Job posting data from Lightcast, which aggregates information from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use. The dependent variable $AI_{it}$ is defined as:
 
-Explanatory variables (all lagged one year and standardized as z-scores):
+$$AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100$$
 
-* **Demographics:** bachelor’s degree share, Black population share, poverty share, log population, log median income.
-* **Innovation:** patents per employee, AI patents’ share, STEM degree share, degrees per capita.
-* **Industry and labor market:** labor market tightness, turnover rate, manufacturing intensity, ICT intensity, large establishments’ share.
+**Demographic Variables**: From the American Community Survey (ACS), including:
+- Bachelor's share: Percentage of workforce with bachelor's degree or higher
+- Black population share: Percentage of county population identifying as Black
+- Poverty share: Percentage of population below federal poverty line
+- Log population: Natural logarithm of county population
+- Log median income: Natural logarithm of median household income
 
-The original paper uses population weights in WLS. I reproduce those estimates and then re-estimate with log-population weights $w_{it} = \log(\text{Population}_{it})$ as a robustness check.
+**Innovation Indicators**: 
+- Patents per employee: USPTO patent counts normalized by employment
+- AI patents share: Percentage of patents classified as AI-related
+- STEM degrees share: Percentage of awarded degrees in STEM fields
+- Degrees per capita: Total degrees awarded per capita
 
-## Replication of Original Results
+**Industry and Labor Market Variables**:
+- Labor market tightness: Ratio of job postings to unemployed workers
+- Manufacturing intensity: Employment share in manufacturing sector
+- ICT intensity: Employment share in information and communication technology
+- Turnover rate: Worker separation rate from Quarterly Workforce Indicators
+- Large establishments share: Percentage of employment in large firms
 
-I reproduce the main tables estimating correlates of (i) AI job share and (ii) change in AI job share. Coefficients, standard errors, and significance align with the originals within rounding error. In brief:
+**Housing Market**: House price growth from Federal Housing Finance Agency (FHFA)
 
-* **Levels (AI share):** bachelor’s degree share, labor market tightness, patents per employee, and STEM share are positive; manufacturing intensity is negative; ICT intensity is positive in richer specs.
-* **Changes:** STEM degree share and labor tightness are positive; manufacturing intensity is negative; turnover becomes important in the full model.
+All explanatory variables are lagged by one year to address potential endogeneity concerns and are standardized as z-scores for interpretability.
 
-### Table 1. The correlates of the share of AI jobs
+## Reproduction of Original Results
 
-| Variable                        | (1) Demographics | (2) Innovation | (3) Industry | (4) All Controls | (5) All + State FE |
-| :------------------------------ | :--------------: | :------------: | :----------: | :--------------: | :----------------: |
-| Bachelor’s share, z-score       |    0.160\*\*\*   |                |              |     0.188\*\*    |        0.085       |
-|                                 |      (0.047)     |                |              |      (0.067)     |       (0.059)      |
-| Black pop, z-score              |      -0.121      |                |              |      -0.121      |        0.000       |
-|                                 |      (0.127)     |                |              |      (0.185)     |       (0.162)      |
-| Poverty share, z-score          |       0.044      |                |              |      0.067+      |       -0.003       |
-|                                 |      (0.028)     |                |              |      (0.040)     |       (0.037)      |
-| log(Population), z-score        |      0.807\*     |                |              |       0.219      |        0.146       |
-|                                 |      (0.367)     |                |              |      (0.444)     |       (0.544)      |
-| House Price Growth, z-score     |     -0.019\*     |                |              |     -0.028\*     |     -0.032\*\*     |
-|                                 |      (0.008)     |                |              |      (0.012)     |       (0.011)      |
-| log(Median Income), z-score     |      -0.022      |                |              |      -0.001      |        0.032       |
-|                                 |      (0.047)     |                |              |      (0.065)     |       (0.060)      |
-| Labor Market Tightness, z-score |    0.255\*\*\*   |                |              |    0.315\*\*\*   |     0.372\*\*\*    |
-|                                 |      (0.050)     |                |              |      (0.063)     |       (0.065)      |
-| Patents per employee, z-score   |                  |    0.031\*\*   |              |      0.028\*     |       0.031\*      |
-|                                 |                  |     (0.012)    |              |      (0.012)     |       (0.014)      |
-| AI patents’ share, z-score      |                  |      0.009     |              |       0.009      |        0.003       |
-|                                 |                  |     (0.007)    |              |      (0.006)     |       (0.005)      |
-| Degrees awarded per capita      |                  |      0.013     |              |       0.034      |        0.034       |
-|                                 |                  |     (0.026)    |              |      (0.026)     |       (0.027)      |
-| STEM Degrees’ share             |                  |    0.072\*\*   |              |     0.058\*\*    |       0.048\*      |
-|                                 |                  |     (0.023)    |              |      (0.022)     |       (0.020)      |
-| Large Establishments, z-score   |                  |                |    -0.002    |      -0.037      |       -0.036       |
-|                                 |                  |                |    (0.025)   |      (0.028)     |       (0.029)      |
-| ICT sector intensity, z-score   |                  |                |     0.010    |      0.038\*     |       0.040\*      |
-|                                 |                  |                |    (0.014)   |      (0.017)     |       (0.016)      |
-| Manufacturing intensity         |                  |                | -0.057\*\*\* |   -0.048\*\*\*   |      -0.034\*      |
-|                                 |                  |                |    (0.012)   |      (0.014)     |       (0.015)      |
-| Turnover Rate, z-score          |                  |                |   0.034\*\*  |       0.016      |        0.010       |
-|                                 |                  |                |    (0.011)   |      (0.017)     |       (0.016)      |
-| **Observations**                |    **27,497**    |   **22,744**   |  **24,651**  |    **19,184**    |     **19,184**     |
-| **R²**                          |     **0.704**    |    **0.721**   |   **0.694**  |     **0.758**    |      **0.778**     |
-| **Within R²**                   |     **0.057**    |    **0.003**   |   **0.002**  |     **0.059**    |      **0.063**     |
+I successfully reproduced the main findings from Tables 1 and 2 of Andreadis et al. (2025). The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
 
-### Table 2. The correlates of the change in the share of AI jobs
+### Table 1 Reproduction: The Correlates of the Share of Artificial Intelligence Jobs
 
-| Variable                | (1) Demographics | (2) Innovation | (3) Industry | (4) All Controls | (5) All + State FE |
-| :---------------------- | :--------------: | :------------: | :----------: | :--------------: | :----------------: |
-| **Constant**            |       0.007      |                |              |      -0.073      |     -0.138\*\*     |
-|                         |      (0.027)     |                |              |      (0.050)     |       (0.043)      |
-| Bachelors, %            |       0.018      |                |              |       0.049      |        0.051       |
-|                         |      (0.019)     |                |              |      (0.033)     |       (0.033)      |
-| Black, %                |      0.068+      |                |              |       0.054      |        0.113       |
-|                         |      (0.037)     |                |              |      (0.069)     |       (0.076)      |
-| Poverty, %              |      -0.019      |                |              |      -0.018      |       -0.020       |
-|                         |      (0.022)     |                |              |      (0.055)     |       (0.057)      |
-| Pop. Growth             |     -0.034\*     |                |              |      -0.039      |        0.047       |
-|                         |      (0.017)     |                |              |      (0.036)     |       (0.042)      |
-| House Price Growth      |     0.124\*\*    |                |              |      0.125+      |       0.197\*      |
-|                         |      (0.042)     |                |              |      (0.075)     |       (0.079)      |
-| Income, Log             |    0.098\*\*\*   |                |              |    0.187\*\*\*   |       0.152+       |
-|                         |      (0.021)     |                |              |      (0.040)     |       (0.086)      |
-| Tightness               |       0.002      |                |              |      -0.061+     |       -0.008       |
-|                         |      (0.027)     |                |              |      (0.035)     |       (0.039)      |
-| Patents per employee    |                  |   0.151\*\*\*  |              |     0.113\*\*    |        0.082       |
-|                         |                  |     (0.036)    |              |      (0.043)     |       (0.066)      |
-| AI Patents’ Share       |                  |      0.021     |              |       0.045      |        0.058       |
-|                         |                  |     (0.017)    |              |      (0.029)     |       (0.035)      |
-| Degrees per capita      |                  |   0.093\*\*\*  |              |     0.082\*\*    |       0.076+       |
-|                         |                  |     (0.027)    |              |      (0.027)     |       (0.036)      |
-| STEM Degrees’ share     |                  |      0.031     |              |      -0.064+     |       -0.039       |
-|                         |                  |     (0.021)    |              |      (0.049)     |       (0.060)      |
-| Large Establishments, % |                  |                |    0.031+    |      -0.024      |       -0.016       |
-|                         |                  |                |    (0.018)   |      (0.030)     |       (0.026)      |
-| ICT sector intensity    |                  |                |    -0.037+   |      -0.014      |       -0.001       |
-|                         |                  |                |    (0.019)   |      (0.046)     |       (0.042)      |
-| Manufacturing intensity |                  |                |  -0.072\*\*  |     -0.128\*     |      -0.170\*      |
-|                         |                  |                |    (0.023)   |      (0.061)     |       (0.079)      |
-| Turnover rate           |                  |                |    0.023+    |    -0.056\*\*    |      -0.042\*      |
-|                         |                  |                |    (0.014)   |      (0.022)     |       (0.023)      |
-| **Observations**        |     **2,751**    |     **897**    |   **2,723**  |      **810**     |       **810**      |
-| **R²**                  |     **0.021**    |    **0.019**   |   **0.016**  |     **0.031**    |      **0.082**     |
-| **Within R²**           |       **—**      |      **—**     |     **—**    |       **—**      |      **0.025**     |
+| Variable                            | (1) Demographics         | (2) Innovation          | (3) Industry           | (4) All Controls        | (5) All + State FE      |
+|-------------------------------------|--------------------------|-------------------------|------------------------|-------------------------|-------------------------|
+| Bachelor's share, z-score           | 0.160***                 |                         |                        | 0.188**                 | 0.085                   |
+|                                     | (0.047)                  |                         |                        | (0.067)                 | (0.059)                 |
+| Black pop, z-score                  | -0.121                   |                         |                        | -0.121                  | 0.000                   |
+|                                     | (0.127)                  |                         |                        | (0.185)                 | (0.162)                 |
+| Poverty share, z-score              | 0.044                    |                         |                        | 0.067+                  | -0.003                  |
+|                                     | (0.028)                  |                         |                        | (0.040)                 | (0.037)                 |
+| log(Population), z-score            | 0.807*                   |                         |                        | 0.219                   | 0.146                   |
+|                                     | (0.367)                  |                         |                        | (0.444)                 | (0.544)                 |
+| House Price Growth, z-score         | -0.019*                  |                         |                        | -0.028*                 | -0.032**                |
+|                                     | (0.008)                  |                         |                        | (0.012)                 | (0.011)                 |
+| log(Median Income), z-score         | -0.022                   |                         |                        | -0.001                  | 0.032                   |
+|                                     | (0.047)                  |                         |                        | (0.065)                 | (0.060)                 |
+| Labor Market Tightness, z-score     | 0.255***                 |                         |                        | 0.315***                | 0.372***                |
+|                                     | (0.050)                  |                         |                        | (0.063)                 | (0.065)                 |
+| Patents per employee, z-score       |                          | 0.031**                 |                        | 0.028*                  | 0.031*                  |
+|                                     |                          | (0.012)                 |                        | (0.012)                 | (0.014)                 |
+| AI patents' share, z-score          |                          | 0.009                   |                        | 0.009                   | 0.003                   |
+|                                     |                          | (0.007)                 |                        | (0.006)                 | (0.005)                 |
+| Degrees awarded per capita          |                          | 0.013                   |                        | 0.034                   | 0.034                   |
+|                                     |                          | (0.026)                 |                        | (0.026)                 | (0.027)                 |
+| STEM Degrees' share                 |                          | 0.072**                 |                        | 0.058**                 | 0.048*                  |
+|                                     |                          | (0.023)                 |                        | (0.022)                 | (0.020)                 |
+| Large Establishments, z-score       |                          |                         | -0.002                 | -0.037                  | -0.036                  |
+|                                     |                          |                         | (0.025)                | (0.028)                 | (0.029)                 |
+| ICT sector Intensity, z-score       |                          |                         | 0.010                  | 0.038*                  | 0.040*                  |
+|                                     |                          |                         | (0.014)                | (0.017)                 | (0.016)                 |
+| Manufacturing Intensity             |                          |                         | -0.057***              | -0.048***               | -0.034*                 |
+|                                     |                          |                         | (0.012)                | (0.014)                 | (0.015)                 |
+| Turnover Rate, z-score              |                          |                         | 0.034**                | 0.016                   | 0.010                   |
+|                                     |                          |                         | (0.011)                | (0.017)                 | (0.016)                 |
+|                                     |                          |                         |                        |                         |                         |
+| **Observations**                    | **27,497**               | **22,744**              | **24,651**             | **19,184**              | **19,184**              |
+| **R²**                              | **0.704**                | **0.721**               | **0.694**              | **0.758**               | **0.778**               |
+| **Within R²**                       | **0.057**                | **0.003**               | **0.002**              | **0.059**               | **0.063**               |
 
-## Causal language and identification
+### Table 2 Reproduction: The Correlates of the Change in the Share of Artificial Intelligence Jobs
 
-The original manuscript sometimes uses terms like “drivers” and “determinants” of AI adoption. In the Rubin Causal Model, causal effects are defined as comparisons of potential outcomes under well-defined interventions, and identification requires assumptions and design features that address confounding (e.g., randomization, instruments, discontinuities). See @holland1986 for a clear statement of why regression with observational data alone doesn’t justify causal claims.
+| Variable                            | (1) Demographics         | (2) Innovation          | (3) Industry           | (4) All Controls        | (5) All + State FE      |
+|-------------------------------------|--------------------------|-------------------------|------------------------|-------------------------|-------------------------|
+| **Constant**                        | 0.007                    |                         |                        | -0.073                  | -0.138**                |
+|                                     | (0.027)                  |                         |                        | (0.050)                 | (0.043)                 |
+| Bachelors, %                        | 0.018                    |                         |                        | 0.049                   | 0.051                   |
+|                                     | (0.019)                  |                         |                        | (0.033)                 | (0.033)                 |
+| Black, %                            | 0.068+                   |                         |                        | 0.054                   | 0.113                   |
+|                                     | (0.037)                  |                         |                        | (0.069)                 | (0.076)                 |
+| Poverty, %                          | -0.019                   |                         |                        | -0.018                  | -0.020                  |
+|                                     | (0.022)                  |                         |                        | (0.055)                 | (0.057)                 |
+| Pop. Growth                         | -0.034*                  |                         |                        | -0.039                  | 0.047                   |
+|                                     | (0.017)                  |                         |                        | (0.036)                 | (0.042)                 |
+| House Price Growth                  | 0.124**                  |                         |                        | 0.125+                  | 0.197*                  |
+|                                     | (0.042)                  |                         |                        | (0.075)                 | (0.079)                 |
+| Income, Log                         | 0.098***                 |                         |                        | 0.187***                | 0.152+                  |
+|                                     | (0.021)                  |                         |                        | (0.040)                 | (0.086)                 |
+| Tightness                           | 0.002                    |                         |                        | -0.061+                 | -0.008                  |
+|                                     | (0.027)                  |                         |                        | (0.035)                 | (0.039)                 |
+| Patents per employee                |                          | 0.151***                |                        | 0.113**                 | 0.082                   |
+|                                     |                          | (0.036)                 |                        | (0.043)                 | (0.066)                 |
+| AI Patents' Share                   |                          | 0.021                   |                        | 0.045                   | 0.058                   |
+|                                     |                          | (0.017)                 |                        | (0.029)                 | (0.035)                 |
+| Degrees per capita                  |                          | 0.093***                |                        | 0.082**                 | 0.076+                  |
+|                                     |                          | (0.027)                 |                        | (0.027)                 | (0.036)                 |
+| STEM Degrees' share                 |                          | 0.031                   |                        | -0.064+                 | -0.039                  |
+|                                     |                          | (0.021)                 |                        | (0.049)                 | (0.060)                 |
+| Large Establishments, %             |                          |                         | 0.031+                 | -0.024                  | -0.016                  |
+|                                     |                          |                         | (0.018)                | (0.030)                 | (0.026)                 |
+| ICT sector Intensity                |                          |                         | -0.037+                | -0.014                  | -0.001                  |
+|                                     |                          |                         | (0.019)                | (0.046)                 | (0.042)                 |
+| Manufacturing Intensity             |                          |                         | -0.072**               | -0.128*                 | -0.170*                 |
+|                                     |                          |                         | (0.023)                | (0.061)                 | (0.079)                 |
+| Turnover Rate                       |                          |                         | 0.023+                 | -0.056**                | -0.042*                 |
+|                                     |                          |                         | (0.014)                | (0.022)                 | (0.023)                 |
+|                                     |                          |                         |                        |                         |                         |
+| **Observations**                    | **2,751**                | **897**                 | **2,723**              | **810**                 | **810**                 |
+| **R²**                              | **0.021**                | **0.019**               | **0.016**              | **0.031**               | **0.082**               |
+| **Within R²**                       | **—**                    | **—**                   | **—**                  | **—**                   | **0.025**               |
 
-Examples of causal framing in the original paper
 
-“we identify several key drivers of AI job intensity” and that higher STEM, tightness, and patents “significantly predict greater AI adoption.” 
+``` {r setup}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 10
+#| fig-height: 12
+library(tidyverse)
+library(sf)
+library(scales)
+library(tigris)
+library(ggplot2)
+library(patchwork)
 
-“The findings are robust to including state × year fixed effects specifications, confirming the stability of these relationships.” 
-
-When discussing Table 1: “Labor market tightness emerges as a key driver” and the listed variables “positively and significantly predict AI intensity.” 
+# Load and prepare AI data
+df <- read_csv("data.csv") %>%
+  filter(Year %in% c(2017,2018,2022,2023)) %>%
+  mutate(
+    ai_intensity = ai / nads, #calculation to determine percentages
+    period = ifelse(Year %in% c(2017,2018), "early", "late")
+  ) %>%
+  group_by(COUNTY_FIPS, period) %>%
+  summarise(ai_intensity = mean(ai_intensity, na.rm = TRUE), .groups = 'drop') %>%
+  pivot_wider(names_from = period, values_from = ai_intensity) %>%
+  mutate(
+    ai_change_pct = (late - early) * 100,
+    avg_ai_pct    = ((early + late)/2) * 100
+  )
+# Format FIPS codes
+df$COUNTY_FIPS <- str_pad(as.character(df$COUNTY_FIPS), 5, pad = '0')
  
+# Quietly load county geometries
+options(tigris_use_cache = TRUE)
+counties <- suppressMessages(
+  tigris::counties(cb=TRUE, year=2020, class='sf')
+) %>%
+  mutate(COUNTY_FIPS = GEOID) %>%
+  st_transform(crs=4326)
 
-Why this reads as causal
+# Merge with AI data
+map_data <- left_join(counties, df, by='COUNTY_FIPS')
 
-Phrases like identify, drivers, predict, and confirming the stability imply mechanisms, not just associations. In observational panels with county and year fixed effects, these coefficients are conditional correlations. Without as-if random shocks, instruments, discontinuities, or explicit causal designs, the estimands are not average treatment effects.
+# Define bins and colors
+bins_avg <- c(0, 0.06, 0.14, 0.23, 0.37, 0.71, Inf)
+labels_avg <- c("0 – 0.06", "0.06 – 0.14", "0.14 – 0.23", "0.23 – 0.37", "0.37 – 0.71", "0.71 – 10")
+cols_avg <- c('#ffffcc','#ffeda0','#fed976','#fd8d3c','#e31a1c','#800026')
 
-Our replication confirms that several local characteristics are correlated with county AI-job shares, conditional on fixed effects. We caution against causal language. As Holland (1986) emphasizes, causal claims hinge on well-defined interventions and counterfactuals; panel regressions with rich controls document associations, not effects, absent exogenous variation or a research design that approximates a randomized intervention. In this setting, terms like “drivers,” “determinants,” or “predict” overstate what the estimates can support. See Holland (1986) for the “no causation without manipulation” principle and the role of counterfactual comparisons in causal inference.
+bins_chg <- c(-5.56, -0.12, 0.00, 0.09, 0.24, 0.57, Inf)
+labels_chg <- c("-5.56 – -0.12", "-0.12 – 0", "0 – 0.09", "0.09 – 0.24", "0.24 – 0.57", "0.57 – 12.35")
+cols_chg <- c('#ffffcc','#ffeda0','#fed976','#fd8d3c','#fc4e2a','#800026')
 
-## Robustness: log-population weighting
+# Bin the data
+map_data <- map_data %>%
+  mutate(
+    avg_bin = cut(avg_ai_pct, breaks = bins_avg, labels = labels_avg, include.lowest = TRUE, right = FALSE),
+    chg_bin = cut(ai_change_pct, breaks = bins_chg, labels = labels_chg, include.lowest = TRUE, right = FALSE)
+  )
 
-To assess sensitivity to county size, I re-estimate the specifications with weights $w_{it} = \log(\text{Population}_{it})$. This choice still recognizes population differences but reduces leverage from the largest counties.
+# Plot for average
+p1 <- ggplot(map_data) +
+  geom_sf(aes(fill = avg_bin), color = 'white', size = 0.1) +
+  scale_fill_manual(values = cols_avg, na.value = 'gray90', drop = FALSE, guide = guide_legend(title = "")) +
+  coord_sf(xlim = c(-125, -66), ylim = c(24, 50), expand = FALSE) +
+  theme_void() +
+  labs(title = "Panel A. Percent share of AI jobs, 2014–2023",
+       caption = "Panel A plots the share (average 2014–2023) of job postings related to AI in a county.") +
+  theme(plot.title = element_text(hjust = 0.5, size = 12),
+        plot.caption = element_text(hjust = 0.5, size = 10),
+        legend.text = element_text(size = 10))
 
-Why reweight? The original study uses population weights, which tilt estimation toward very large counties. That choice is defensible if the estimand of interest is a population-average association. Switching to log(population) weights reduces the leverage of mega-counties while still down-weighting tiny places, yielding estimates closer to a “typical-county” association.
+# Plot for change
+p2 <- ggplot(map_data) +
+  geom_sf(aes(fill = chg_bin), color = 'white', size = 0.1) +
+  scale_fill_manual(values = cols_chg, na.value = 'gray90', drop = FALSE, guide = guide_legend(title = "")) +
+  coord_sf(xlim = c(-125, -66), ylim = c(24, 50), expand = FALSE) +
+  theme_void() +
+  labs(title = "Panel B. Percentage point change in AI share, 2018–2023",
+       caption = "Panel B plots the percentage point change (2023–2018) in the share of AI jobs.") +
+  theme(plot.title = element_text(hjust = 0.5, size = 12),
+        plot.caption = element_text(hjust = 0.5, size = 10),
+        legend.text = element_text(size = 10))
 
-Main takeaways:
+p1 / p2 + plot_annotation(title = "Replication of the Maps from the Article",
+                          theme = theme(plot.title = element_text(size = 16, face = "bold", hjust = 0.5)))
+```
 
-* The coefficient on **bachelor’s degree share** declines in magnitude under log-population weights, implying size sensitivity.
-* **Labor market tightness** remains positive and precisely estimated across both weighting schemes.
-* **Manufacturing intensity** retains a negative association; **ICT intensity** remains positive in rich specifications.
+The successful reproduction confirms the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
+
+## Critical Assessment of Causal Claims
+
+### Identification of Problematic Causal Language
+
+The original study by Andreadis et al. (2025) employs language that suggests causal relationships despite relying on observational data with multiple potentially endogenous predictors. Several passages illustrate this concern:
+
+From the Introduction: *"Higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets."*
+
+From Section III: The authors state they *"identify several key drivers of AI job intensity"* and that *"Labor market tightness emerges as a key driver."*
+
+From the Conclusion: *"We find that counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter labor markets have seen greater AI job growth."*
+
+### Methodological Limitations for Causal Inference
+
+The regression specifications employed by Andreadis et al., while appropriate for documenting correlational patterns, face significant challenges for causal interpretation:
+
+**Multiple Treatment Problem**: The analysis simultaneously examines numerous county characteristics (demographics, innovation metrics, industry composition) as predictors of AI adoption. With over a dozen variables included as potential "drivers," the study lacks a clear theoretical framework for which specific mechanisms operate causally versus which serve as proxies for omitted factors.
+
+**Endogeneity Concerns**: Many of the key predictors are likely endogenous to economic development processes. For example, STEM degree production may respond to local demand for technical skills, labor market tightness reflects underlying economic dynamism that could drive both AI adoption and other outcomes, and patent activity and AI job concentration may be jointly determined by unobserved innovation capacity.
+
+**Lack of Quasi-Experimental Variation**: The study does not exploit any plausibly exogenous variation in the key predictors. Without instruments, policy discontinuities, or other sources of identification, the estimated coefficients capture associations rather than causal effects.
+
+## Extension: Log-Population Weighting Analysis
+
+To assess the robustness of the original findings, I re-estimated all models using log-population weights instead of population weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
+
+The modified weighting scheme is: $w_{it} = \log(Population_{it})$
+
+This transformation addresses concerns that extremely populous counties (e.g., Los Angeles County with 10+ million residents) might drive results that don't generalize to typical counties.
 
 ## Figure 1: Key Coefficient Estimates for AI Share (Table 1)
 
@@ -365,20 +460,46 @@ wrap_plots(plots, ncol = 2) +
 
 ```
 
+## Results & Interpretation
 
-## Discussion
+The comparison between population-weighted and log-population-weighted regressions reveals several important patterns:
 
-What moves and why. Under log(population) weights, education-related coefficients (e.g., bachelor’s share) attenuate and in several specifications lose conventional significance, while labor market tightness and the negative association for manufacturing intensity remain robust. Intuitively, education and population are strongly correlated with large metropolitan areas; once their leverage is moderated, the education–AI link shrinks toward the average county. In contrast, tightness captures within-county hiring pressure that matters in metros and nonmetros, so its association is more stable. Manufacturing’s negative sign persists, but the magnitude often decreases, reflecting the fact that many smaller manufacturing counties are weighted relatively more.
+**Magnitude Effects**: The estimated effects of key predictors are highly sensitive to the weighting scheme. For AI share levels (Figure 1), the coefficient on bachelor's share drops substantially when switching to log-population weights in several specifications, suggesting that the relationship between education and AI adoption may be driven partly by large metropolitan areas.
 
-Standard errors and model fit. Because the effective weight distribution is less extreme, standard errors on the “big-county” covariates often grow relative to their point estimates, pushing some p-values above conventional thresholds even when signs are unchanged. Within-R² and overall fit can move slightly, but the qualitative ranking—tightness most stable, education and size most sensitive—remains the same in our replication.
+**Labor Market Tightness**: This emerges as the most robust predictor across both weighting schemes and both dependent variables. In Figure 1, labor tightness maintains strong positive effects regardless of weighting method, and in Figure 2, it consistently predicts AI job growth. This suggests that tight labor markets create conditions conducive to AI adoption across counties of all sizes.
 
-How to present it. We recommend reporting both weighting schemes side-by-side, stating the estimand each implies (population-average vs typical-county). Note which results are robust across weights (tightness; manufacturing<0; ICT>0 in richer specs) and which are weight-sensitive (education; raw population). This framing keeps the original narrative on correlational patterns intact, while making clear where claims hinge on the influence of large metros.
+**STEM Education**: STEM degree share shows consistent positive relationships in both weighting schemes, though magnitudes vary. This indicates that technical human capital is important for AI adoption beyond just large metropolitan areas.
+
+**Manufacturing vs. Technology Sectors**: Manufacturing intensity consistently shows negative relationships with AI adoption, while ICT intensity shows positive effects. These patterns persist across weighting schemes, suggesting structural differences in how traditional vs. technology-oriented industries adopt AI.
+
+**County Size Effects**: The divergence between weighting schemes is most pronounced for variables like bachelor's share and population size itself, indicating that large counties drive many of the education-AI relationships found in the original analysis.
 
 ## Conclusion
 
-The replication confirms the original patterns and makes clear which relationships are robust versus size-sensitive. Incorporating @holland1986 clarifies why we should avoid causal language without identification. Future work should leverage quasi-experimental variation—policy changes, instruments, or discontinuities—to move from correlation to causation.
+This replication and extension of Andreadis et al. (2025) demonstrates both the technical reproducibility and limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI job concentration across U.S. counties. However, our analysis reveals three important qualifications to the original study's conclusions.
+
+**First**, the original study employs causal language that overstates the nature of the relationships identified. Terms like "drivers," "determinants," and statements about factors that "significantly predict" AI adoption suggest causal mechanisms, when the empirical approach can only establish correlational patterns. Without exogenous variation or quasi-experimental identification strategies, these relationships likely reflect a complex mixture of causal effects, reverse causation, and selection processes.
+
+**Second**, the alternative log-population weighting analysis reveals that some relationships are sensitive to the influence of large metropolitan areas. The most consistent predictor across both weighting schemes is labor market tightness, which maintains strong associations regardless of county size. However, educational attainment shows notably weaker relationships when log-population weights reduce the influence of large metros, suggesting this factor may be less universally important for AI adoption than the original analysis suggests.
+
+**Third**, the industry composition effects prove relatively stable across weighting strategies, with manufacturing intensity consistently showing negative associations and ICT sector concentration showing positive relationships with AI adoption. This suggests that structural economic factors may be more fundamental determinants of technological adoption patterns than demographic characteristics.
+
+**Policy Implications**: These findings suggest that while the correlational patterns documented by Andreadis et al. represent meaningful empirical regularities, their policy implications should be interpreted cautiously. Our interpretation suggests that interventions targeting labor market conditions and industry composition may have broader applicability across different county types, while education-focused policies may yield the highest returns in larger metropolitan areas where network effects and complementary institutions are stronger.
+
+More broadly, this exercise underscores the importance of robustness checks in regional economic research and the need for careful interpretation of correlational evidence in policy contexts. Simple changes in weighting can meaningfully shift both the interpretation and the policy relevance of empirical findings about technological change.
 
 ## Acknowledgments
 
-I thank my preceptor for guidance and Andreadis et al. (2025) for methodological transparency. All errors are my own.
+I thank my preceptor for guidance on this replication exercise and extension analysis. I also acknowledge Andreadis et al. (2025) for making their methodology transparent, enabling this replication study. All errors remain my own.
 
+## References
+
+Andreadis, L., Kalotychou, E., Chatzikonstantinou, M., Louca, C., & Makridis, C. A. (2025). Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space. *American Economic Papers & Proceedings*, forthcoming.
+
+Acemoglu, D. (2024). The simple macroeconomics of AI. *Working Paper*.
+
+Babina, T., Fedyk, A., He, A., & Hodson, J. (2024). Artificial intelligence, firm growth, and product innovation. *Journal of Financial Economics*, 151, 103745.
+
+Brynjolfsson, E., Rock, D., & Syverson, C. (2021). The productivity J-curve: How intangibles complement general-purpose technologies. *American Economic Journal: Macroeconomics*, 13(1), 333–372.
+
+Eloundou, T., Manning, S., Mishkin, P., & Rock, D. (2024). GPTs are GPTs: Labor market impact potential of LLMs. *Science*, 384(6702), 1306–1308.
