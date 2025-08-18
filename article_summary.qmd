@@ -5,6 +5,7 @@ bibliography: references.bib
 link-citations: true
 format:
   pdf: default
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/chicago-author-date.csl
 ---
 
 ## Abstract
