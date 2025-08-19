@@ -1,22 +1,67 @@
 ---
-title: "Replication Summary of Andreadis et al. (2025)"
-author: "Jacob Khaykin"
+title: "Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space"
+subtitle: "A Replication Study of Andreadis et al. (AEA Papers and Proceedings, 2025)"
+author:
+  - Jacob Khaykin ^{*}
+  - David Kane ^{†}
 bibliography: references.bib
+nocite: '@*'
 link-citations: true
 format:
-  pdf: default
+  pdf:
+    number-sections: true
+    documentclass: article
+    fontsize: 11pt
+    fontfamily: times
+    geometry: "top=1in, bottom=1in, left=1in, right=1in"
+    include-in-header:
+      - text: |
+          \usepackage{titling}
+          \usepackage{fancyhdr}
+          \pagestyle{fancy}
+          \fancyhead[C]{\small Journal of Comments and Replications in Economics - JCRE}
+          \fancyfoot{}
+          \renewcommand{\headrulewidth}{0.4pt}
+          \usepackage[dvipsnames]{xcolor}
+          \pretitle{\begin{center}\LARGE\color{MidnightBlue}}
+          \posttitle{\par\end{center}\vskip 0em}
+          \setlength{\headheight}{15pt}
+          \setlength{\headsep}{20pt}
+          \setlength{\droptitle}{5em}
+          \usepackage{sectsty}
+          \allsectionsfont{\bfseries\color{black}}
+          \usepackage{parskip}
+          \setlength{\parskip}{0.5em}
+          \setlength{\parindent}{0pt}
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/chicago-author-date.csl
 ---
+\thispagestyle{fancy}
+
+Journal of Comments and Replications in Economics, Volume x, 202x-x, DOI: xxxxx
+
+JEL: J24, O33, R11  
+Keywords: Artificial Intelligence, Regional Economics, Labor Markets, Replication, Robustness  
+Data Availability: The R code and data to reproduce this replication are available in JCRE's data archive (DOI: xxxxx).
+
+Please Cite As: Khaykin, J. and Kane, D. (2025). Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space: A Replication Study of Andreadis et al. (AEA Papers and Proceedings, 2025). Journal of Comments and Replications in Economics, Vol.x (202x-x). DOI: xxxxx
 
 ## Abstract
 
-This study replicates and extends the analysis of Andreadis et al. (2025), who examine the determinants of AI-related employment across U.S. counties. I successfully reproduce their core findings regarding the correlations between local demographic, innovation, and industry characteristics with AI job concentration. However, I identify problematic causal language in the original study that overstates the causal nature of these relationships. As a robustness check, I re-estimate their models using log-population weights, which reveals that several key relationships—particularly those involving educational attainment—are sensitive to the influence of large metropolitan areas. The findings suggest these results represent meaningful correlational patterns rather than causal relationships, with important implications for interpreting the geographic distribution of AI employment.
+This paper replicates the analysis of [@andreadis2025] on the local heterogeneity in artificial intelligence jobs across U.S. counties from 2014 to 2023. [@andreadis2025] document substantial variation in AI-related job postings and identify key correlates including education, innovation, and industry factors. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though some magnitudes attenuate. Additionally, we highlight unsupported causal claims in the original study given its observational design. Our findings affirm stable correlational patterns while emphasizing caution in interpretation. Replication code and data are provided.
+\end{abstract}
+
+$^{*}$Solon High School, jacobkhaykin@example.com  
+$^{†}$Institute for Globally Distributed Open Research and Education (IGDORE), davidkane@example.com  
+Declaration: This paper was not the result of a for-pay consulting relationship. Neither we nor our employers have a financial interest in the topic that could create a conflict of interest.
+
+Received xxxxx; Revised xxxxx; Accepted xxxxx; Published xxxxx.  
+©Author(s) 2025. Licensed under the Creative Commons License - Attribution 4.0 International (CC BY 4.0).
 
 ## Introduction
 
-Recent work by Andreadis et al. (2025) investigates how local economic and innovation factors shape the geography of AI-related employment in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the stated goal of identifying the "drivers" and "determinants" of AI adoption across counties.
+Recent work by [@andreadis2025] investigates how local economic and innovation factors shape the geography of AI-related employment in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the stated goal of identifying the "drivers" and "determinants" of AI adoption across counties.
 
-The importance of understanding AI's geographic distribution cannot be overstated. As Eloundou et al. (2024) project that up to 80% of the workforce could see at least 10% of their tasks influenced by AI and large language models, the spatial concentration of AI-related employment has significant implications for regional economic development and inequality. Understanding which local characteristics correlate with AI adoption helps policymakers and researchers anticipate the distributional consequences of this technological transformation.
+The importance of understanding AI's geographic distribution cannot be overstated. As [@eloundou2024] project that up to 80% of the workforce could see at least 10% of their tasks influenced by AI and large language models, the spatial concentration of AI-related employment has significant implications for regional economic development and inequality. Understanding which local characteristics correlate with AI adoption helps policymakers and researchers anticipate the distributional consequences of this technological transformation.
 
 The original study employs weighted least squares regression with population weights to account for heteroscedasticity and emphasize results in more populous counties. Their primary regression specifications can be expressed as:
 
@@ -60,7 +105,7 @@ All explanatory variables are lagged by one year to address potential endogeneit
 
 ## Reproduction of Original Results
 
-I successfully reproduced the main findings from Tables 1 and 2 of Andreadis et al. (2025). The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
+I successfully reproduced the main findings from Tables 1 and 2 of [@andreadis2025]. The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
 
 ### Table 1 Reproduction: The Correlates of the Share of Artificial Intelligence Jobs
 
@@ -234,7 +279,7 @@ The successful reproduction confirms the technical reliability of the original a
 
 ### Identification of Problematic Causal Language
 
-The original study by Andreadis et al. (2025) employs language that suggests causal relationships despite relying on observational data with multiple potentially endogenous predictors. Several passages illustrate this concern:
+The original study by [@andreadis2025] employs language that suggests causal relationships despite relying on observational data with multiple potentially endogenous predictors. Several passages illustrate this concern:
 
 From the Introduction: *"Higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets."*
 
@@ -244,7 +289,7 @@ From the Conclusion: *"We find that counties with stronger innovation ecosystems
 
 ### Methodological Limitations for Causal Inference
 
-The regression specifications employed by Andreadis et al., while appropriate for documenting correlational patterns, face significant challenges for causal interpretation:
+The regression specifications employed by [@andreadis2025], while appropriate for documenting correlational patterns, face significant challenges for causal interpretation:
 
 **Multiple Treatment Problem**: The analysis simultaneously examines numerous county characteristics (demographics, innovation metrics, industry composition) as predictors of AI adoption. With over a dozen variables included as potential "drivers," the study lacks a clear theoretical framework for which specific mechanisms operate causally versus which serve as proxies for omitted factors.
 
@@ -477,7 +522,7 @@ The comparison between population-weighted and log-population-weighted regressio
 
 ## Conclusion
 
-This replication and extension of Andreadis et al. (2025) demonstrates both the technical reproducibility and limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI job concentration across U.S. counties. However, our analysis reveals three important qualifications to the original study's conclusions.
+This replication and extension of [@andreadis2025] demonstrates both the technical reproducibility and limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI job concentration across U.S. counties. However, our analysis reveals three important qualifications to the original study's conclusions.
 
 **First**, the original study employs causal language that overstates the nature of the relationships identified. Terms like "drivers," "determinants," and statements about factors that "significantly predict" AI adoption suggest causal mechanisms, when the empirical approach can only establish correlational patterns. Without exogenous variation or quasi-experimental identification strategies, these relationships likely reflect a complex mixture of causal effects, reverse causation, and selection processes.
 
@@ -485,22 +530,12 @@ This replication and extension of Andreadis et al. (2025) demonstrates both the 
 
 **Third**, the industry composition effects prove relatively stable across weighting strategies, with manufacturing intensity consistently showing negative associations and ICT sector concentration showing positive relationships with AI adoption. This suggests that structural economic factors may be more fundamental determinants of technological adoption patterns than demographic characteristics.
 
-**Policy Implications**: These findings suggest that while the correlational patterns documented by Andreadis et al. represent meaningful empirical regularities, their policy implications should be interpreted cautiously. Our interpretation suggests that interventions targeting labor market conditions and industry composition may have broader applicability across different county types, while education-focused policies may yield the highest returns in larger metropolitan areas where network effects and complementary institutions are stronger.
+**Policy Implications**: These findings suggest that while the correlational patterns documented by [@andreadis2025] represent meaningful empirical regularities, their policy implications should be interpreted cautiously. Our interpretation suggests that interventions targeting labor market conditions and industry composition may have broader applicability across different county types, while education-focused policies may yield the highest returns in larger metropolitan areas where network effects and complementary institutions are stronger.
 
 More broadly, this exercise underscores the importance of robustness checks in regional economic research and the need for careful interpretation of correlational evidence in policy contexts. Simple changes in weighting can meaningfully shift both the interpretation and the policy relevance of empirical findings about technological change.
 
 ## Acknowledgments
 
-I thank my preceptor for guidance on this replication exercise and extension analysis. I also acknowledge Andreadis et al. (2025) for making their methodology transparent, enabling this replication study. All errors remain my own.
+I thank my preceptor for guidance on this replication exercise and extension analysis. I also acknowledge [@andreadis2025] for making their methodology transparent, enabling this replication study. All errors remain my own.
 
 ## References
-
-Andreadis, L., Kalotychou, E., Chatzikonstantinou, M., Louca, C., & Makridis, C. A. (2025). Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space. *American Economic Papers & Proceedings*, forthcoming.
-
-Acemoglu, D. (2024). The simple macroeconomics of AI. *Working Paper*.
-
-Babina, T., Fedyk, A., He, A., & Hodson, J. (2024). Artificial intelligence, firm growth, and product innovation. *Journal of Financial Economics*, 151, 103745.
-
-Brynjolfsson, E., Rock, D., & Syverson, C. (2021). The productivity J-curve: How intangibles complement general-purpose technologies. *American Economic Journal: Macroeconomics*, 13(1), 333–372.
-
-Eloundou, T., Manning, S., Mishkin, P., & Rock, D. (2024). GPTs are GPTs: Labor market impact potential of LLMs. *Science*, 384(6702), 1306–1308.
