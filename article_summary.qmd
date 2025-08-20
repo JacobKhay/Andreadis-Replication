@@ -19,7 +19,6 @@ format:
           \usepackage{titling}
           \usepackage{fancyhdr}
           \pagestyle{fancy}
-          \fancyhead[C]{\small Journal of Comments and Replications in Economics - JCRE}
           \fancyfoot{}
           \renewcommand{\headrulewidth}{0.4pt}
           \usepackage[dvipsnames]{xcolor}
@@ -40,24 +39,22 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/chi
 Journal of Comments and Replications in Economics, Volume x, 202x-x, DOI: xxxxx
 
 JEL: J24, O33, R11  
-Keywords: Artificial Intelligence, Regional Economics, Labor Markets, Replication, Robustness  
-Data Availability: The R code and data to reproduce this replication are available in JCRE's data archive (DOI: xxxxx).
+Keywords: Artificial Intelligence, Regional Economics, Labor Markets  
+Data Availability: The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/JustReplicationAI-Share.
 
-Please Cite As: Khaykin, J. and Kane, D. (2025). Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space: A Replication Study of Andreadis et al. (AEA Papers and Proceedings, 2025). Journal of Comments and Replications in Economics, Vol.x (202x-x). DOI: xxxxx
 
-## Abstract
+\section*{{\normalfont\itshape Abstract}}
 
-This paper replicates the analysis of [@andreadis2025] on the local heterogeneity in artificial intelligence jobs across U.S. counties from 2014 to 2023. [@andreadis2025] document substantial variation in AI-related job postings and identify key correlates including education, innovation, and industry factors. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though some magnitudes attenuate. Additionally, we highlight unsupported causal claims in the original study given its observational design. Our findings affirm stable correlational patterns while emphasizing caution in interpretation. Replication code and data are provided.
-\end{abstract}
+This paper replicates the analysis of [@andreadis2025] on the local heterogeneity in artificial intelligence jobs across U.S. counties from 2014 to 2023. [@andreadis2025] document substantial variation in AI-related job postings and identify key correlates including education, innovation, and industry factors. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though all magnitudes attenuate. Additionally, we highlight unsupported causal claims in the original study given its observational design. Our findings affirm stable correlational patterns while emphasizing caution in interpretation.
+
 
 $^{*}$Solon High School, jacobkhaykin@example.com  
 $^{†}$Institute for Globally Distributed Open Research and Education (IGDORE), davidkane@example.com  
-Declaration: This paper was not the result of a for-pay consulting relationship. Neither we nor our employers have a financial interest in the topic that could create a conflict of interest.
+Declaration: There are no financial conflicts of interest to share. 
 
-Received xxxxx; Revised xxxxx; Accepted xxxxx; Published xxxxx.  
 ©Author(s) 2025. Licensed under the Creative Commons License - Attribution 4.0 International (CC BY 4.0).
 
-## Introduction
+# **Introduction**
 
 Recent work by [@andreadis2025] investigates how local economic and innovation factors shape the geography of AI-related employment in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the stated goal of identifying the "drivers" and "determinants" of AI adoption across counties.
 
@@ -71,7 +68,7 @@ where $AI_{it}$ represents the AI job share in county $i$ at time $t$, $Demog_{i
 
 This replication serves two primary purposes: (1) to verify the reproducibility of the original findings, and (2) to assess their robustness using alternative weighting schemes. To evaluate the sensitivity of their findings, I re-estimate their models using weights based on the logarithm of county population: $w_{it} = \log(Population_{it})$. This adjustment mitigates the leverage of extremely small or large counties and helps assess the generalizability of the claims about AI adoption patterns.
 
-## Data
+# **Data**
 
 The study utilizes multiple data sources to construct a comprehensive county-level dataset spanning 2014-2023:
 
@@ -105,7 +102,7 @@ All explanatory variables are lagged by one year to address potential endogeneit
 
 ## Reproduction of Original Results
 
-I successfully reproduced the main findings from Tables 1 and 2 of [@andreadis2025]. The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
+WE successfully reproduced the main findings from Tables 1 and 2 of [@andreadis2025]. The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
 
 ### Table 1 Reproduction: The Correlates of the Share of Artificial Intelligence Jobs
 
@@ -188,12 +185,12 @@ I successfully reproduced the main findings from Tables 1 and 2 of [@andreadis20
 | **Within R²**                       | **—**                    | **—**                   | **—**                  | **—**                   | **0.025**               |
 
 
-``` {r setup}
+```{r setup}
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-width: 10
-#| fig-height: 12
+#| fig-width: 16
+#| fig-height: 20
 library(tidyverse)
 library(sf)
 library(scales)
@@ -203,40 +200,44 @@ library(patchwork)
 
 # Load and prepare AI data
 df <- read_csv("data.csv") %>%
-  filter(Year %in% c(2017,2018,2022,2023)) %>%
+  filter(Year %in% c(2017, 2018, 2022, 2023)) %>%
   mutate(
-    ai_intensity = ai / nads, #calculation to determine percentages
-    period = ifelse(Year %in% c(2017,2018), "early", "late")
+    ai_intensity = ai / nads,        # calculation to determine percentages
+    period = ifelse(Year %in% c(2017, 2018), "early", "late")
   ) %>%
   group_by(COUNTY_FIPS, period) %>%
   summarise(ai_intensity = mean(ai_intensity, na.rm = TRUE), .groups = 'drop') %>%
   pivot_wider(names_from = period, values_from = ai_intensity) %>%
   mutate(
     ai_change_pct = (late - early) * 100,
-    avg_ai_pct    = ((early + late)/2) * 100
+    avg_ai_pct    = ((early + late) / 2) * 100
   )
+
 # Format FIPS codes
 df$COUNTY_FIPS <- str_pad(as.character(df$COUNTY_FIPS), 5, pad = '0')
- 
-# Quietly load county geometries
+
+# Quietly load county geometries (cartographic boundaries = lighter/faster)
 options(tigris_use_cache = TRUE)
 counties <- suppressMessages(
-  tigris::counties(cb=TRUE, year=2020, class='sf')
+  tigris::counties(cb = TRUE, year = 2020, class = 'sf')
 ) %>%
   mutate(COUNTY_FIPS = GEOID) %>%
-  st_transform(crs=4326)
+  st_transform(crs = 4326)
 
 # Merge with AI data
-map_data <- left_join(counties, df, by='COUNTY_FIPS')
+map_data <- left_join(counties, df, by = 'COUNTY_FIPS')
+
+# Apply shift_geometry to include AK and HI as shifted insets
+map_data <- tigris::shift_geometry(map_data)
 
 # Define bins and colors
-bins_avg <- c(0, 0.06, 0.14, 0.23, 0.37, 0.71, Inf)
+bins_avg   <- c(0, 0.06, 0.14, 0.23, 0.37, 0.71, Inf)
 labels_avg <- c("0 – 0.06", "0.06 – 0.14", "0.14 – 0.23", "0.23 – 0.37", "0.37 – 0.71", "0.71 – 10")
-cols_avg <- c('#ffffcc','#ffeda0','#fed976','#fd8d3c','#e31a1c','#800026')
+cols_avg   <- c('#ffffcc', '#ffeda0', '#fed976', '#fd8d3c', '#e31a1c', '#800026')
 
-bins_chg <- c(-5.56, -0.12, 0.00, 0.09, 0.24, 0.57, Inf)
+bins_chg   <- c(-5.56, -0.12, 0.00, 0.09, 0.24, 0.57, Inf)
 labels_chg <- c("-5.56 – -0.12", "-0.12 – 0", "0 – 0.09", "0.09 – 0.24", "0.24 – 0.57", "0.57 – 12.35")
-cols_chg <- c('#ffffcc','#ffeda0','#fed976','#fd8d3c','#fc4e2a','#800026')
+cols_chg   <- c('#ffffcc', '#ffeda0', '#fed976', '#fd8d3c', '#fc4e2a', '#800026')
 
 # Bin the data
 map_data <- map_data %>%
@@ -245,32 +246,56 @@ map_data <- map_data %>%
     chg_bin = cut(ai_change_pct, breaks = bins_chg, labels = labels_chg, include.lowest = TRUE, right = FALSE)
   )
 
-# Plot for average
+# Enhanced map theme with better sizing
+map_theme <- theme_void() +
+  theme(
+    plot.title   = element_text(hjust = 0.5, size = 16, face = "bold", margin = margin(b = 15)),
+    plot.caption = element_text(hjust = 0.5, size = 12, margin = margin(t = 10)),
+    legend.text  = element_text(size = 12),
+    legend.title = element_text(size = 14),
+    legend.key.size = unit(1.2, "cm"),
+    plot.margin  = unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
+    aspect.ratio = NULL
+  )
+
+# Plot for average with fixed coordinates for shifted geometry
 p1 <- ggplot(map_data) +
   geom_sf(aes(fill = avg_bin), color = 'white', size = 0.1) +
-  scale_fill_manual(values = cols_avg, na.value = 'gray90', drop = FALSE, guide = guide_legend(title = "")) +
-  coord_sf(xlim = c(-125, -66), ylim = c(24, 50), expand = FALSE) +
-  theme_void() +
-  labs(title = "Panel A. Percent share of AI jobs, 2014–2023",
-       caption = "Panel A plots the share (average 2014–2023) of job postings related to AI in a county.") +
-  theme(plot.title = element_text(hjust = 0.5, size = 12),
-        plot.caption = element_text(hjust = 0.5, size = 10),
-        legend.text = element_text(size = 10))
+  coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
+           xlim = c(-2500000, 2500000), ylim = c(-2300000, 1500000)) +
+  scale_fill_manual(values = cols_avg, na.value = 'gray90', drop = FALSE, 
+                    guide = guide_legend(title = "", override.aes = list(size = 0))) +
+  labs(
+    title   = "Panel A. Percent share of AI jobs, 2014–2023",
+    caption = "Panel A plots the share (average 2014–2023) of job postings related to AI in a county."
+  ) +
+  map_theme
 
-# Plot for change
+# Plot for change with fixed coordinates for shifted geometry
 p2 <- ggplot(map_data) +
   geom_sf(aes(fill = chg_bin), color = 'white', size = 0.1) +
-  scale_fill_manual(values = cols_chg, na.value = 'gray90', drop = FALSE, guide = guide_legend(title = "")) +
-  coord_sf(xlim = c(-125, -66), ylim = c(24, 50), expand = FALSE) +
-  theme_void() +
-  labs(title = "Panel B. Percentage point change in AI share, 2018–2023",
-       caption = "Panel B plots the percentage point change (2023–2018) in the share of AI jobs.") +
-  theme(plot.title = element_text(hjust = 0.5, size = 12),
-        plot.caption = element_text(hjust = 0.5, size = 10),
-        legend.text = element_text(size = 10))
+  coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
+           xlim = c(-2500000, 2500000), ylim = c(-2300000, 1500000)) +
+  scale_fill_manual(values = cols_chg, na.value = 'gray90', drop = FALSE, 
+                    guide = guide_legend(title = "", override.aes = list(size = 0))) +
+  labs(
+    title   = "Panel B. Percentage point change in AI share, 2018–2023",
+    caption = "Panel B plots the percentage point change (2023–2018) in the share of AI jobs."
+  ) +
+  map_theme
 
-p1 / p2 + plot_annotation(title = "Replication of the Maps from the Article",
-                          theme = theme(plot.title = element_text(size = 16, face = "bold", hjust = 0.5)))
+# Create final plot with better spacing and sizing
+final_plot <- (p1 / p2) +
+  plot_annotation(
+    title = "Replication of the Maps from the Article",
+    theme = theme(
+      plot.title = element_text(size = 20, face = "bold", hjust = 0.5, margin = margin(b = 20))
+    )
+  ) +
+  plot_layout(heights = c(1, 1))
+
+# Display the plot
+final_plot
 ```
 
 The successful reproduction confirms the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
@@ -297,9 +322,9 @@ The regression specifications employed by [@andreadis2025], while appropriate fo
 
 **Lack of Quasi-Experimental Variation**: The study does not exploit any plausibly exogenous variation in the key predictors. Without instruments, policy discontinuities, or other sources of identification, the estimated coefficients capture associations rather than causal effects.
 
-## Extension: Log-Population Weighting Analysis
+# **Extension: Log-Population Weighting Analysis**
 
-To assess the robustness of the original findings, I re-estimated all models using log-population weights instead of population weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
+To assess the robustness of the original findings, we re-estimated all models using log-population weights instead of population weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
 
 The modified weighting scheme is: $w_{it} = \log(Population_{it})$
 
@@ -520,7 +545,7 @@ The comparison between population-weighted and log-population-weighted regressio
 
 **County Size Effects**: The divergence between weighting schemes is most pronounced for variables like bachelor's share and population size itself, indicating that large counties drive many of the education-AI relationships found in the original analysis.
 
-## Conclusion
+# *Conclusion*
 
 This replication and extension of [@andreadis2025] demonstrates both the technical reproducibility and limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI job concentration across U.S. counties. However, our analysis reveals three important qualifications to the original study's conclusions.
 
@@ -534,8 +559,8 @@ This replication and extension of [@andreadis2025] demonstrates both the technic
 
 More broadly, this exercise underscores the importance of robustness checks in regional economic research and the need for careful interpretation of correlational evidence in policy contexts. Simple changes in weighting can meaningfully shift both the interpretation and the policy relevance of empirical findings about technological change.
 
-## Acknowledgments
+## Acknowledgments {.unnumbered}
 
-I thank my preceptor for guidance on this replication exercise and extension analysis. I also acknowledge [@andreadis2025] for making their methodology transparent, enabling this replication study. All errors remain my own.
+We acknowledge [@andreadis2025] for making their methodology transparent, enabling this replication study. All errors remain our own.
 
-## References
+## References {.unnumbered}
