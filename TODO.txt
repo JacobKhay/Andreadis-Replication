@@ -1,34 +1,42 @@
-1) Get copy of https://www.cs.columbia.edu/~blei/fogm/2020F/readings/Holland1986.pdf. Read it. 
 
 
-8) Make the paper look more like published papers.
-    + Authors and affiliations. Institute for Globally Distributed Open Research and Education
-    + JEL:
-    + Keywords:
-    + Bibliography formatting
-
- Follow submission instructuions. You need three versions: regular PDF, no authors PDF, and regular Word.   
-
- "There are no financial conflicts of interest to declare."
 
 
-Separate. Add a "Done" when each is done.
 
-    JCRE defines replication as any study that directly addresses the reliability of a specific claim from a previously published study. This includes “reproductions,” “robustness checks,” “generalizations,” and a host of other types of analyses designed to assess the trustworthiness of a previously published result. JCRE publishes both successful and unsuccessful replications. What matters is the quality of the analysis, not the outcome of the results. Authors who wish to clarify whether their research fits the category of replication are encouraged to contact the editors directly.
+ Follow submission instructions. You need three versions: regular PDF, no authors PDF, and regular Word.   
+
+JCRE defines replication as any study that directly addresses the reliability of a specific claim from a previously published study. This includes “reproductions,” “robustness checks,” “generalizations,” and a host of other types of analyses designed to assess the trustworthiness of a previously published result. JCRE publishes both successful and unsuccessful replications. What matters is the quality of the analysis, not the outcome of the results. Authors who wish to clarify whether their research fits the category of replication are encouraged to contact the editors directly.
+
 The standard format for replication consists of 4 parts:(i) an introduction in which the importance of the original study is evidenced; (ii) a reproduction of the original study’s finding(s), with the original study’s results and the replicating study’s corresponding estimates placed side-by-side in a table; (iii) robustness checks in which one or more dimensions of the original study are extended or modified (e.g., the sample is updated with more recent data, alternative econometric procedures are employed, etc.); and (iv) a conclusion that summarizes which results from the original study have been confirmed/disconfirmed.
+
 If the replicating study cannot reproduce the original study’s findings, the replicating authors must provide evidence upon submission that they have attempted to contact the original authors to resolve any discrepancies. The respective correspondence with the original authors must be submitted.
-Replications should be submitted as both PDF and LaTex/Word documents. An anonymized PDF version of the manuscript must also be submitted.
+
+Replications should be submitted as both PDF and LaTex/Word documents. 
+
+An anonymized PDF version of the manuscript must also be submitted.
+
 At the time of submission, authors must also include data and code that allows push-button reproduction of their results. The program code should start from the raw data as it is publicly available and end with the final results. Only if the program code allows the immediate replication of your results can your submission be considered for publication.
+
 For copyrighted material, authors must obtain written permission from the copyright holders and submit the manuscript.
+
 The title page of the manuscript must contain each author’s name and corresponding information, as well as the title of the article, complemented by JEL classification numbers and keywords.
+
 Authors should indicate on the title page whether the research reported in their paper resulted from a for-pay consulting relationship or if their employer has a financial interest in the paper’s topic, which might constitute a conflict of interest.
+
 Displayed formulas should be numbered consecutively. Only numbers in parentheses should be used when referring to formulas in the text, e.g., (1). At the beginning of sentences, numbers in parentheses should be preceded by the word “equation,” e.g., Equation (1).
+
 Tables should be of a reasonable number and size. Columns should be clearly designed, and explanations should be given in footnotes using letters below the table’s body. Avoid using square brackets within tables.
+
 References for figures, tables, photographs, etc., should be given in the captions.
+
 The reference list should appear at the end of the text. Datasets must be cited. We encourage the following format: Author’s Name (year of publication): Name of data set. Version: #. Place of publication (e.g., journal, institution, or repository). Dataset. DOI. Names and dates in the text should correspond strictly to the list of references. Please provide DOIs with references when available.
+
 Manuscripts should be clear, concise, well organized, and written in English, with correct spelling and good sentence structure. Authors are responsible for the use of correct English.
+
 In the spirit of constructive scientific discourse, authors are encouraged to maintain a professional and respectful tone in their manuscripts. Submissions should employ non-judgmental language and focus on factual interpretations rather than personal judgments. Authors must refrain from ascribing negative motivations or intentions to the authors of the original study. Additionally, when providing interpretations that extend beyond direct observations, authors should clearly indicate that these are subjective perspectives. This can be done by using language such as, “Our interpretation suggests that…” or “From our analysis, it appears that…” By doing so, authors acknowledge the inherent subjectivity in scientific analysis and contribute to a more open and respectful scholarly dialogue.
+
 Submitted manuscripts will be subject to the standard blinded peer-reviewed referee process. One of the referees will normally be the original author; if this is the case, this information will be disclosed to the author.
+
 Should the manuscript be accepted, the original author(s) will be given the opportunity to publish a reply in JCRE.
 
 

@@ -36,12 +36,22 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/chi
 ---
 \thispagestyle{fancy}
 
+
+<!-- DK: Make the paper look more like published papers. -->
+    <!-- Authors and affiliations. Institute for Globally Distributed Open Research and Education -->
+    <!-- JEL: -->
+    <!-- Keywords: -->
+    <!-- Bibliography formatting -->
+
 Journal of Comments and Replications in Economics, Volume x, 202x-x, DOI: xxxxx
+
+<!-- DK:  Italicize things like JEL.   -->
 
 JEL: J24, O33, R11  
 Keywords: Artificial Intelligence, Regional Economics, Labor Markets  
 Data Availability: The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/JustReplicationAI-Share.
 
+<!-- JK: Shoiuld repo be linked? -->
 
 \section*{{\normalfont\itshape Abstract}}
 
@@ -54,7 +64,7 @@ Declaration: There are no financial conflicts of interest to share.
 
 ©Author(s) 2025. Licensed under the Creative Commons License - Attribution 4.0 International (CC BY 4.0).
 
-# **Introduction**
+# Introduction
 
 Recent work by [@andreadis2025] investigates how local economic and innovation factors shape the geography of AI-related employment in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the stated goal of identifying the "drivers" and "determinants" of AI adoption across counties.
 
