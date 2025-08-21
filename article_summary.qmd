@@ -11,9 +11,6 @@ format:
  pdf:
    number-sections: true
    documentclass: article
-   fontsize: 11pt
-   fontfamily: times
-   geometry: "top=1in, bottom=1in, left=1in, right=1in"
    include-in-header:
      - text: |
          \usepackage{titling}
@@ -39,14 +36,37 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa
 
 Journal of Comments and Replications in Economics, Volume x, 202x-x, DOI: xxxxx
 
+<!-- DK: Author's footnotes can be much cleaner. -->
+
+<!-- DK: Do not use LaTeX unless you have a compelling reason. -->
+
+<!-- DK: Get rid of 90% of the include-in-header garbage. Maybe you need a couple of these, but be sure that you do. And understand why. -->
+
+<!-- DK: Download a copy of the asl file. -->
+
 <!-- DK:  Italicize things like JEL.   -->
-\textsl{JEL: J24, O33, R11}
+
+<!-- DK: Read about Markdown. Do not use LaTeX unless you have a compelling reason. -->
+
+<!-- DK: Fix tables. -->
+
+<!-- DK: Learn about R code chunk options, especially caption. -->
+
+<!-- DK: Make a script which, when run, produces the three files we need: Word, PDF, PDF without our names. -->
+
+<!-- DK: More than one author, so language should be "Andreadis et al. (2025) employ" not "employs". -->
+
+<!-- DK: No nonsense bolding. -->
+
+<!-- DK: No acknowledgement. -->
+
+*JEL*: J24, O33, R11
 \textsl{Keywords: Artificial Intelligence, Regional Economics, Labor Markets}
 \textsl{Data Availability: The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/JustReplicationAI-Share.}
 
-<!-- JK: Shoiuld repo be linked? -->
+<!-- DK: Abstract should have no number and Introduction should be "1 Introduction". -->
 
-\section*{{\normalfont\itshape Abstract}}
+# Abstract
 
 This paper replicates the analysis of @andreadis2025 on the local heterogeneity in artificial intelligence jobs across U.S. counties from 2014 to 2023. @andreadis2025 document substantial variation in AI-related job postings and identify key correlates including education, innovation, and industry factors. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though all magnitudes attenuate. Additionally, we highlight unsupported causal claims in the original study given its observational design. Our findings affirm stable correlational patterns while emphasizing caution in interpretation.
 
@@ -56,6 +76,7 @@ This paper replicates the analysis of @andreadis2025 on the local heterogeneity 
 Declaration: There are no financial conflicts of interest to share. 
 
 # Introduction
+
 Recent work by @andreadis2025 investigates how local economic and innovation factors shape the geography of AI-related employment in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the stated goal of identifying the "drivers" and "determinants" of AI adoption across counties.
 
 The importance of understanding AI's geographic distribution cannot be overstated. As @eloundou2024 project that up to 80% of the workforce could see at least 10% of their tasks influenced by AI and large language models, the spatial concentration of AI-related employment has significant implications for regional economic development and inequality. Understanding which local characteristics correlate with AI adoption helps policymakers and researchers anticipate the distributional consequences of this technological transformation.
