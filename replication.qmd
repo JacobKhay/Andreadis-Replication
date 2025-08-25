@@ -23,32 +23,16 @@ format:
   docx: default
 ---
 
-Journal of Comments and Replications in Economics, Volume x, 202x-x, DOI: xxxxx
 
-<!-- DK: Author's footnotes can be much cleaner. -->
-<!-- JK: Done. -->
-<!-- DK: Do not use LaTeX unless you have a compelling reason. -->
-<!-- JK: Done. -->
-<!-- DK: Get rid of 90% of the include-in-header garbage. Maybe you need a couple of these, but be sure that you do. And understand why. -->
-<!-- JK: Done. -->
-<!-- DK: Download a copy of the asl file. -->
-<!-- JK: Done. -->
-<!-- DK:  Italicize things like JEL.   -->
-<!-- JK: Done. -->
-<!-- DK: Read about Markdown. Do not use LaTeX unless you have a compelling reason. -->
-<!-- JK: Done. -->
-<!-- DK: Fix tables. -->
+<!-- DK: Do not use LaTeX unless you have a compelling reason. fancyheader? -->
 
-<!-- DK: Learn about R code chunk options, especially caption. -->
-<!-- JK: Done. -->
-<!-- DK: Make a script which, when run, produces the three files we need: Word, PDF, PDF without our names. -->
-<!-- JK: Done. -->
-<!-- DK: More than one author, so language should be "Andreadis et al. (2025) employ" not "employs". -->
-<!-- JK: Done. -->
-<!-- DK: No nonsense bolding. -->
-<!-- JK: Done. -->
-<!-- DK: No References. -->
-<!-- JK: Done. -->
+<!-- DK: Code must generate the tables. No copy/paste in replication. -->
+
+<!-- DK: Use fig.cap, not headers, for caoptions in table. -->
+
+<!-- DK: get rid of causation discussion. -->
+
+<!-- DK: Our plot should look like their plot. Check Alaska. -->
 
 *JEL: J24, O33, R11*
 
@@ -56,7 +40,6 @@ Journal of Comments and Replications in Economics, Volume x, 202x-x, DOI: xxxxx
 
 *Data Availability:* The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/JustReplicationAI-Share.
 
-<!-- DK: Abstract should have no number and Introduction should be "1 Introduction". -->
 
 ## Abstract {.unnumbered}
 
