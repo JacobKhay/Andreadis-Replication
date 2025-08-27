@@ -14,8 +14,6 @@ format:
     documentclass: article
     include-in-header:
       - text: |
-          \usepackage{fancyhdr}
-          \pagestyle{plain}
           \usepackage{float}
           % reset numbering after abstract
           \usepackage{etoolbox}
@@ -24,15 +22,15 @@ format:
 ---
 
 
-<!-- DK: Do not use LaTeX unless you have a compelling reason. fancyheader? -->
+<!-- DK: Do not use LaTeX unless you have a compelling reason. fancyheader? JK: I removed fancyheader and some of the other ones but AI says float is important for figure placement and I kept the numbering system which is also there -->
 
-<!-- DK: Code must generate the tables. No copy/paste in replication. -->
+<!-- DK: Code must generate the tables. No copy/paste in replication. Done for both tables. -->
 
-<!-- DK: Use fig.cap, not headers, for caoptions in table. -->
+<!-- DK: Use fig.cap, not headers, for caoptions in table. Used tbl-cap. I'm not sure if it matters or not. -->
 
-<!-- DK: get rid of causation discussion. -->
+<!-- DK: get rid of causation discussion. Done -->
 
-<!-- DK: Our plot should look like their plot. Check Alaska. -->
+<!-- DK: Our plot should look like their plot. Check Alaska. Corrected the color scheme in Alaska as well as formatted more like the original -->
 
 *JEL: J24, O33, R11*
 
@@ -99,85 +97,409 @@ All explanatory variables are lagged by one year to address potential endogeneit
 
 We successfully reproduced the main findings from Tables 1 and 2 of @andreadis2025. The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
 
-#### Table 1: Replication of Table 1 from @andreadis2025 - The Correlates of the Share of AI Jobs {.unnumbered}
+```{r}
+#| label: tbl-table1
+#| echo: false
+#| warning: false
+#| message: false
+#| results: asis
+#| tbl-cap: "Replication of Table 1 from Andreadis et al. (2025) - The Correlates of the Share of Artificial Intelligence Jobs"
+#| tbl-pos: "H"
 
-| Variable | (1) Demographics | (2) Innovation | (3) Industry | (4) All Controls | (5) All + State FE |
-|-------------------------------------|--------------------------|-------------------------|------------------------|-------------------------|-------------------------|
-| Bachelor's share, z-score | 0.160*** | | | 0.188** | 0.085 |
-| | (0.047) | | | (0.067) | (0.059) |
-| Black pop, z-score | -0.121 | | | -0.121 | 0.000 |
-| | (0.127) | | | (0.185) | (0.162) |
-| Poverty share, z-score | 0.044 | | | 0.067+ | -0.003 |
-| | (0.028) | | | (0.040) | (0.037) |
-| log(Population), z-score | 0.807* | | | 0.219 | 0.146 |
-| | (0.367) | | | (0.444) | (0.544) |
-| House Price Growth, z-score | -0.019* | | | -0.028* | -0.032** |
-| | (0.008) | | | (0.012) | (0.011) |
-| log(Median Income), z-score | -0.022 | | | -0.001 | 0.032 |
-| | (0.047) | | | (0.065) | (0.060) |
-| Labor Market Tightness, z-score | 0.255*** | | | 0.315*** | 0.372*** |
-| | (0.050) | | | (0.063) | (0.065) |
-| Patents per employee, z-score | | 0.031** | | 0.028* | 0.031* |
-| | | (0.012) | | (0.012) | (0.014) |
-| AI patents' share, z-score | | 0.009 | | 0.009 | 0.003 |
-| | | (0.007) | | (0.006) | (0.005) |
-| Degrees awarded per capita | | 0.013 | | 0.034 | 0.034 |
-| | | (0.026) | | (0.026) | (0.027) |
-| STEM Degrees' share | | 0.072** | | 0.058** | 0.048* |
-| | | (0.023) | | (0.022) | (0.020) |
-| Large Establishments, z-score | | | -0.002 | -0.037 | -0.036 |
-| | | | (0.025) | (0.028) | (0.029) |
-| ICT sector Intensity, z-score | | | 0.010 | 0.038* | 0.040* |
-| | | | (0.014) | (0.017) | (0.016) |
-| Manufacturing Intensity | | | -0.057*** | -0.048*** | -0.034* |
-| | | | (0.012) | (0.014) | (0.015) |
-| Turnover Rate, z-score | | | 0.034** | 0.016 | 0.010 |
-| | | | (0.011) | (0.017) | (0.016) |
-| **Observations** | **27,497** | **22,744** | **24,651** | **19,184** | **19,184** |
-| **R²** | **0.704** | **0.721** | **0.694** | **0.758** | **0.778** |
-| **Within R²** | **0.057** | **0.003** | **0.002** | **0.059** | **0.063** |
+# Load required libraries
+library(tidyverse)      
+library(fixest)         
+library(modelsummary)   
+library(scales)         
+library(kableExtra)     
 
+# Read in the dataset and preprocess it
+data_ai <- read_csv("data.csv") |>   
+  ungroup() |>                       
+  mutate(
+    degshare = (udeg + mdeg) / Employed,            
+    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),  
+    stemshare2 = ustemdeg / udeg,                   
+    stemshare = replace_na(stemshare, 0),           
+    stemshare2 = replace_na(stemshare2, 0),         
+    tightness = nads / Unemployed,                  
+    hpi_ch = hpi_ch / 100,                          
+    logpop = log(pop),                              
+    logincome = log(medhhincome),                   
+    pat_intensity = n_inventors / Employed,         
+    patai_intensity = ai_patents / n_patents,       
+    large_firms = 1 - (small + medium) / est,       
+    information_intensity = information_emp / emp,  
+    manuf_intensity = manuf_emp / emp,              
+    ai_intensity = ai / nads,                       
+    lads = log(1 + nads),                           
+    state_year = paste0(state, Year)                
+  )
 
-#### Table 2: Replication of Table 2 from @andreadis2025 - The Correlates of the Percentage Point Change in the Share of AI Jobs {.unnumbered}
+# Normalize and scale predictors for z-score regressions
+data_ai_z <- data_ai |> 
+  filter(emp != 0) |>                               
+  mutate(
+    share_bac = scale(share_bac),                   
+    share_black = scale(share_black),               
+    share_poverty = scale(share_poverty),           
+    logpop = scale(logpop),                         
+    hpi_ch = scale(hpi_ch),                         
+    logincome = scale(logincome),                   
+    tightness = scale(tightness),                   
+    unrate = scale(unrate),                         
+    pat_intensity = scale(pat_intensity),           
+    patai_intensity = scale(patai_intensity),       
+    degshare = scale(degshare),                     
+    stemshare = scale(stemshare),                   
+    large_firms = scale(large_firms),               
+    information_intensity = scale(information_intensity),  
+    manuf_intensity = scale(manuf_intensity),       
+    TurnOvrS = scale(TurnOvrS),                     
+    ai_intensity = ai_intensity * 100               
+  )
 
-| Variable                            | (1) Demographics         | (2) Innovation          | (3) Industry           | (4) All Controls        | (5) All + State FE      |
-|-------------------------------------|--------------------------|-------------------------|------------------------|-------------------------|-------------------------|
-| **Constant**                        | 0.007                    |                         |                        | -0.073                  | -0.138**                |
-|                                     | (0.027)                  |                         |                        | (0.050)                 | (0.043)                 |
-| Bachelors, %                        | 0.018                    |                         |                        | 0.049                   | 0.051                   |
-|                                     | (0.019)                  |                         |                        | (0.033)                 | (0.033)                 |
-| Black, %                            | 0.068+                   |                         |                        | 0.054                   | 0.113                   |
-|                                     | (0.037)                  |                         |                        | (0.069)                 | (0.076)                 |
-| Poverty, %                          | -0.019                   |                         |                        | -0.018                  | -0.020                  |
-|                                     | (0.022)                  |                         |                        | (0.055)                 | (0.057)                 |
-| Pop. Growth                         | -0.034*                  |                         |                        | -0.039                  | 0.047                   |
-|                                     | (0.017)                  |                         |                        | (0.036)                 | (0.042)                 |
-| House Price Growth                  | 0.124**                  |                         |                        | 0.125+                  | 0.197*                  |
-|                                     | (0.042)                  |                         |                        | (0.075)                 | (0.079)                 |
-| Income, Log                         | 0.098***                 |                         |                        | 0.187***                | 0.152+                  |
-|                                     | (0.021)                  |                         |                        | (0.040)                 | (0.086)                 |
-| Tightness                           | 0.002                    |                         |                        | -0.061+                 | -0.008                  |
-|                                     | (0.027)                  |                         |                        | (0.035)                 | (0.039)                 |
-| Patents per employee                |                          | 0.151***                |                        | 0.113**                 | 0.082                   |
-|                                     |                          | (0.036)                 |                        | (0.043)                 | (0.066)                 |
-| AI Patents' Share                   |                          | 0.021                   |                        | 0.045                   | 0.058                   |
-|                                     |                          | (0.017)                 |                        | (0.029)                 | (0.035)                 |
-| Degrees per capita                  |                          | 0.093***                |                        | 0.082**                 | 0.076+                  |
-|                                     |                          | (0.027)                 |                        | (0.027)                 | (0.036)                 |
-| STEM Degrees' share                 |                          | 0.031                   |                        | -0.064+                 | -0.039                  |
-|                                     |                          | (0.021)                 |                        | (0.049)                 | (0.060)                 |
-| Large Establishments, %             |                          |                         | 0.031+                 | -0.024                  | -0.016                  |
-|                                     |                          |                         | (0.018)                | (0.030)                 | (0.026)                 |
-| ICT sector Intensity                |                          |                         | -0.037+                | -0.014                  | -0.001                  |
-|                                     |                          |                         | (0.019)                | (0.046)                 | (0.042)                 |
-| Manufacturing Intensity             |                          |                         | -0.072**               | -0.128*                 | -0.170*                 |
-|                                     |                          |                         | (0.023)                | (0.061)                 | (0.079)                 |
-| Turnover Rate                       |                          |                         | 0.023+                 | -0.056**                | -0.042*                 |
-|                                     |                          |                         | (0.014)                | (0.022)                 | (0.023)                 |
-|                                     |                          |                         |                        |                         |                         |
-| **Observations**                    | **2,751**                | **897**                 | **2,723**              | **810**                 | **810**                 |
-| **R²**                              | **0.021**                | **0.019**               | **0.016**              | **0.031**               | **0.082**               |
-| **Within R²**                       | **—**                    | **—**                   | **—**                  | **—**                   | **0.025**               |
+# Run regressions corresponding to columns (1)–(5) of Table 1
+
+# Column (1): Demographics only
+est_demog_no = feols(
+  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (2): Innovation variables only
+est_innovation_no = feols(
+  ai_intensity ~ pat_intensity + patai_intensity + degshare + stemshare | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (3): Industry variables only
+est_industry_no = feols(
+  ai_intensity ~ large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (4): All controls, fixed effects at year + county level
+est_all = feols(
+  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
+    pat_intensity + patai_intensity + degshare + stemshare + large_firms +
+    information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Column (5): All controls, now with state × year fixed effects
+est_all_large = feols(
+  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
+    pat_intensity + patai_intensity + degshare + stemshare + large_firms +
+    information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS,
+  data = data_ai_z,
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+)
+
+# Extract statistics for each model - FIX: Extract single values, not vectors
+obs1 <- comma(nobs(est_demog_no))
+obs2 <- comma(nobs(est_innovation_no))
+obs3 <- comma(nobs(est_industry_no))
+obs4 <- comma(nobs(est_all))
+obs5 <- comma(nobs(est_all_large))
+
+# FIX: Extract R² values properly as single numbers
+r21 <- sprintf("%.3f", r2(est_demog_no, "r2"))
+r22 <- sprintf("%.3f", r2(est_innovation_no, "r2"))
+r23 <- sprintf("%.3f", r2(est_industry_no, "r2"))
+r24 <- sprintf("%.3f", r2(est_all, "r2"))
+r25 <- sprintf("%.3f", r2(est_all_large, "r2"))
+
+wr21 <- sprintf("%.3f", r2(est_demog_no, "wr2"))
+wr22 <- sprintf("%.3f", r2(est_innovation_no, "wr2"))
+wr23 <- sprintf("%.3f", r2(est_industry_no, "wr2"))
+wr24 <- sprintf("%.3f", r2(est_all, "wr2"))
+wr25 <- sprintf("%.3f", r2(est_all_large, "wr2"))
+
+# Create extra rows for fixed effects and fit statistics
+extra_rows <- tribble(
+  ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
+  "\\textit{Fixed-effects}", "", "", "", "", "",
+  "Year", "Yes", "Yes", "Yes", "Yes", "Yes",
+  "County", "Yes", "Yes", "Yes", "Yes", "Yes",
+  "State Year", "", "", "", "", "Yes",
+  "\\textit{Fit statistics}", "", "", "", "", "",
+  "Observations", obs1, obs2, obs3, obs4, obs5,
+  "R²", r21, r22, r23, r24, r25,
+  "Within R²", wr21, wr22, wr23, wr24, wr25
+)
+
+# Clean and readable variable labels for output
+labels <- c(
+  "share_bac" = "Bachelor's share, z-score",
+  "share_black" = "Black pop, z-score",
+  "share_poverty" = "Poverty share, z-score",
+  "logpop" = "log(Population), z-score",
+  "hpi_ch" = "House Price Growth, z-score",
+  "logincome" = "log(Median Income), z-score",
+  "tightness" = "Labor Market Tightness, z-score",
+  "pat_intensity" = "Patents per employee, z-score",
+  "patai_intensity" = "AI patents' share, z-score",
+  "degshare" = "Degrees awarded per capita, z-score",
+  "stemshare" = "STEM Degrees' share, z-score",
+  "large_firms" = "Large Establishments, z-score",
+  "information_intensity" = "ICT sector Intensity, z-score",
+  "manuf_intensity" = "Manufacturing Intensity, z-score",
+  "TurnOvrS" = "Turnover Rate, z-score"
+)
+
+# Render the regression table with modelsummary and style with kableExtra
+modelsummary(
+  list(
+    "(1)" = est_demog_no,
+    "(2)" = est_innovation_no,
+    "(3)" = est_industry_no,
+    "(4)" = est_all,
+    "(5)" = est_all_large
+  ),
+  coef_map = labels,                 
+  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),  
+  gof_omit = ".*",                   
+  add_rows = extra_rows,             
+  escape = FALSE,                    
+  statistic = "({std.error})",       
+  output = "kableExtra",             
+  notes = NULL                       
+) |>
+  kable_styling(
+    latex_options = c("hold_position", "scale_down"),
+    full_width = FALSE,
+    font_size = 10,
+    position = "center"
+  ) |>
+  column_spec(1, width = "4.5cm") |>
+  column_spec(2:6, width = "1.8cm") |>
+  add_header_above(c(" " = 1, "Demographics" = 1, "Innovation" = 1, 
+                      "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
+                   font_size = 10, bold = TRUE) |>
+  footnote(
+    general = "Notes: Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023. The table reports coefficients from regressions of the share of AI jobs in a county on Demographic, Innovation, and Industry Characteristics. Observations are weighted by log(1 + job postings) and standard errors are clustered at the county-level. *** p<0.01, ** p<0.05, * p<0.10",
+    general_title = "",
+    escape = FALSE,
+    threeparttable = TRUE,
+    footnote_as_chunk = TRUE
+  )
+```
+
+```{r}
+#| label: tbl-table2
+#| echo: false
+#| warning: false
+#| message: false
+#| results: asis
+#| tbl-cap: "Replication of Table 2 from Andreadis et al. (2025) - The Correlates of the Percentage Point Change in the Share of AI Jobs"
+#| tbl-pos: "H"
+
+# Load required libraries
+library(tidyverse)
+library(fixest)
+library(modelsummary)
+library(scales)
+library(kableExtra)
+
+# Step 1: Load data and create derived variables
+data <- read_csv("data.csv")
+
+data <- data %>%
+  mutate(
+    degshare = (udeg + mdeg) / Employed,
+    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),
+    tightness = nads / Unemployed,
+    hpi_ch = hpi_ch / 100,
+    logpop = log(pop),
+    logincome = log(medhhincome),
+    pat_intensity = n_inventors / Employed,
+    patai_intensity = ai_patents / n_patents,
+    large_firms = 1 - (small + medium) / est,
+    information_intensity = information_emp / emp,
+    manuf_intensity = manuf_emp / emp,
+    ai_intensity = ai / nads
+  )
+
+# Step 2: Filter years and assign period
+data <- data %>%
+  filter(Year %in% c(2017, 2018, 2022, 2023)) %>%
+  mutate(period = ifelse(Year %in% c(2017, 2018), "early", "late"))
+
+# Step 3: Aggregate by county, period, and state
+summary_data <- data %>%
+  group_by(state, COUNTY_FIPS, period) %>%
+  summarise(across(c(ai_intensity, share_bac, share_black, share_poverty,
+                     logpop, hpi_ch, logincome, tightness, pat_intensity,
+                     patai_intensity, degshare, stemshare, large_firms,
+                     information_intensity, manuf_intensity, TurnOvrS),
+                   \(x) mean(x, na.rm = TRUE)),
+            .groups = "drop")
+
+# Step 4: Pivot to wide format (retain state)
+wide_data <- summary_data %>%
+  pivot_wider(names_from = period, values_from = -c(COUNTY_FIPS, state))
+
+# Step 5: Compute differences and retain state
+clean_data <- wide_data %>%
+  mutate(
+    d_ai_intensity = 100 * (ai_intensity_late - ai_intensity_early),
+    d_share_bac = share_bac_late - share_bac_early,
+    d_share_black = share_black_late - share_black_early,
+    d_share_poverty = share_poverty_late - share_poverty_early,
+    d_logpop = logpop_late - logpop_early,
+    d_hpi_ch = hpi_ch_late - hpi_ch_early,
+    d_logincome = logincome_late - logincome_early,
+    d_tightness = tightness_late - tightness_early,
+    d_pat_intensity = pat_intensity_late - pat_intensity_early,
+    d_patai_intensity = patai_intensity_late - patai_intensity_early,
+    d_degshare = degshare_late - degshare_early,
+    d_stemshare = stemshare_late - stemshare_early,
+    d_large_firms = large_firms_late - large_firms_early,
+    d_information_intensity = information_intensity_late - information_intensity_early,
+    d_manuf_intensity = manuf_intensity_late - manuf_intensity_early,
+    d_TurnOvrS = TurnOvrS_late - TurnOvrS_early
+  )
+
+# Step 6: Z-score baseline (early) covariates
+Z <- function(x) (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+
+clean_data <- clean_data %>%
+  mutate(
+    z_share_bac = Z(share_bac_early),
+    z_share_black = Z(share_black_early),
+    z_share_poverty = Z(share_poverty_early),
+    z_logpop = Z(logpop_early),
+    z_hpi_ch = Z(hpi_ch_early),
+    z_logincome = Z(logincome_early),
+    z_tightness = Z(tightness_early),
+    z_pat_intensity = Z(pat_intensity_early),
+    z_patai_intensity = Z(patai_intensity_early),
+    z_degshare = Z(degshare_early),
+    z_stemshare = Z(stemshare_early),
+    z_large_firms = Z(large_firms_early),
+    z_information_intensity = Z(information_intensity_early),
+    z_manuf_intensity = Z(manuf_intensity_early),
+    z_TurnOvrS = Z(TurnOvrS_early)
+  )
+
+# Step 7: Run regressions
+mod1 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
+                z_logpop + z_hpi_ch + z_logincome + z_tightness, data = clean_data)
+
+mod2 <- feols(d_ai_intensity ~ z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare, data = clean_data)
+
+mod3 <- feols(d_ai_intensity ~ z_large_firms + z_information_intensity +
+                z_manuf_intensity + z_TurnOvrS, data = clean_data)
+
+mod4 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
+                z_logpop + z_hpi_ch + z_logincome + z_tightness +
+                z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare +
+                z_large_firms + z_information_intensity + z_manuf_intensity + z_TurnOvrS, data = clean_data)
+
+mod5 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
+                z_logpop + z_hpi_ch + z_logincome + z_tightness +
+                z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare +
+                z_large_firms + z_information_intensity + z_manuf_intensity + z_TurnOvrS | state,
+              data = clean_data)
+
+# Extract statistics for each model
+obs1 <- comma(nobs(mod1))
+obs2 <- comma(nobs(mod2))
+obs3 <- comma(nobs(mod3))
+obs4 <- comma(nobs(mod4))
+obs5 <- comma(nobs(mod5))
+
+# Extract R² values properly as single numbers
+r21 <- sprintf("%.3f", r2(mod1, "r2"))
+r22 <- sprintf("%.3f", r2(mod2, "r2"))
+r23 <- sprintf("%.3f", r2(mod3, "r2"))
+r24 <- sprintf("%.3f", r2(mod4, "r2"))
+r25 <- sprintf("%.3f", r2(mod5, "r2"))
+
+# Within R² (only meaningful for model 5 with fixed effects)
+wr21 <- "—"
+wr22 <- "—"
+wr23 <- "—"
+wr24 <- "—"
+wr25 <- sprintf("%.3f", r2(mod5, "wr2"))
+
+# Create extra rows for fixed effects and fit statistics
+extra_rows <- tribble(
+  ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
+  "\\textit{Fixed-effects}", "", "", "", "", "",
+  "State", "", "", "", "", "Yes",
+  "\\textit{Fit statistics}", "", "", "", "", "",
+  "Observations", obs1, obs2, obs3, obs4, obs5,
+  "R²", r21, r22, r23, r24, r25,
+  "Within R²", wr21, wr22, wr23, wr24, wr25
+)
+
+# Clean and readable variable labels for output
+labels <- c(
+  "z_share_bac" = "Bachelors, % z-score in 2017",
+  "z_share_black" = "Black, % z-score in 2017",
+  "z_share_poverty" = "Poverty, % z-score in 2017",
+  "z_logpop" = "Pop. Growth",
+  "z_hpi_ch" = "House Price Growth z-score in 2017",
+  "z_logincome" = "Income, Log z-score in 2017",
+  "z_tightness" = "Tightness, z-score in 2017",
+  "z_pat_intensity" = "Patents per employee z-score in 2017",
+  "z_patai_intensity" = "AI Patents' Share z-score in 2017",
+  "z_degshare" = "Degrees awarded per capita, z-score in 2017",
+  "z_stemshare" = "STEM Degrees' share, z-score in 2017",
+  "z_large_firms" = "Large Establishments, % z-score in 2017",
+  "z_information_intensity" = "ICT sector Intensity, % z-score in 2017",
+  "z_manuf_intensity" = "Manufacturing Intensity, % z-score in 2017",
+  "z_TurnOvrS" = "Turnover Rate, % z-score in 2017"
+)
+
+# Render the regression table with modelsummary and style with kableExtra
+modelsummary(
+  list(
+    "(1)" = mod1,
+    "(2)" = mod2,
+    "(3)" = mod3,
+    "(4)" = mod4,
+    "(5)" = mod5
+  ),
+  coef_map = labels,
+  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+  gof_omit = ".*",
+  add_rows = extra_rows,
+  escape = FALSE,
+  statistic = "({std.error})",
+  output = "kableExtra",
+  notes = NULL
+) |>
+  kable_styling(
+    latex_options = c("hold_position", "scale_down"),
+    full_width = FALSE,
+    font_size = 10,
+    position = "center"
+  ) |>
+  column_spec(1, width = "4.5cm") |>
+  column_spec(2:6, width = "1.8cm") |>
+  add_header_above(c(" " = 1, "Demographics" = 1, "Innovation" = 1, 
+                      "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
+                   font_size = 10, bold = TRUE) |>
+  footnote(
+    general = "Notes: Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2016–2023. The table reports the coefficients associated with regressions of the change in share of AI jobs in a county from 2017–18 (average) to 2022–23 (average) on Demographic, Innovation, and Industry characteristics. Observations are unweighted. Standard errors in parentheses. *** p<0.01, ** p<0.05, * p<0.1",
+    general_title = "",
+    escape = FALSE,
+    threeparttable = TRUE,
+    footnote_as_chunk = TRUE
+  )
+```
 
 ```{r}
 #| label: setup
@@ -199,91 +521,134 @@ options(tigris_use_cache = TRUE)
 #| fig-cap: "Replication of Andreadis et al. (2025) - Spatial heterogeneity in AI job share (Panel A, 2014–2023 average) and percentage-point change (Panel B, 2018–2023)."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 14
-#| fig-height: 16
-# --- data prep as in your original code ---
-df <- read_csv("data.csv") %>%
-  filter(Year %in% c(2017, 2018, 2022, 2023)) %>%
-  mutate(ai_intensity = ai / nads,
-         period = ifelse(Year %in% c(2017, 2018), "early", "late")) %>%
-  group_by(COUNTY_FIPS, period) %>%
-  summarise(ai_intensity = mean(ai_intensity, na.rm = TRUE), .groups = "drop") %>%
-  pivot_wider(names_from = period, values_from = ai_intensity) %>%
-  mutate(
-    ai_change_pct = (late - early) * 100,
-    avg_ai_pct    = ((early + late) / 2) * 100
-  )
-df$COUNTY_FIPS <- str_pad(as.character(df$COUNTY_FIPS), 5, pad = "0")
+#| fig-width: 18
+#| fig-height: 9
 
+# Data prep - use 2014-2023 for Panel A as stated in the original paper
+df <- read_csv("data.csv") %>%
+  mutate(ai_intensity = ai / nads) %>%
+  group_by(COUNTY_FIPS) %>%
+  summarise(
+    # Panel A: Average 2014-2023 as stated in paper
+    avg_ai_pct = mean(ai_intensity, na.rm = TRUE) * 100,
+    # Panel B: Change from 2018 to 2023 (single years, not averages)
+    ai_2018 = mean(ai_intensity[Year == 2018], na.rm = TRUE),
+    ai_2023 = mean(ai_intensity[Year == 2023], na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    ai_change_pct = (ai_2023 - ai_2018) * 100,
+    COUNTY_FIPS = str_pad(as.character(COUNTY_FIPS), 5, pad = "0")
+  )
+
+# Get county boundaries
 options(tigris_use_cache = TRUE)
 counties <- suppressMessages(
   tigris::counties(cb = TRUE, year = 2020, class = "sf")
 ) %>%
   mutate(COUNTY_FIPS = GEOID) %>%
-  filter(!str_starts(COUNTY_FIPS, "72")) %>%
+  filter(!str_starts(COUNTY_FIPS, "72")) %>% # Remove Puerto Rico
   st_transform(crs = 4326)
 
+# Join data with geography and shift for proper Alaska/Hawaii positioning
 map_data <- left_join(counties, df, by = "COUNTY_FIPS") %>%
   tigris::shift_geometry()
 
-# --- bins/colors as before ---
-bins_avg   <- c(0, 0.06, 0.14, 0.23, 0.37, 0.71, Inf)
+# Exact bins from the original paper
+bins_avg <- c(0, 0.06, 0.14, 0.23, 0.37, 0.71, Inf)
 labels_avg <- c("0 – 0.06", "0.06 – 0.14", "0.14 – 0.23", "0.23 – 0.37", "0.37 – 0.71", "0.71 – 10")
-cols_avg   <- c("#ffffcc", "#ffeda0", "#fed976", "#fd8d3c", "#e31a1c", "#800026")
 
-bins_chg   <- c(-5.56, -0.12, 0.00, 0.09, 0.24, 0.57, Inf)
-labels_chg <- c("-5.56 – -0.12", "-0.12 – 0", "0 – 0.09", "0.09 – 0.24", "0.24 – 0.57", "0.57 – 12.35")
-cols_chg   <- c("#ffffcc", "#ffeda0", "#fed976", "#fd8d3c", "#fc4e2a", "#800026")
+bins_chg <- c(-Inf, -0.12, 0.00, 0.09, 0.24, 0.57, Inf)
+labels_chg <- c("−5.56 – −0.12", "−0.12 – 0", "0 – 0.09", "0.09 – 0.24", "0.24 – 0.57", "0.57 – 12.35")
 
+# Colors matching the target image (yellow to red)
+cols_avg <- c("#ffffcc", "#ffeda0", "#fed976", "#fd8d3c", "#e31a1c", "#800026")
+cols_chg <- c("#ffffcc", "#ffeda0", "#fed976", "#fd8d3c", "#fc4e2a", "#800026")
+
+# Create bins
 map_data <- map_data %>%
   mutate(
     avg_bin = cut(avg_ai_pct, breaks = bins_avg, labels = labels_avg, include.lowest = TRUE, right = FALSE),
     chg_bin = cut(ai_change_pct, breaks = bins_chg, labels = labels_chg, include.lowest = TRUE, right = FALSE)
+  ) %>%
+  mutate(
+    avg_bin = forcats::fct_explicit_na(avg_bin, na_level = "No data"),
+    chg_bin = forcats::fct_explicit_na(chg_bin, na_level = "No data")
   )
 
-# --- common theme ---
+# Base theme matching original paper
 map_theme <- theme_void() +
   theme(
-    legend.text     = element_text(size = 12),
-    legend.title    = element_text(size = 14),
-    legend.key.size = unit(2, "cm"),
-    plot.margin     = unit(c(0.5, 0.5, 0.5, 0.5), "cm")
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 14),
+    legend.title = element_blank(),
+    legend.key.width = unit(2.2, "cm"),
+    legend.key.height = unit(0.7, "cm"),
+    legend.margin = margin(t = 10, b = 5),
+    plot.margin = margin(10, 10, 10, 10, "pt"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.border = element_rect(color = "black", fill = NA, size = 0.5)
   )
+
+# Define breaks and values for legends (high to low, then No data)
+breaks_avg <- c(rev(labels_avg), "No data")
+values_avg <- c(rev(cols_avg), "gray90")
+
+breaks_chg <- c(rev(labels_chg), "No data")
+values_chg <- c(rev(cols_chg), "gray90")
 
 # Panel A plot
 p1 <- ggplot(map_data) +
   geom_sf(aes(fill = avg_bin), color = "white", size = 0.1) +
+  scale_fill_manual(
+    values = values_avg,
+    breaks = breaks_avg,
+    labels = breaks_avg,
+    na.value = "gray90", 
+    drop = FALSE,
+    guide = guide_legend(
+      title = NULL,
+      nrow = 1,
+      label.position = "bottom",
+      keywidth = unit(2.2, "cm"),
+      keyheight = unit(0.7, "cm")
+    )
+  ) +
   coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
            xlim = c(-2500000, 2500000), ylim = c(-2300000, 1500000)) +
-  scale_fill_manual(values = cols_avg, na.value = "gray90", drop = FALSE,
-                    guide = guide_legend(title = "", override.aes = list(size = 0))) +
-  map_theme
+  labs(title = "Panel A. Percent share of AI jobs (2014–2023 average)") +
+  map_theme +
+  theme(plot.title = element_text(size = 18, hjust = 0, margin = margin(b = 12)))
 
-# Panel B plot
+# Panel B plot  
 p2 <- ggplot(map_data) +
   geom_sf(aes(fill = chg_bin), color = "white", size = 0.1) +
+  scale_fill_manual(
+    values = values_chg,
+    breaks = breaks_chg,
+    labels = breaks_chg,
+    na.value = "gray90", 
+    drop = FALSE,
+    guide = guide_legend(
+      title = NULL,
+      nrow = 1,
+      label.position = "bottom",
+      keywidth = unit(2.2, "cm"),
+      keyheight = unit(0.7, "cm")
+    )
+  ) +
   coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
            xlim = c(-2500000, 2500000), ylim = c(-2300000, 1500000)) +
-  scale_fill_manual(values = cols_chg, na.value = "gray90", drop = FALSE,
-                    guide = guide_legend(title = "", override.aes = list(size = 0))) +
-  map_theme
+  labs(title = "Panel B. Percentage-point change in AI share (2018–2023)") +
+  map_theme +
+  theme(plot.title = element_text(size = 18, hjust = 0, margin = margin(b = 12)))
 
-# --- Semi-header text strips (one for each panel) ---
-labelA <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5,
-           label = "Panel A. Percent share of AI jobs (2014–2023 average)",
-           size = 5.5, hjust = 0.5, vjust = 0.5) +
-  theme_void()
-
-labelB <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5,
-           label = "Panel B. Percentage-point change in AI share (2018–2023)",
-           size = 5.5,  hjust = 0.5, vjust = 0.5) +
-  theme_void()
-
-# --- Stack: fig-cap (Quarto handles), then labelA + p1, then labelB + p2 ---
-final_plot <- (labelA / p1 / labelB / p2) +
-  plot_layout(heights = c(0.08, 1, 0.08, 1))
+# Combine plots side by side, equal sizes
+final_plot <- (p1 | p2) +
+  plot_layout(widths = c(1, 1)) &
+  theme(plot.background = element_rect(fill = "white", color = NA))
 
 final_plot
 
@@ -295,29 +660,18 @@ The successful reproduction confirms the technical reliability of the original a
 
 #### Identification of Problematic Causal Language
 
-The original study by @andreadis2025 employ language that suggests causal relationships despite relying on observational data with multiple potentially endogenous predictors. Several passages from the paper illustrate this concern:
+The original study by @andreadis2025 frequently employs language that suggests causal relationships, even though the analysis relies on observational county-level data with multiple potentially endogenous predictors. Several passages illustrate this concern.  
 
-From the Introduction: "higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets."
+From the *Introduction*, the authors write:  
+> “Second, we identify several key drivers of AI job intensity, including demographics, innovation, and industry factors, after controlling for county and year fixed effects. Specifically, higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets.”  
 
-From Section III: The authors state they "identify several key drivers of AI job intensity" and that "Labor market tightness emerges as a key driver."
+From *Section III*, they conclude:  
+> “Labor market tightness emerges as a key driver, with a positive and highly significant coefficient… highlighting the importance of technical education and local innovation capacity in fostering AI job growth.”  
 
-From the Conclusion: "Counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter labor markets have seen greater AI job growth."
+And from the *Conclusion*:  
+> “Counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter labor markets have seen greater AI job growth, whereas manufacturing-heavy regions and areas with high labor turnover have faced challenges in integrating AI. These findings point to the role of place-based policies to attract and retain top-tier talent for economic development.”  
 
-These statements conflate statistical association with causal determination, presenting correlational findings as if they establish causal mechanisms. The frequent use of terms like "drivers," "predict," and "emerges as a key driver" implies that manipulating these variables would lead to changes in AI adoption, yet the study design cannot support such inferences.
-
-#### Methodological Limitations for Causal Inference
-
-The regression specifications employed by @andreadis2025, while appropriate for documenting correlational patterns, face fundamental challenges for causal interpretation that align with established principles of causal inference (@holland1986):
-
-*The Fundamental Problem of Causal Inference*: As @holland1986 demonstrates, establishing causality requires observing counterfactual outcomes—what would have happened to AI adoption in the same counties under different values of the predictor variables. The cross-sectional regression approach cannot address this fundamental identification problem, as it observes each county under only one realization of its demographic, innovation, and industry characteristics.
-
-*Multiple Treatment Problem*: The analysis simultaneously examines numerous county characteristics (demographics, innovation metrics, industry composition) as potential causal factors. With over a dozen variables included as "drivers," the study lacks both a clear theoretical framework for causal ordering and the experimental or quasi-experimental variation needed to isolate individual causal effects. This violates the stable unit treatment value assumption (SUTVA) that underlies causal inference, as the "treatment" is multidimensional and ill-defined.
-
-*Endogeneity and Selection*: Many key predictors are likely endogenous to broader economic development processes that also influence AI adoption. STEM degree production responds to anticipated local labor demand, labor market tightness reflects underlying economic dynamism, and patent activity may be jointly determined with AI job concentration through unobserved innovation capacity. Without addressing this endogeneity through instrumental variables or other identification strategies, the estimated coefficients conflate causal effects with selection and omitted variable bias.
-
-*Lack of Identifying Variation*: The study exploits only cross-sectional and time-series variation in observational data, without any plausibly exogenous source of identification. As @holland1986 emphasizes, causal inference requires either randomized assignment or "as good as random" variation from natural experiments, policy discontinuities, or instrumental variables. The correlational patterns documented, while potentially informative about equilibrium relationships, cannot establish that manipulating education policy, labor market conditions, or innovation investments would causally increase AI adoption.
-
-*Temporal Precedence Issues*: While the authors lag some explanatory variables by one year, this brief lag is insufficient to establish causal ordering for slow-moving structural characteristics like educational attainment, innovation capacity, and industrial composition. These county attributes likely co-evolve with AI adoption over longer time horizons, making it difficult to separate cause from effect even with temporal precedence.
+Each of these statements frames correlational associations as if they were causal mechanisms. Phrases such as “drivers,” “emerges as a key driver,” “underscoring the importance,” and “findings point to the role of policy” imply that manipulating these variables would directly change AI adoption outcomes. However, the study’s empirical design—regressions on observational county characteristics—cannot identify such causal effects, only statistical associations.  
 
 ## Extension: Log-Population Weighting Analysis
 
