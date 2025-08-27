@@ -2,8 +2,8 @@
 title: "Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space"
 subtitle: "A Replication Study of Andreadis et al. (AEA Papers and Proceedings, 2025)"
 author:
-  - name: Jacob Khaykin^[*Solon High School.* [jacobkhaykin27@solonschools.net](mailto:jacobkhaykin27@solonschools.net)]
-  - name: David Kane^[*IGDORE.* Institute for Globally Distributed Open Research and Education (IGDORE) [dave.kane@gmail.com](mailto:dave.kane@gmail.com)]
+  - name: Jacob Khaykin^[Solon High School, [jacobkhaykin27@solonschools.net](mailto:jacobkhaykin27@solonschools.net)]
+  - name: David Kane^[Institute for Globally Distributed Open Research and Education, [dave.kane@gmail.com](mailto:dave.kane@gmail.com)]
 bibliography: references.bib
 csl: apa.csl
 link-citations: true
@@ -21,16 +21,23 @@ format:
   docx: default
 ---
 
+<!-- DK: Give the repo a better name, like `andreadis-replication`. -->
 
-<!-- DK: Do not use LaTeX unless you have a compelling reason. fancyheader? JK: I removed fancyheader and some of the other ones but AI says float is important for figure placement and I kept the numbering system which is also there -->
+<!-- DK: Check the warnings when you render the PDF. -->
 
-<!-- DK: Code must generate the tables. No copy/paste in replication. Done for both tables. -->
+<!-- DK: Ensure noun/verb agreement. -->
 
-<!-- DK: Use fig.cap, not headers, for caoptions in table. Used tbl-cap. I'm not sure if it matters or not. -->
+<!-- DK: Look over prose closely. -->
 
-<!-- DK: get rid of causation discussion. Done -->
+<!-- DK: Do not use two different terms for our key variable, e.g., AI job concentration and AI employment. -->
 
-<!-- DK: Our plot should look like their plot. Check Alaska. Corrected the color scheme in Alaska as well as formatted more like the original -->
+<!-- DK: Your graphic with bigger font. Also, log-pop label key after original. -->
+
+<!-- DK: Graphic titles like "Demog" should be longer and the same. -->
+
+<!-- DK: Check equal, not population, weighted. -->
+
+<!-- DK: Learn about keeping a tex version of the paper around. -->
 
 *JEL: J24, O33, R11*
 
@@ -41,7 +48,7 @@ format:
 
 ## Abstract {.unnumbered}
 
-This paper replicates the analysis of @andreadis2025 on the local heterogeneity in artificial intelligence jobs across U.S. counties from 2014 to 2023. @andreadis2025 document substantial variation in AI-related job postings and identify key correlates including education, innovation, and industry factors. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though all magnitudes attenuate. Additionally, we highlight unsupported causal claims in the original study given its observational design. Our findings affirm stable correlational patterns while emphasizing caution in interpretation.
+This paper replicates the analysis of @andreadis2025 on the local heterogeneity in artificial intelligence jobs across U.S. counties from 2014 to 2023. @andreadis2025 document substantial variation in AI-related job postings and identify key correlates including education, innovation, and industry factors. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though all magnitudes attenuate. Additionally, we highlight unsupported causal claims in the original study, given its observational design. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -49,7 +56,7 @@ Declaration: There are no financial conflicts of interest to share.
 
 ## Introduction
 
-Recent work by @andreadis2025 investigates how local economic and innovation factors shape the geography of AI-related employment in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the stated goal of identifying the "drivers" and "determinants" of AI adoption across counties.
+@andreadis2025 investigate the correlation between local economic and innovation factors and AI-related employment in counties in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the goal of identifying the "drivers" and "determinants" of AI adoption across counties.
 
 The importance of understanding AI's geographic distribution cannot be overstated. As @eloundou2024 project that up to 80% of the workforce could see at least 10% of their tasks influenced by AI and large language models, the spatial concentration of AI-related employment has significant implications for regional economic development and inequality. Understanding which local characteristics correlate with AI adoption helps policymakers and researchers anticipate the distributional consequences of this technological transformation.
 
@@ -896,9 +903,9 @@ final
 
 ```
 
-### Results & Interpretation
+### Results
 
-The comparison between population-weighted and log-population-weighted regressions reveals several important patterns:
+The comparison between equal-weighted and log-population-weighted regressions reveals several important patterns:
 
 *Magnitude Effects*: The estimated effects of key predictors are highly sensitive to the weighting scheme. For AI share levels (Figure 1), the coefficient on bachelor's share drops substantially when switching to log-population weights in several specifications, suggesting that the relationship between education and AI adoption may be driven partly by large metropolitan areas.
 
