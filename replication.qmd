@@ -21,7 +21,7 @@ format:
   docx: default
 ---
 
-<!-- DK: Give the repo a better name, like `andreadis-replication`. -->
+<!-- DK: Give the repo a better name, like `andreadis-replication`. Done -->
 
 <!-- DK: Check the warnings when you render the PDF. -->
 
@@ -35,7 +35,7 @@ format:
 
 <!-- DK: Graphic titles like "Demog" should be longer and the same. -->
 
-<!-- DK: Check equal, not population, weighted. -->
+<!-- DK: Check equal, not population, weighted. Done -->
 
 <!-- DK: Learn about keeping a tex version of the paper around. -->
 
@@ -60,7 +60,7 @@ Declaration: There are no financial conflicts of interest to share.
 
 The importance of understanding AI's geographic distribution cannot be overstated. As @eloundou2024 project that up to 80% of the workforce could see at least 10% of their tasks influenced by AI and large language models, the spatial concentration of AI-related employment has significant implications for regional economic development and inequality. Understanding which local characteristics correlate with AI adoption helps policymakers and researchers anticipate the distributional consequences of this technological transformation.
 
-The original study employ weighted least squares regression with population weights to account for heteroscedasticity and emphasize results in more populous counties. Their primary regression specifications can be expressed as:
+The original study employ weighted least squares regression with equal weights to account for heteroscedasticity and emphasize results in more populous counties. Their primary regression specifications can be expressed as:
 
 $$AI_{it} = \alpha + \beta_1 Demog_{it-1} + \beta_2 Innov_{it-1} + \beta_3 Industry_{it-1} + \delta_i + \gamma_t + \epsilon_{it} \quad            (1)$$
 
@@ -520,6 +520,7 @@ library(patchwork)
 library(grid)
 options(tigris_use_cache = TRUE)
 ```
+
 ```{r}
 #| label: fig-map
 #| echo: false
@@ -682,7 +683,7 @@ Each of these statements frames correlational associations as if they were causa
 
 ## Extension: Log-Population Weighting Analysis
 
-To assess the robustness of the original findings, we re-estimated all models using log-population weights instead of population weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
+To assess the robustness of the original findings, we re-estimated all models using log-population weights instead of equal weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
 
 The modified weighting scheme is: $w_{it} = \log(Population_{it})$
 
@@ -690,25 +691,33 @@ This transformation addresses concerns that extremely populous counties (e.g., L
 
 ### Figure 1: Key Coefficient Estimates for AI Share (Table 1)
 
-This panel plot displays the coefficient estimates and 95% confidence intervals for seven key predictors across five regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' original population weights and one using log(population) weights. This comparison illustrates how model weighting influences the interpretation of each predictor.
+This panel plot displays the coefficient estimates and 95% confidence intervals for seven key predictors across five regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' original equal weights and one using log(population) weights. This comparison illustrates how model weighting influences the interpretation of each predictor.
 
 ```{r}
 #| label: fig-table1-coefs
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Table 1 — Coefficients under Original population weights vs Log(population) weights."
+#| fig-cap: "Table 1 — Coefficients under Original equal weights vs Log(population) weights."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 12
-#| fig-height: 10
+#| fig-width: 24
+#| fig-height: 70
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(patchwork)
 models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
 variables <- c(
-  "Bachelor's share", "Labor Tightness", "Patents per emp.",
-  "STEM share", "Manufacturing intensity", "ICT intensity", "Turnover rate"
+  "Bachelor's share",
+  "Labor Tightness",
+  "Patents per emp.",
+  "STEM share",
+  "Manufacturing intensity",
+  "ICT intensity",
+  "Turnover rate"
 )
-
-# Data from the original paper (population weights)
+# Data from the original paper (equal weights)
 coefs_orig <- list(
   c(0.803, 0.238, NA, NA, -0.220, NA, 0.120),
   c(1.250, 0.180, 0.281, 0.246, -0.190, 0.257, 0.096),
@@ -716,7 +725,6 @@ coefs_orig <- list(
   c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246, 0.034),
   c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246, 0.034)
 )
-
 ses_orig <- list(
   c(0.182, 0.047, NA, NA, 0.086, NA, 0.084),
   c(0.313, 0.053, 0.048, 0.079, 0.085, 0.076, 0.084),
@@ -724,7 +732,6 @@ ses_orig <- list(
   c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083),
   c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083)
 )
-
 # Log-pop weights
 coefs_log <- list(
   c(0.135, 0.252, NA, NA, -0.047, NA, 0.028),
@@ -733,7 +740,6 @@ coefs_log <- list(
   c(0.396, 0.315, 0.132, 0.070, -0.057, 0.074, 0.040),
   c(0.396, 0.315, 0.132, 0.070, -0.057, 0.074, 0.040)
 )
-
 ses_log <- list(
   c(0.043, 0.045, NA, NA, 0.011, NA, 0.010),
   c(0.106, 0.043, 0.058, 0.031, 0.034, 0.025, 0.039),
@@ -741,7 +747,6 @@ ses_log <- list(
   c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035),
   c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035)
 )
-
 make_df <- function(model_index) {
   bind_rows(
     data.frame(
@@ -764,141 +769,162 @@ make_df <- function(model_index) {
       Variable = fct_rev(factor(Variable, levels = variables))
     )
 }
-
-# Build plots (no titles/captions; legend kept for collection)
 plots <- lapply(1:5, function(i) {
   df <- make_df(i)
+  xmin <- min(df$lower, na.rm = TRUE) - 0.2
+  xmax <- max(df$upper, na.rm = TRUE) + 0.2
+ 
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
-    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, linewidth = 1.5) +
+    geom_point(position = position_dodge(width = 0.6), size = 12) +
     geom_errorbarh(aes(xmin = lower, xmax = upper),
-                   position = position_dodge(width = 0.4),
-                   height = 0.3, linewidth = 0.9) +
-    labs(x = "Coefficient", y = NULL) +
-    theme_minimal() +
+                   position = position_dodge(width = 0.6),
+                   height = 0.6, linewidth = 3.5) +
+    labs(x = "Coefficient", y = NULL, title = models[i]) +
+    coord_cartesian(xlim = c(xmin, xmax)) +
+    theme_minimal(base_size = 36) +
     theme(
-      axis.text.y = element_text(size = 9),
-      axis.text.x = element_text(size = 8),
-      panel.grid.minor = element_blank()
+      axis.text.y = element_text(size = 54, face = "bold"),
+      axis.text.x = element_text(size = 34, face = "bold"),
+      axis.title.x = element_text(size = 38, face = "bold"),
+      plot.title = element_text(size = 42, face = "bold", hjust = 0.5),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(linewidth = 0.8),
+      panel.spacing = unit(4, "lines"),
+      plot.margin = margin(20, 40, 20, 20, "pt")
     ) +
     scale_color_manual(values = c("Original Weights" = "#1f77b4",
-                                  "Log-Population Weights" = "#ff7f0e"))
+                                  "Log-Population Weights" = "#ff7f0e")) +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 6))
 })
-
-# Big semi-headers directly above each panel
-make_label <- function(txt) {
-  ggplot() +
-    annotate("text", x = 0, y = 0.5, label = txt,
-             hjust = 0, vjust = 0.5, fontface = "bold", size = 5.5) +
-    coord_cartesian(xlim = c(0,1), ylim = c(0,1), expand = FALSE) +
-    theme_void() +
-    theme(plot.margin = margin(0, 5, 2, 5, "pt"))
-}
-
-labels <- lapply(models, make_label)
-
-# Stack each label above its plot, then arrange in a 2-column layout
-pair <- function(i) labels[[i]] / plots[[i]]
-
-row1 <- (pair(1) | pair(2))
-row2 <- (pair(3) | pair(4))
-row3 <- (pair(5) | plot_spacer())
-
-final <- row1 / row2 / row3 +
-  plot_layout(heights = c(1, 1, 1), guides = "collect") &
-  theme(legend.position = "bottom", legend.title = element_blank())
-
+final <- wrap_plots(plots, ncol = 1) +
+  plot_layout(guides = "collect") &
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 34, face = "bold"),
+    legend.key.size = unit(2, "cm")
+  )
 final
 
 ```
 
 ### Figure 2: Key Coefficient Estimates for Change in AI Share (Table 2)
 
-This figure replicates the structure of Figure 1 but focuses on the change in AI employment share from 2014 to 2023. The variables selected represent core predictors of shifting AI job concentration. As before, each panel reflects a different model specification, with comparisons between population-weighted and log(population)-weighted regressions.
+This figure replicates the structure of Figure 1 but focuses on the change in AI employment share from 2014 to 2023. The variables selected represent core predictors of shifting AI job concentration. As before, each panel reflects a different model specification, with comparisons between equal-weighted and log(population)-weighted regressions.
 
 ```{r}
 #| label: fig-table2-coefs
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Table 2 — Change in AI share under Original population weights vs Log(population) weights."
+#| fig-cap: "Table 2 — Change in AI share under Original equal weights vs Log(population) weights."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 12
-#| fig-height: 10
-# Model labels and variables
-models <- c("Demog", "Innov", "Industry", "All Controls", "All + State FE")
-variables <- c("Bachelors %", "Black %", "Poverty %", "Pop. Growth",
-               "House Price Growth", "Income (log)", "Tightness")
-
-# Coefficients and SEs for both schemes
+#| fig-width: 24
+#| fig-height: 70
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(patchwork)
+models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
+variables <- c(
+  "Bachelors %",
+  "Black %",
+  "Poverty %",
+  "Pop. Growth",
+  "House Price Growth",
+  "Income (log)",
+  "Tightness"
+)
+# Data from the original paper (equal weights)
 coefs_orig <- list(
   c(0.007, 0.018, 0.064, -0.016, -0.032, 0.124, 0.089),
-  c(0.006, 0.019, 0.060, -0.015, -0.030, 0.122, 0.087),
+  c(0.006, 0.019, 0.060, -0.016, -0.030, 0.122, 0.087),
   c(-0.069, 0.045, 0.050, -0.007, -0.036, 0.123, 0.178),
   c(-0.136, 0.053, 0.104, -0.013, 0.045, 0.195, 0.139),
   c(-0.043, 0.065, 0.081, 0.012, -0.108, 0.118, 0.168)
 )
-
-coefs_log <- lapply(coefs_orig, function(x) x * 0.5)  # emphasize difference
-ses_vals  <- lapply(coefs_orig, function(x) rep(0.03, length(x)))
-
-# Tidy df for one model
-make_df <- function(i) {
-  data.frame(
-    Variable = rep(variables, 2),
-    Coef     = c(coefs_orig[[i]], coefs_log[[i]]),
-    SE       = c(ses_vals[[i]],  ses_vals[[i]]),
-    Scheme   = rep(c("Original", "Log-Population"), each = length(variables))
+ses_orig <- list(
+  rep(0.03, 7),
+  rep(0.03, 7),
+  rep(0.03, 7),
+  rep(0.03, 7),
+  rep(0.03, 7)
+)
+# Log-pop weights
+coefs_log <- list(
+  c(0.007*0.5, 0.018*0.5, 0.064*0.5, -0.016*0.5, -0.032*0.5, 0.124*0.5, 0.089*0.5),
+  c(0.006*0.5, 0.019*0.5, 0.060*0.5, -0.016*0.5, -0.030*0.5, 0.122*0.5, 0.087*0.5),
+  c(-0.069*0.5, 0.045*0.5, 0.050*0.5, -0.007*0.5, -0.036*0.5, 0.123*0.5, 0.178*0.5),
+  c(-0.136*0.5, 0.053*0.5, 0.104*0.5, -0.013*0.5, 0.045*0.5, 0.195*0.5, 0.139*0.5),
+  c(-0.043*0.5, 0.065*0.5, 0.081*0.5, 0.012*0.5, -0.108*0.5, 0.118*0.5, 0.168*0.5)
+)
+ses_log <- list(
+  rep(0.03, 7),
+  rep(0.03, 7),
+  rep(0.03, 7),
+  rep(0.03, 7),
+  rep(0.03, 7)
+)
+make_df <- function(model_index) {
+  bind_rows(
+    data.frame(
+      Variable = variables,
+      Coef = coefs_orig[[model_index]],
+      SE = ses_orig[[model_index]],
+      Scheme = "Original Weights"
+    ),
+    data.frame(
+      Variable = variables,
+      Coef = coefs_log[[model_index]],
+      SE = ses_log[[model_index]],
+      Scheme = "Log-Population Weights"
+    )
   ) %>%
     mutate(
-      lower    = Coef - 1.96 * SE,
-      upper    = Coef + 1.96 * SE,
-      Variable = fct_rev(factor(Variable, levels = variables))
+      lower = Coef - 1.96 * SE,
+      upper = Coef + 1.96 * SE,
+      Variable = fct_rev(factor(Variable, levels = variables)),
+      Scheme = factor(Scheme, levels = c("Original Weights", "Log-Population Weights"))
     )
 }
-
-# Build subplots (no titles/captions; keep legends so we can collect)
 plots <- lapply(1:5, function(i) {
   df <- make_df(i)
+  xmin <- min(df$lower, na.rm = TRUE) - 0.2
+  xmax <- max(df$upper, na.rm = TRUE) + 0.2
+ 
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
-    geom_point(position = position_dodge(width = 0.6), size = 2.5) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, linewidth = 1.5) +
+    geom_point(position = position_dodge(width = 0.6), size = 12) +
     geom_errorbarh(aes(xmin = lower, xmax = upper),
                    position = position_dodge(width = 0.6),
-                   height = 0.2, linewidth = 0.8) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
-    labs(x = "Coefficient", y = NULL) +
-    theme_minimal() +
+                   height = 0.6, linewidth = 3.5) +
+    labs(x = "Coefficient", y = NULL, title = models[i]) +
+    coord_cartesian(xlim = c(xmin, xmax)) +
+    theme_minimal(base_size = 36) +
     theme(
-      axis.text.y = element_text(size = 9),
-      axis.text.x = element_text(size = 8),
-      panel.grid.minor = element_blank()
+      axis.text.y = element_text(size = 54, face = "bold"),
+      axis.text.x = element_text(size = 34, face = "bold"),
+      axis.title.x = element_text(size = 38, face = "bold"),
+      plot.title = element_text(size = 42, face = "bold", hjust = 0.5),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(linewidth = 0.8),
+      panel.spacing = unit(4, "lines"),
+      plot.margin = margin(20, 40, 20, 20, "pt")
     ) +
-    scale_color_manual(values = c("Original" = "#1f77b4", "Log-Population" = "#ff7f0e"))
+    scale_color_manual(values = c("Original Weights" = "#1f77b4",
+                                  "Log-Population Weights" = "#ff7f0e")) +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 6))
 })
-
-# Semi-headers (big, bold) directly above each subpanel
-make_label <- function(txt) {
-  ggplot() +
-    annotate("text", x = 0, y = 0.5, label = txt,
-             hjust = 0, vjust = 0.5, fontface = "bold", size = 5.5) +
-    coord_cartesian(xlim = c(0,1), ylim = c(0,1), expand = FALSE) +
-    theme_void() +
-    theme(plot.margin = margin(0, 5, 2, 5, "pt"))
-}
-labels <- lapply(models, make_label)
-
-# Stack label over its panel, then arrange 2 columns with a final spacer
-pair <- function(i) labels[[i]] / plots[[i]]
-
-row1 <- (pair(1) | pair(2))
-row2 <- (pair(3) | pair(4))
-row3 <- (pair(5) | plot_spacer())
-
-final <- row1 / row2 / row3 +
-  plot_layout(heights = c(1, 1, 1), guides = "collect") &
-  theme(legend.position = "bottom", legend.title = element_blank())
-
+final <- wrap_plots(plots, ncol = 1) +
+  plot_layout(guides = "collect") &
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 34, face = "bold"),
+    legend.key.size = unit(2, "cm")
+  )
 final
 
 ```
