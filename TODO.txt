@@ -14,7 +14,6 @@ An anonymized PDF version of the manuscript must also be submitted.
 
 At the time of submission, authors must also include data and code that allows push-button reproduction of their results. The program code should start from the raw data as it is publicly available and end with the final results. Only if the program code allows the immediate replication of your results can your submission be considered for publication.
 
-Displayed formulas should be numbered consecutively. Only numbers in parentheses should be used when referring to formulas in the text, e.g., (1). At the beginning of sentences, numbers in parentheses should be preceded by the word “equation,” e.g., Equation (1). Done
 
 Tables should be of a reasonable number and size. Columns should be clearly designed, and explanations should be given in footnotes using letters below the table’s body. Avoid using square brackets within tables.
 

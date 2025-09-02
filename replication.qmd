@@ -22,23 +22,23 @@ format:
   docx: default
 ---
 
-<!-- DK: Give the repo a better name, like `andreadis-replication`. Done -->
+<!-- DK:  -->
 
-<!-- DK: Check the warnings when you render the PDF. -->
+<!-- Change to new repo -->
 
 <!-- DK: Ensure noun/verb agreement. -->
 
-<!-- DK: Look over prose closely. -->
+<!-- DK: Look over prose closely. Give AI each paragraph one at a time, after setting up the context. "You are a PhD economist writing an academic paper. ... "  -->
 
 <!-- DK: Do not use two different terms for our key variable, e.g., AI job concentration and AI employment. -->
 
-<!-- DK: Your graphic with bigger font. Also, log-pop label key after original. -->
+<!-- DK: Your graphic needs bigger font. Also, log-pop label key after original. -->
 
-<!-- DK: Graphic titles like "Demog" should be longer and the same. Done -->
+<!-- DK: Make the font in the tables a little bigger. -->
 
-<!-- DK: Check equal, not population, weighted. Done -->
+<!-- DK: Equation is good but does not belong in the introduction. -->
 
-<!-- DK: Learn about keeping a tex version of the paper around. Done -->
+<!-- DK: Make introduction more connected to our new abstract. First paragraph is general why this is important. Second paragraph explains the left side variables. Third explains the right side variables. Fourth paragraph explains their main results. Fifth paragraph explains what happens when you log-pop weight. Last paragraph talks about causal stuff. -->
 
 *JEL: J24, O33, R11*
 
@@ -47,9 +47,11 @@ format:
 *Data Availability:* The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/JustReplicationAI-Share.
 
 
+
+
 ## Abstract {.unnumbered}
 
-This paper replicates the analysis of @andreadis2025 on the local heterogeneity in artificial intelligence jobs across U.S. counties from 2014 to 2023. @andreadis2025 document substantial variation in AI-related job postings and identify key correlates including education, innovation, and industry factors. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though all magnitudes attenuate. Additionally, we highlight unsupported causal claims in the original study, given its observational design. 
+We replicate @andreadis2025 on the correlation between the level and growth artificial intelligence job openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though most magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
