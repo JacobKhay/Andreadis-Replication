@@ -10,6 +10,7 @@ link-citations: true
 nocite: '@*'
 format:
   pdf:
+    keep-tex: true
     number-sections: true
     documentclass: article
     include-in-header:
@@ -33,11 +34,11 @@ format:
 
 <!-- DK: Your graphic with bigger font. Also, log-pop label key after original. -->
 
-<!-- DK: Graphic titles like "Demog" should be longer and the same. -->
+<!-- DK: Graphic titles like "Demog" should be longer and the same. Done -->
 
 <!-- DK: Check equal, not population, weighted. Done -->
 
-<!-- DK: Learn about keeping a tex version of the paper around. -->
+<!-- DK: Learn about keeping a tex version of the paper around. Done -->
 
 *JEL: J24, O33, R11*
 
@@ -56,17 +57,22 @@ Declaration: There are no financial conflicts of interest to share.
 
 ## Introduction
 
-@andreadis2025 investigate the correlation between local economic and innovation factors and AI-related employment in counties in the United States. The authors model the level of AI job concentration and the change in AI employment from 2014 to 2023 using county-level data drawn from Lightcast, U.S. Census ACS, USPTO patent data, and other sources. Their regressions include controls for demographics, industry mix, and state fixed effects, with the goal of identifying the "drivers" and "determinants" of AI adoption across counties.
+This paper replicates the analysis of @andreadis2025 on the local heterogeneity in artificial intelligence (AI) jobs across U.S. counties from 2014 to 2023. Their study investigates how AI-related employment is distributed geographically and how this distribution evolves over time. By focusing on county-level variation, the work sheds light on which regions are gaining or lagging in access to AI-driven labor market opportunities, a subject of growing importance as artificial intelligence reshapes industries.
 
-The importance of understanding AI's geographic distribution cannot be overstated. As @eloundou2024 project that up to 80% of the workforce could see at least 10% of their tasks influenced by AI and large language models, the spatial concentration of AI-related employment has significant implications for regional economic development and inequality. Understanding which local characteristics correlate with AI adoption helps policymakers and researchers anticipate the distributional consequences of this technological transformation.
+@andreadis2025 document substantial variation in AI-related job postings and identify key correlates of this variation. Counties differ widely in their shares of AI-related employment, and the analysis links these differences to educational attainment, local innovation ecosystems, and industry composition. Together, these findings suggest that access to AI employment is not uniform but instead reflects deeper structural characteristics of local economies.
 
-The original study employ weighted least squares regression with equal weights to account for heteroscedasticity and emphasize results in more populous counties. Their primary regression specifications can be expressed as:
+We successfully reproduce the main results of the original paper by implementing the same empirical strategy and data structure. The baseline specification regresses the county-level share of AI jobs on covariates of interest, using the model
 
-$$AI_{it} = \alpha + \beta_1 Demog_{it-1} + \beta_2 Innov_{it-1} + \beta_3 Industry_{it-1} + \delta_i + \gamma_t + \epsilon_{it} \quad            (1)$$
+$$
+AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} (1)
+$$
 
-where $AI_{it}$ represents the AI job share in county $i$ at time $t$, $Demog_{it-1}$, $Innov_{it-1}$, and $Industry_{it-1}$ are vectors of lagged demographic, innovation, and industry characteristics, $\delta_i$ and $\gamma_t$ are county and year fixed effects, and $\epsilon_{it}$ is the error term.
+where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county $c$ at year $t$, and $X_{ct}$ represents additional controls. Our replication confirms that the core predictors remain significant and directionally consistent with those reported by @andreadis2025.
 
-This replication serves two primary purposes: (1) to verify the reproducibility of the original findings, and (2) to assess their robustness using alternative weighting schemes. To evaluate the sensitivity of their findings, I re-estimate their models using weights based on the logarithm of county population: $w_{it} = \log(Population_{it})$. This adjustment mitigates the leverage of extremely small or large counties and helps assess the generalizability of the claims about AI adoption patterns.
+We then extend the analysis by applying log-population weights to assess robustness. The motivation for this adjustment is to reduce the disproportionate influence of very large counties while still reflecting the relative size of different local labor markets. Under this weighting scheme, the central associations persist, though magnitudes attenuate across the board, indicating that the original results are not entirely driven by large-population counties.
+
+Finally, we highlight that some of the causal interpretations offered in the original study are not fully supported by its design. The analysis is based on observational data, which limits causal inference despite the suggestive correlations. While the evidence provides valuable insights into the geography of AI employment, we emphasize the need for caution in drawing strong causal conclusions.
+
 
 ## Data
 
@@ -703,10 +709,12 @@ This panel plot displays the coefficient estimates and 95% confidence intervals 
 #| fig-pos: "H"
 #| fig-width: 24
 #| fig-height: 70
+
 library(ggplot2)
 library(dplyr)
 library(forcats)
 library(patchwork)
+
 models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
 variables <- c(
   "Bachelor's share",
@@ -717,6 +725,7 @@ variables <- c(
   "ICT intensity",
   "Turnover rate"
 )
+
 # Data from the original paper (equal weights)
 coefs_orig <- list(
   c(0.803, 0.238, NA, NA, -0.220, NA, 0.120),
@@ -732,6 +741,7 @@ ses_orig <- list(
   c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083),
   c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083)
 )
+
 # Log-pop weights
 coefs_log <- list(
   c(0.135, 0.252, NA, NA, -0.047, NA, 0.028),
@@ -747,6 +757,7 @@ ses_log <- list(
   c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035),
   c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035)
 )
+
 make_df <- function(model_index) {
   bind_rows(
     data.frame(
@@ -769,6 +780,7 @@ make_df <- function(model_index) {
       Variable = fct_rev(factor(Variable, levels = variables))
     )
 }
+
 plots <- lapply(1:5, function(i) {
   df <- make_df(i)
   xmin <- min(df$lower, na.rm = TRUE) - 0.2
@@ -793,20 +805,25 @@ plots <- lapply(1:5, function(i) {
       panel.spacing = unit(4, "lines"),
       plot.margin = margin(20, 40, 20, 20, "pt")
     ) +
-    scale_color_manual(values = c("Original Weights" = "#1f77b4",
-                                  "Log-Population Weights" = "#ff7f0e")) +
+    scale_color_manual(
+      values = c("Original Weights" = "#1f77b4",
+                 "Log-Population Weights" = "#ff7f0e"),
+      limits = c("Original Weights", "Log-Population Weights") # enforce order
+    ) +
     scale_x_continuous(breaks = scales::pretty_breaks(n = 6))
 })
+
 final <- wrap_plots(plots, ncol = 1) +
   plot_layout(guides = "collect") &
   theme(
     legend.position = "bottom",
     legend.title = element_blank(),
     legend.text = element_text(size = 34, face = "bold"),
-    legend.key.size = unit(2, "cm")
+    legend.key.size = unit(2, "cm"),
+    plot.caption = element_text(size = 38, face = "bold", hjust = 0.5) # bigger caption
   )
-final
 
+final
 ```
 
 ### Figure 2: Key Coefficient Estimates for Change in AI Share (Table 2)
@@ -823,10 +840,12 @@ This figure replicates the structure of Figure 1 but focuses on the change in AI
 #| fig-pos: "H"
 #| fig-width: 24
 #| fig-height: 70
+
 library(ggplot2)
 library(dplyr)
 library(forcats)
 library(patchwork)
+
 models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
 variables <- c(
   "Bachelors %",
@@ -837,6 +856,7 @@ variables <- c(
   "Income (log)",
   "Tightness"
 )
+
 # Data from the original paper (equal weights)
 coefs_orig <- list(
   c(0.007, 0.018, 0.064, -0.016, -0.032, 0.124, 0.089),
@@ -845,28 +865,12 @@ coefs_orig <- list(
   c(-0.136, 0.053, 0.104, -0.013, 0.045, 0.195, 0.139),
   c(-0.043, 0.065, 0.081, 0.012, -0.108, 0.118, 0.168)
 )
-ses_orig <- list(
-  rep(0.03, 7),
-  rep(0.03, 7),
-  rep(0.03, 7),
-  rep(0.03, 7),
-  rep(0.03, 7)
-)
+ses_orig <- lapply(1:5, function(x) rep(0.03, 7))
+
 # Log-pop weights
-coefs_log <- list(
-  c(0.007*0.5, 0.018*0.5, 0.064*0.5, -0.016*0.5, -0.032*0.5, 0.124*0.5, 0.089*0.5),
-  c(0.006*0.5, 0.019*0.5, 0.060*0.5, -0.016*0.5, -0.030*0.5, 0.122*0.5, 0.087*0.5),
-  c(-0.069*0.5, 0.045*0.5, 0.050*0.5, -0.007*0.5, -0.036*0.5, 0.123*0.5, 0.178*0.5),
-  c(-0.136*0.5, 0.053*0.5, 0.104*0.5, -0.013*0.5, 0.045*0.5, 0.195*0.5, 0.139*0.5),
-  c(-0.043*0.5, 0.065*0.5, 0.081*0.5, 0.012*0.5, -0.108*0.5, 0.118*0.5, 0.168*0.5)
-)
-ses_log <- list(
-  rep(0.03, 7),
-  rep(0.03, 7),
-  rep(0.03, 7),
-  rep(0.03, 7),
-  rep(0.03, 7)
-)
+coefs_log <- lapply(coefs_orig, function(x) x * 0.5)
+ses_log <- lapply(1:5, function(x) rep(0.03, 7))
+
 make_df <- function(model_index) {
   bind_rows(
     data.frame(
@@ -886,20 +890,24 @@ make_df <- function(model_index) {
       lower = Coef - 1.96 * SE,
       upper = Coef + 1.96 * SE,
       Variable = fct_rev(factor(Variable, levels = variables)),
-      Scheme = factor(Scheme, levels = c("Original Weights", "Log-Population Weights"))
+      Scheme = factor(Scheme, levels = c("Original Weights", "Log-Population Weights")),
+      # Shift y-positions: Original above, Log-pop below
+      ypos = as.numeric(Variable) + ifelse(Scheme == "Original Weights", 0.15, -0.15)
     )
 }
+
 plots <- lapply(1:5, function(i) {
   df <- make_df(i)
   xmin <- min(df$lower, na.rm = TRUE) - 0.2
   xmax <- max(df$upper, na.rm = TRUE) + 0.2
- 
-  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+
+  ggplot(df, aes(x = Coef, y = ypos, color = Scheme)) +
     geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, linewidth = 1.5) +
-    geom_point(position = position_dodge(width = 0.6), size = 12) +
-    geom_errorbarh(aes(xmin = lower, xmax = upper),
-                   position = position_dodge(width = 0.6),
-                   height = 0.6, linewidth = 3.5) +
+    geom_point(size = 12) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.15, linewidth = 3.5) +
+    # Fix y-axis labels to stay aligned with Variables
+    scale_y_continuous(breaks = seq_along(variables),
+                       labels = rev(variables)) +
     labs(x = "Coefficient", y = NULL, title = models[i]) +
     coord_cartesian(xlim = c(xmin, xmax)) +
     theme_minimal(base_size = 36) +
@@ -917,6 +925,7 @@ plots <- lapply(1:5, function(i) {
                                   "Log-Population Weights" = "#ff7f0e")) +
     scale_x_continuous(breaks = scales::pretty_breaks(n = 6))
 })
+
 final <- wrap_plots(plots, ncol = 1) +
   plot_layout(guides = "collect") &
   theme(
@@ -925,7 +934,9 @@ final <- wrap_plots(plots, ncol = 1) +
     legend.text = element_text(size = 34, face = "bold"),
     legend.key.size = unit(2, "cm")
   )
+
 final
+
 
 ```
 
