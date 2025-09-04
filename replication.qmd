@@ -24,19 +24,26 @@ format:
 
 <!-- DK:  -->
 
-<!-- Change to new repo Done. -->
+<!-- Listing of variables, without punctuation seems wrong.  -->
 
-<!-- DK: Ensure noun/verb agreement. -->
+<!-- Delete pdf files. Commit/push. Then add pdf files to .gitignore. Also replication_files. Also aux and log. Keep pdf papers, of course.  And add published version. -->
 
-<!-- DK: Look over prose closely. Give AI each paragraph one at a time, after setting up the context. "You are a PhD economist writing an academic paper. ... done"  -->
+<!-- Change title, unless the standard in this journal is to use the same title. -->
+
+<!-- Causal discussion comes at end. -->
 
 <!-- DK: Do not use two different terms for our key variable, e.g., AI job concentration and AI employment. -->
 
-<!-- DK: Your graphic needs bigger font. Also, log-pop label key after original.Done -->
+<!-- 9 over Official Weights -->
 
-<!-- DK: Make the font in the tables a little bigger. -->
+<!-- Exention plot legend text should be bigger. axis labels bigger. Same x-axis tick marks. -->
 
-<!-- DK: Equation is good but does not belong in the introduction. Done -->
+<!-- Two columns for plots. -->
+
+<!-- Extension titles/captions should be like replication title/captions, not headers. -->
+
+
+<!-- DK: Make the font in the tables a little bigger. Font in tables can not be different sizes!-->
 
 <!-- DK: Make introduction more connected to our new abstract. First paragraph is general why this is important. Second paragraph explains the left side variables. Third explains the right side variables. Fourth paragraph explains their main results. Fifth paragraph explains what happens when you log-pop weight. Last paragraph talks about causal stuff. Done  -->
 
@@ -51,7 +58,7 @@ format:
 
 ## Abstract {.unnumbered}
 
-We replicate @andreadis2025 on the correlation between the level and growth artificial intelligence job openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though most magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
+We replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence job openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though most magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
