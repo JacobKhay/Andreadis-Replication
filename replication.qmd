@@ -24,7 +24,7 @@ format:
 
 <!-- DK:  -->
 
-<!-- Change to new repo -->
+<!-- Change to new repo Done. -->
 
 <!-- DK: Ensure noun/verb agreement. -->
 
@@ -32,19 +32,19 @@ format:
 
 <!-- DK: Do not use two different terms for our key variable, e.g., AI job concentration and AI employment. -->
 
-<!-- DK: Your graphic needs bigger font. Also, log-pop label key after original. -->
+<!-- DK: Your graphic needs bigger font. Also, log-pop label key after original.Done -->
 
 <!-- DK: Make the font in the tables a little bigger. -->
 
-<!-- DK: Equation is good but does not belong in the introduction. -->
+<!-- DK: Equation is good but does not belong in the introduction. Done -->
 
-<!-- DK: Make introduction more connected to our new abstract. First paragraph is general why this is important. Second paragraph explains the left side variables. Third explains the right side variables. Fourth paragraph explains their main results. Fifth paragraph explains what happens when you log-pop weight. Last paragraph talks about causal stuff. -->
+<!-- DK: Make introduction more connected to our new abstract. First paragraph is general why this is important. Second paragraph explains the left side variables. Third explains the right side variables. Fourth paragraph explains their main results. Fifth paragraph explains what happens when you log-pop weight. Last paragraph talks about causal stuff. Done-check please -->
 
 *JEL: J24, O33, R11*
 
 *Keywords:* Artificial Intelligence, Regional Economics, Labor Markets
 
-*Data Availability:* The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/JustReplicationAI-Share.
+*Data Availability:* The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/Andreadis-Replication.
 
 
 
@@ -59,59 +59,63 @@ Declaration: There are no financial conflicts of interest to share.
 
 ## Introduction
 
-This paper replicates the analysis of @andreadis2025 on the local heterogeneity in artificial intelligence (AI) jobs across U.S. counties from 2014 to 2023. Their study investigates how AI-related employment is distributed geographically and how this distribution evolves over time. By focusing on county-level variation, the work sheds light on which regions are gaining or lagging in access to AI-driven labor market opportunities, a subject of growing importance as artificial intelligence reshapes industries.
+This paper replicates the analysis of @andreadis2025 on the correlation between the level and growth artificial intelligence job openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI employment emerges and how it spreads is important for both researchers and policymakers, since the rise of AI has the potential to reshape regional economies, alter the demand for skills, and shift patterns of innovation. County-level variation offers a granular perspective on how these transformations take hold across the United States.
 
-@andreadis2025 document substantial variation in AI-related job postings and identify key correlates of this variation. Counties differ widely in their shares of AI-related employment, and the analysis links these differences to educational attainment, local innovation ecosystems, and industry composition. Together, these findings suggest that access to AI employment is not uniform but instead reflects deeper structural characteristics of local economies.
+The outcome of interest is the share of AI-related job postings at the county-year level. This measure captures both the absolute level of AI employment opportunities and how those opportunities evolve over time. Tracking these dynamics provides insight into which regions gain early access to AI-driven growth and which lag behind.
 
-We successfully reproduce the main results of the original paper by implementing the same empirical strategy and data structure. The baseline specification regresses the county-level share of AI jobs on covariates of interest, using the model
+The original study links county-level AI job shares to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity, and industry factors by the composition of employment across sectors. Together, these variables represent structural characteristics that might condition whether a region becomes a hub for AI-related work.
 
-$$
-AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} (1)
-$$
+@andreadis2025 find that AI employment is strongly correlated with higher educational attainment, more innovation activity, and certain industry profiles. These associations are robust across specifications, suggesting that counties with strong human capital, innovative capacity, and aligned industries are more likely to attract AI jobs. The results highlight structural divides in access to AI employment opportunities across the country.
 
-where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county $c$ at year $t$, and $X_{ct}$ represents additional controls. Our replication confirms that the core predictors remain significant and directionally consistent with those reported by @andreadis2025.
+We reproduce these results and then extend the analysis by applying log-population weights. This alternative weighting scheme reduces the influence of the largest counties while still reflecting the relative size of local labor markets. Under this adjustment, the core relationships persist but the estimated magnitudes generally shrink. This indicates that while large counties contribute to the overall pattern, the relationships hold across the broader distribution of counties.
 
-We then extend the analysis by applying log-population weights to assess robustness. The motivation for this adjustment is to reduce the disproportionate influence of very large counties while still reflecting the relative size of different local labor markets. Under this weighting scheme, the central associations persist, though magnitudes attenuate across the board, indicating that the original results are not entirely driven by large-population counties.
+Finally, we note that some of the causal interpretations in @andreadis2025 are not supported by the observational nature of the data. While the correlations are informative and highlight important regional patterns, they do not establish that education, innovation, or industry factors directly cause higher AI employment. Our replication underscores the value of the evidence while also emphasizing the limits of what can be inferred from the design.
 
-Finally, we highlight that some of the causal interpretations offered in the original study are not fully supported by its design. The analysis is based on observational data, which limits causal inference despite the suggestive correlations. While the evidence provides valuable insights into the geography of AI employment, we emphasize the need for caution in drawing strong causal conclusions.
 
 
 ## Data
 
-The study utilizes multiple data sources to construct a comprehensive county-level dataset spanning 2014-2023:
+The study utilizes multiple data sources to construct a comprehensive county-level dataset spanning 2014–2023:
 
-*AI Employment Data*: Job posting data from Lightcast, which aggregates information from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use. The dependent variable $AI_{it}$ is defined as:
+**AI Employment Data**: Job posting data from Lightcast, which aggregates information from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use. The dependent variable $AI_{it}$ is defined as:
 
-$$AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \quad                                                  (2)$$
+$$
+AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{2}
+$$
 
-*Demographic Variables*: From the American Community Survey (ACS), including:
-- Bachelor's share: Percentage of workforce with bachelor's degree or higher
-- Black population share: Percentage of county population identifying as Black
-- Poverty share: Percentage of population below federal poverty line
-- Log population: Natural logarithm of county population
-- Log median income: Natural logarithm of median household income
+**Demographic Variables**: From the American Community Survey (ACS), including:  
+- Bachelor's share: Percentage of workforce with bachelor's degree or higher  
+- Black population share: Percentage of county population identifying as Black  
+- Poverty share: Percentage of population below federal poverty line  
+- Log population: Natural logarithm of county population  
+- Log median income: Natural logarithm of median household income  
 
-*Innovation Indicators*: 
-- Patents per employee: USPTO patent counts normalized by employment
-- AI patents share: Percentage of patents classified as AI-related
-- STEM degrees share: Percentage of awarded degrees in STEM fields
-- Degrees per capita: Total degrees awarded per capita
+**Innovation Indicators**:  
+- Patents per employee: USPTO patent counts normalized by employment  
+- AI patents share: Percentage of patents classified as AI-related  
+- STEM degrees share: Percentage of awarded degrees in STEM fields  
+- Degrees per capita: Total degrees awarded per capita  
 
-*Industry and Labor Market Variables*:
-- Labor market tightness: Ratio of job postings to unemployed workers
-- Manufacturing intensity: Employment share in manufacturing sector
-- ICT intensity: Employment share in information and communication technology
-- Turnover rate: Worker separation rate from Quarterly Workforce Indicators
-- Large establishments share: Percentage of employment in large firms
+**Industry and Labor Market Variables**:  
+- Labor market tightness: Ratio of job postings to unemployed workers  
+- Manufacturing intensity: Employment share in manufacturing sector  
+- ICT intensity: Employment share in information and communication technology  
+- Turnover rate: Worker separation rate from Quarterly Workforce Indicators  
+- Large establishments share: Percentage of employment in large firms  
 
-*Housing Market*: House price growth from Federal Housing Finance Agency (FHFA)
+**Housing Market**: House price growth from Federal Housing Finance Agency (FHFA)  
 
-All explanatory variables are lagged by one year to address potential endogeneity concerns and are standardized as z-scores for interpretability.
+All explanatory variables are lagged by one year to address potential endogeneity concerns. The baseline specification relates the dependent variable to these covariates using the following model:
+
+$$
+AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} \tag{1}
+$$
+
+where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county $c$ at year $t$, and $X_{ct}$ includes demographic, labor market, and housing controls.
 
 ### Reproduction of Original Results
 
 We successfully reproduced the main findings from Tables 1 and 2 of @andreadis2025. The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
-
 ```{r}
 #| label: tbl-table1
 #| echo: false
@@ -121,14 +125,12 @@ We successfully reproduced the main findings from Tables 1 and 2 of @andreadis20
 #| tbl-cap: "Replication of Table 1 from Andreadis et al. (2025) - The Correlates of the Share of Artificial Intelligence Jobs"
 #| tbl-pos: "H"
 
-# Load required libraries
 library(tidyverse)      
 library(fixest)         
 library(modelsummary)   
 library(scales)         
 library(kableExtra)     
 
-# Read in the dataset and preprocess it
 data_ai <- read_csv("data.csv") |>   
   ungroup() |>                       
   mutate(
@@ -151,7 +153,6 @@ data_ai <- read_csv("data.csv") |>
     state_year = paste0(state, Year)                
   )
 
-# Normalize and scale predictors for z-score regressions
 data_ai_z <- data_ai |> 
   filter(emp != 0) |>                               
   mutate(
@@ -174,9 +175,6 @@ data_ai_z <- data_ai |>
     ai_intensity = ai_intensity * 100               
   )
 
-# Run regressions corresponding to columns (1)–(5) of Table 1
-
-# Column (1): Demographics only
 est_demog_no = feols(
   ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS,
   data = data_ai_z,
@@ -184,7 +182,6 @@ est_demog_no = feols(
   weights = ~lads
 )
 
-# Column (2): Innovation variables only
 est_innovation_no = feols(
   ai_intensity ~ pat_intensity + patai_intensity + degshare + stemshare | Year + COUNTY_FIPS,
   data = data_ai_z,
@@ -192,7 +189,6 @@ est_innovation_no = feols(
   weights = ~lads
 )
 
-# Column (3): Industry variables only
 est_industry_no = feols(
   ai_intensity ~ large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS,
   data = data_ai_z,
@@ -200,7 +196,6 @@ est_industry_no = feols(
   weights = ~lads
 )
 
-# Column (4): All controls, fixed effects at year + county level
 est_all = feols(
   ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
     pat_intensity + patai_intensity + degshare + stemshare + large_firms +
@@ -210,7 +205,6 @@ est_all = feols(
   weights = ~lads
 )
 
-# Column (5): All controls, now with state × year fixed effects
 est_all_large = feols(
   ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
     pat_intensity + patai_intensity + degshare + stemshare + large_firms +
@@ -220,14 +214,12 @@ est_all_large = feols(
   weights = ~lads
 )
 
-# Extract statistics for each model - FIX: Extract single values, not vectors
 obs1 <- comma(nobs(est_demog_no))
 obs2 <- comma(nobs(est_innovation_no))
 obs3 <- comma(nobs(est_industry_no))
 obs4 <- comma(nobs(est_all))
 obs5 <- comma(nobs(est_all_large))
 
-# FIX: Extract R² values properly as single numbers
 r21 <- sprintf("%.3f", r2(est_demog_no, "r2"))
 r22 <- sprintf("%.3f", r2(est_innovation_no, "r2"))
 r23 <- sprintf("%.3f", r2(est_industry_no, "r2"))
@@ -240,7 +232,6 @@ wr23 <- sprintf("%.3f", r2(est_industry_no, "wr2"))
 wr24 <- sprintf("%.3f", r2(est_all, "wr2"))
 wr25 <- sprintf("%.3f", r2(est_all_large, "wr2"))
 
-# Create extra rows for fixed effects and fit statistics
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
   "\\textit{Fixed-effects}", "", "", "", "", "",
@@ -253,26 +244,25 @@ extra_rows <- tribble(
   "Within R²", wr21, wr22, wr23, wr24, wr25
 )
 
-# Clean and readable variable labels for output
+# Updated labels with slightly smaller font size commands
 labels <- c(
-  "share_bac" = "Bachelor's share, z-score",
-  "share_black" = "Black pop, z-score",
-  "share_poverty" = "Poverty share, z-score",
-  "logpop" = "log(Population), z-score",
-  "hpi_ch" = "House Price Growth, z-score",
-  "logincome" = "log(Median Income), z-score",
-  "tightness" = "Labor Market Tightness, z-score",
-  "pat_intensity" = "Patents per employee, z-score",
-  "patai_intensity" = "AI patents' share, z-score",
-  "degshare" = "Degrees awarded per capita, z-score",
-  "stemshare" = "STEM Degrees' share, z-score",
-  "large_firms" = "Large Establishments, z-score",
-  "information_intensity" = "ICT sector Intensity, z-score",
-  "manuf_intensity" = "Manufacturing Intensity, z-score",
-  "TurnOvrS" = "Turnover Rate, z-score"
+  "share_bac" = "\\Large{Bachelor's share, z-score}",
+  "share_black" = "\\Large{Black pop, z-score}",
+  "share_poverty" = "\\Large{Poverty share, z-score}",
+  "logpop" = "\\Large{log(Population), z-score}",
+  "hpi_ch" = "\\Large{House Price Growth, z-score}",
+  "logincome" = "\\Large{log(Median Income), z-score}",
+  "tightness" = "\\Large{Labor Market Tightness, z-score}",
+  "pat_intensity" = "\\Large{Patents per employee, z-score}",
+  "patai_intensity" = "\\Large{AI patents' share, z-score}",
+  "degshare" = "\\Large{Degrees awarded per capita, z-score}",
+  "stemshare" = "\\Large{STEM Degrees' share, z-score}",
+  "large_firms" = "\\Large{Large Establishments, z-score}",
+  "information_intensity" = "\\Large{ICT sector Intensity, z-score}",
+  "manuf_intensity" = "\\Large{Manufacturing Intensity, z-score}",
+  "TurnOvrS" = "\\Large{Turnover Rate, z-score}"
 )
 
-# Render the regression table with modelsummary and style with kableExtra
 modelsummary(
   list(
     "(1)" = est_demog_no,
@@ -281,26 +271,28 @@ modelsummary(
     "(4)" = est_all,
     "(5)" = est_all_large
   ),
-  coef_map = labels,                 
-  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),  
-  gof_omit = ".*",                   
-  add_rows = extra_rows,             
-  escape = FALSE,                    
-  statistic = "({std.error})",       
-  output = "kableExtra",             
-  notes = NULL                       
+  coef_map = labels,
+  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+  gof_omit = ".*",
+  add_rows = extra_rows,
+  escape = FALSE,
+  statistic = "({std.error})",
+  output = "kableExtra",
+  notes = NULL
 ) |>
   kable_styling(
-    latex_options = c("hold_position", "scale_down"),
+    latex_options = c("hold_position", "scale_down"),  # Retained scale_down to fit page
     full_width = FALSE,
-    font_size = 10,
+    font_size = 14,  # Increased font size to make actual values larger
     position = "center"
   ) |>
-  column_spec(1, width = "4.5cm") |>
-  column_spec(2:6, width = "1.8cm") |>
+  column_spec(1, width = "5.5cm") |>   # Adjusted for better fit
+  column_spec(2:6, width = "2cm") |>  # Standard column widths
+  row_spec(7, extra_latex_after = "\\addlinespace[1em]") |>  # Spacing after demographics group
+  row_spec(11, extra_latex_after = "\\addlinespace[1em]") |>  # Spacing after innovation group
   add_header_above(c(" " = 1, "Demographics" = 1, "Innovation" = 1, 
-                      "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
-                   font_size = 10, bold = TRUE) |>
+                     "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
+                   bold = TRUE) |>
   footnote(
     general = "Notes: Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023. The table reports coefficients from regressions of the share of AI jobs in a county on Demographic, Innovation, and Industry Characteristics. Observations are weighted by log(1 + job postings) and standard errors are clustered at the county-level. *** p<0.01, ** p<0.05, * p<0.10",
     general_title = "",
@@ -499,14 +491,14 @@ modelsummary(
   kable_styling(
     latex_options = c("hold_position", "scale_down"),
     full_width = FALSE,
-    font_size = 10,
+    font_size = 14,
     position = "center"
   ) |>
   column_spec(1, width = "4.5cm") |>
   column_spec(2:6, width = "1.8cm") |>
   add_header_above(c(" " = 1, "Demographics" = 1, "Innovation" = 1, 
                       "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
-                   font_size = 10, bold = TRUE) |>
+                   font_size = 14, bold = TRUE) |>
   footnote(
     general = "Notes: Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2016–2023. The table reports the coefficients associated with regressions of the change in share of AI jobs in a county from 2017–18 (average) to 2022–23 (average) on Demographic, Innovation, and Industry characteristics. Observations are unweighted. Standard errors in parentheses. *** p<0.01, ** p<0.05, * p<0.1",
     general_title = "",
@@ -597,10 +589,10 @@ map_theme <- theme_void() +
   theme(
     legend.position = "bottom",
     legend.direction = "horizontal",
-    legend.text = element_text(size = 14),
+    legend.text = element_text(size = 20),
     legend.title = element_blank(),
-    legend.key.width = unit(2.2, "cm"),
-    legend.key.height = unit(0.7, "cm"),
+    legend.key.width = unit(3, "cm"),
+    legend.key.height = unit(1, "cm"),
     legend.margin = margin(t = 10, b = 5),
     plot.margin = margin(10, 10, 10, 10, "pt"),
     panel.background = element_rect(fill = "white", color = NA),
@@ -628,15 +620,15 @@ p1 <- ggplot(map_data) +
       title = NULL,
       nrow = 1,
       label.position = "bottom",
-      keywidth = unit(2.2, "cm"),
-      keyheight = unit(0.7, "cm")
+      keywidth = unit(3, "cm"),
+      keyheight = unit(1, "cm")
     )
   ) +
   coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
            xlim = c(-2500000, 2500000), ylim = c(-2300000, 1500000)) +
   labs(title = "Panel A. Percent share of AI jobs (2014–2023 average)") +
   map_theme +
-  theme(plot.title = element_text(size = 18, hjust = 0, margin = margin(b = 12)))
+  theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
 # Panel B plot  
 p2 <- ggplot(map_data) +
@@ -651,15 +643,15 @@ p2 <- ggplot(map_data) +
       title = NULL,
       nrow = 1,
       label.position = "bottom",
-      keywidth = unit(2.2, "cm"),
-      keyheight = unit(0.7, "cm")
+      keywidth = unit(3, "cm"),
+      keyheight = unit(1, "cm")
     )
   ) +
   coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
            xlim = c(-2500000, 2500000), ylim = c(-2300000, 1500000)) +
   labs(title = "Panel B. Percentage-point change in AI share (2018–2023)") +
   map_theme +
-  theme(plot.title = element_text(size = 18, hjust = 0, margin = margin(b = 12)))
+  theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
 # Combine plots side by side, equal sizes
 final_plot <- (p1 | p2) +
@@ -667,7 +659,6 @@ final_plot <- (p1 | p2) +
   theme(plot.background = element_rect(fill = "white", color = NA))
 
 final_plot
-
 ```
 
 The successful reproduction confirms the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.

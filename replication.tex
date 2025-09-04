@@ -245,7 +245,7 @@ Markets
 
 \emph{Data Availability:} The R code and data to reproduce this
 replication are available in this repository:
-https://github.com/JacobKhay/JustReplicationAI-Share.
+https://github.com/JacobKhay/Andreadis-Replication.
 
 \section*{Abstract}\label{abstract}
 \addcontentsline{toc}{section}{Abstract}
@@ -266,94 +266,108 @@ Declaration: There are no financial conflicts of interest to share.
 \section{Introduction}\label{introduction}
 
 This paper replicates the analysis of Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) on the local heterogeneity in
-artificial intelligence (AI) jobs across U.S. counties from 2014 to
-2023. Their study investigates how AI-related employment is distributed
-geographically and how this distribution evolves over time. By focusing
-on county-level variation, the work sheds light on which regions are
-gaining or lagging in access to AI-driven labor market opportunities, a
-subject of growing importance as artificial intelligence reshapes
-industries.
+(\citeproc{ref-andreadis2025}{2025}) on the correlation between the
+level and growth artificial intelligence job openings and education,
+innovation, and industry factors across U.S. counties from 2014 to 2023.
+Understanding where AI employment emerges and how it spreads is
+important for both researchers and policymakers, since the rise of AI
+has the potential to reshape regional economies, alter the demand for
+skills, and shift patterns of innovation. County-level variation offers
+a granular perspective on how these transformations take hold across the
+United States.
 
-Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) document
-substantial variation in AI-related job postings and identify key
-correlates of this variation. Counties differ widely in their shares of
-AI-related employment, and the analysis links these differences to
-educational attainment, local innovation ecosystems, and industry
-composition. Together, these findings suggest that access to AI
-employment is not uniform but instead reflects deeper structural
-characteristics of local economies.
+The outcome of interest is the share of AI-related job postings at the
+county-year level. This measure captures both the absolute level of AI
+employment opportunities and how those opportunities evolve over time.
+Tracking these dynamics provides insight into which regions gain early
+access to AI-driven growth and which lag behind.
 
-We successfully reproduce the main results of the original paper by
-implementing the same empirical strategy and data structure. The
-baseline specification regresses the county-level share of AI jobs on
-covariates of interest, using the model
+The original study links county-level AI job shares to several
+explanatory factors. Education is captured by the share of adults with a
+college degree, innovation by local patenting activity, and industry
+factors by the composition of employment across sectors. Together, these
+variables represent structural characteristics that might condition
+whether a region becomes a hub for AI-related work.
 
-\[
-AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} (1)
-\]
+Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) find that AI
+employment is strongly correlated with higher educational attainment,
+more innovation activity, and certain industry profiles. These
+associations are robust across specifications, suggesting that counties
+with strong human capital, innovative capacity, and aligned industries
+are more likely to attract AI jobs. The results highlight structural
+divides in access to AI employment opportunities across the country.
 
-where \(AIShare_{ct}\) denotes the proportion of AI-related job postings
-in county \(c\) at year \(t\), and \(X_{ct}\) represents additional
-controls. Our replication confirms that the core predictors remain
-significant and directionally consistent with those reported by
-Andreadis et al. (\citeproc{ref-andreadis2025}{2025}).
+We reproduce these results and then extend the analysis by applying
+log-population weights. This alternative weighting scheme reduces the
+influence of the largest counties while still reflecting the relative
+size of local labor markets. Under this adjustment, the core
+relationships persist but the estimated magnitudes generally shrink.
+This indicates that while large counties contribute to the overall
+pattern, the relationships hold across the broader distribution of
+counties.
 
-We then extend the analysis by applying log-population weights to assess
-robustness. The motivation for this adjustment is to reduce the
-disproportionate influence of very large counties while still reflecting
-the relative size of different local labor markets. Under this weighting
-scheme, the central associations persist, though magnitudes attenuate
-across the board, indicating that the original results are not entirely
-driven by large-population counties.
-
-Finally, we highlight that some of the causal interpretations offered in
-the original study are not fully supported by its design. The analysis
-is based on observational data, which limits causal inference despite
-the suggestive correlations. While the evidence provides valuable
-insights into the geography of AI employment, we emphasize the need for
-caution in drawing strong causal conclusions.
+Finally, we note that some of the causal interpretations in Andreadis et
+al. (\citeproc{ref-andreadis2025}{2025}) are not supported by the
+observational nature of the data. While the correlations are informative
+and highlight important regional patterns, they do not establish that
+education, innovation, or industry factors directly cause higher AI
+employment. Our replication underscores the value of the evidence while
+also emphasizing the limits of what can be inferred from the design.
 
 \section{Data}\label{data}
 
 The study utilizes multiple data sources to construct a comprehensive
-county-level dataset spanning 2014-2023:
+county-level dataset spanning 2014--2023:
 
-\emph{AI Employment Data}: Job posting data from Lightcast, which
+\textbf{AI Employment Data}: Job posting data from Lightcast, which
 aggregates information from over 40,000 online job boards, newspapers,
 and employer websites. AI-related jobs are identified through skills and
 keywords associated with AI development and use. The dependent variable
 \(AI_{it}\) is defined as:
 
-\[AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \quad                                                  (2)\]
+\[
+AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{2}
+\]
 
-\emph{Demographic Variables}: From the American Community Survey (ACS),
-including: - Bachelor's share: Percentage of workforce with bachelor's
-degree or higher - Black population share: Percentage of county
-population identifying as Black - Poverty share: Percentage of
-population below federal poverty line - Log population: Natural
-logarithm of county population - Log median income: Natural logarithm of
-median household income
+\textbf{Demographic Variables}: From the American Community Survey
+(ACS), including:\\
+- Bachelor's share: Percentage of workforce with bachelor's degree or
+higher\\
+- Black population share: Percentage of county population identifying as
+Black\\
+- Poverty share: Percentage of population below federal poverty line\\
+- Log population: Natural logarithm of county population\\
+- Log median income: Natural logarithm of median household income
 
-\emph{Innovation Indicators}: - Patents per employee: USPTO patent
-counts normalized by employment - AI patents share: Percentage of
-patents classified as AI-related - STEM degrees share: Percentage of
-awarded degrees in STEM fields - Degrees per capita: Total degrees
-awarded per capita
+\textbf{Innovation Indicators}:\\
+- Patents per employee: USPTO patent counts normalized by employment\\
+- AI patents share: Percentage of patents classified as AI-related\\
+- STEM degrees share: Percentage of awarded degrees in STEM fields\\
+- Degrees per capita: Total degrees awarded per capita
 
-\emph{Industry and Labor Market Variables}: - Labor market tightness:
-Ratio of job postings to unemployed workers - Manufacturing intensity:
-Employment share in manufacturing sector - ICT intensity: Employment
-share in information and communication technology - Turnover rate:
-Worker separation rate from Quarterly Workforce Indicators - Large
-establishments share: Percentage of employment in large firms
+\textbf{Industry and Labor Market Variables}:\\
+- Labor market tightness: Ratio of job postings to unemployed workers\\
+- Manufacturing intensity: Employment share in manufacturing sector\\
+- ICT intensity: Employment share in information and communication
+technology\\
+- Turnover rate: Worker separation rate from Quarterly Workforce
+Indicators\\
+- Large establishments share: Percentage of employment in large firms
 
-\emph{Housing Market}: House price growth from Federal Housing Finance
+\textbf{Housing Market}: House price growth from Federal Housing Finance
 Agency (FHFA)
 
 All explanatory variables are lagged by one year to address potential
-endogeneity concerns and are standardized as z-scores for
-interpretability.
+endogeneity concerns. The baseline specification relates the dependent
+variable to these covariates using the following model:
+
+\[
+AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} \tag{1}
+\]
+
+where \(AIShare_{ct}\) denotes the proportion of AI-related job postings
+in county \(c\) at year \(t\), and \(X_{ct}\) includes demographic,
+labor market, and housing controls.
 
 \subsection{Reproduction of Original
 Results}\label{reproduction-of-original-results}
@@ -375,43 +389,45 @@ Jobs}
 
 \centering\centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{10}{12}\selectfont
+\fontsize{14}{16}\selectfont
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4.5cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{5.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
 \toprule
-\multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{ }\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{Demographics}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{Innovation}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{Industry}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{All Controls}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{All + State FE}\egroup{}} \\
+\multicolumn{1}{c}{\textbf{ }} & \multicolumn{1}{c}{\textbf{Demographics}} & \multicolumn{1}{c}{\textbf{Innovation}} & \multicolumn{1}{c}{\textbf{Industry}} & \multicolumn{1}{c}{\textbf{All Controls}} & \multicolumn{1}{c}{\textbf{All + State FE}} \\
 \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-Bachelor's share, z-score & \num{0.160}*** &  &  & \num{0.188}*** & \num{0.085}\\
+\Large{Bachelor's share, z-score} & \num{0.160}*** &  &  & \num{0.188}*** & \num{0.085}\\
  & (\num{0.047}) &  &  & (\num{0.067}) & (\num{0.059})\\
-Black pop, z-score & \num{-0.121} &  &  & \num{-0.121} & \num{0.000}\\
+\Large{Black pop, z-score} & \num{-0.121} &  &  & \num{-0.121} & \num{0.000}\\
  & (\num{0.127}) &  &  & (\num{0.185}) & (\num{0.162})\\
-Poverty share, z-score & \num{0.044} &  &  & \num{0.067}* & \num{-0.003}\\
+\Large{Poverty share, z-score} & \num{0.044} &  &  & \num{0.067}* & \num{-0.003}\\
  & (\num{0.028}) &  &  & (\num{0.040}) & (\num{0.037})\\
-log(Population), z-score & \num{0.807}** &  &  & \num{0.219} & \num{0.146}\\
+\Large{log(Population), z-score} & \num{0.807}** &  &  & \num{0.219} & \num{0.146}\\
+\addlinespace[1em]
  & (\num{0.367}) &  &  & (\num{0.444}) & (\num{0.544})\\
-House Price Growth, z-score & \num{-0.019}** &  &  & \num{-0.028}** & \num{-0.032}***\\
+\Large{House Price Growth, z-score} & \num{-0.019}** &  &  & \num{-0.028}** & \num{-0.032}***\\
  & (\num{0.008}) &  &  & (\num{0.012}) & (\num{0.011})\\
-log(Median Income), z-score & \num{-0.022} &  &  & \num{-0.001} & \num{0.032}\\
+\Large{log(Median Income), z-score} & \num{-0.022} &  &  & \num{-0.001} & \num{0.032}\\
+\addlinespace[1em]
  & (\num{0.047}) &  &  & (\num{0.065}) & (\num{0.060})\\
-Labor Market Tightness, z-score & \num{0.255}*** &  &  & \num{0.315}*** & \num{0.372}***\\
+\Large{Labor Market Tightness, z-score} & \num{0.255}*** &  &  & \num{0.315}*** & \num{0.372}***\\
  & (\num{0.050}) &  &  & (\num{0.063}) & (\num{0.065})\\
-Patents per employee, z-score &  & \num{0.031}*** &  & \num{0.028}** & \num{0.031}**\\
+\Large{Patents per employee, z-score} &  & \num{0.031}*** &  & \num{0.028}** & \num{0.031}**\\
  &  & (\num{0.012}) &  & (\num{0.012}) & (\num{0.014})\\
-AI patents' share, z-score &  & \num{0.009} &  & \num{0.009} & \num{0.003}\\
+\Large{AI patents' share, z-score} &  & \num{0.009} &  & \num{0.009} & \num{0.003}\\
  &  & (\num{0.007}) &  & (\num{0.006}) & (\num{0.005})\\
-Degrees awarded per capita, z-score &  & \num{0.013} &  & \num{0.034} & \num{0.034}\\
+\Large{Degrees awarded per capita, z-score} &  & \num{0.013} &  & \num{0.034} & \num{0.034}\\
  &  & (\num{0.026}) &  & (\num{0.026}) & (\num{0.027})\\
-STEM Degrees' share, z-score &  & \num{0.072}*** &  & \num{0.058}*** & \num{0.048}**\\
+\Large{STEM Degrees' share, z-score} &  & \num{0.072}*** &  & \num{0.058}*** & \num{0.048}**\\
  &  & (\num{0.023}) &  & (\num{0.022}) & (\num{0.020})\\
-Large Establishments, z-score &  &  & \num{-0.002} & \num{-0.037} & \num{-0.036}\\
+\Large{Large Establishments, z-score} &  &  & \num{-0.002} & \num{-0.037} & \num{-0.036}\\
  &  &  & (\num{0.025}) & (\num{0.028}) & (\num{0.029})\\
-ICT sector Intensity, z-score &  &  & \num{0.010} & \num{0.038}** & \num{0.040}**\\
+\Large{ICT sector Intensity, z-score} &  &  & \num{0.010} & \num{0.038}** & \num{0.040}**\\
  &  &  & (\num{0.014}) & (\num{0.017}) & (\num{0.016})\\
-Manufacturing Intensity, z-score &  &  & \num{-0.057}*** & \num{-0.048}*** & \num{-0.034}**\\
+\Large{Manufacturing Intensity, z-score} &  &  & \num{-0.057}*** & \num{-0.048}*** & \num{-0.034}**\\
  &  &  & (\num{0.012}) & (\num{0.014}) & (\num{0.015})\\
-Turnover Rate, z-score &  &  & \num{0.034}*** & \num{0.016} & \num{0.010}\\
+\Large{Turnover Rate, z-score} &  &  & \num{0.034}*** & \num{0.016} & \num{0.010}\\
  &  &  & (\num{0.011}) & (\num{0.017}) & (\num{0.016})\\
 \textit{Fixed-effects} &  &  &  &  & \\
 Year & Yes & Yes & Yes & Yes & Yes\\
@@ -443,11 +459,11 @@ of AI Jobs}
 
 \centering\centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{10}{12}\selectfont
+\fontsize{14}{16}\selectfont
 \begin{threeparttable}
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{4.5cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}}
 \toprule
-\multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{ }\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{Demographics}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{Innovation}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{Industry}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{All Controls}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{10}{12}\selectfont \textbf{All + State FE}\egroup{}} \\
+\multicolumn{1}{c}{\bgroup\fontsize{14}{16}\selectfont \textbf{ }\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{14}{16}\selectfont \textbf{Demographics}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{14}{16}\selectfont \textbf{Innovation}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{14}{16}\selectfont \textbf{Industry}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{14}{16}\selectfont \textbf{All Controls}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{14}{16}\selectfont \textbf{All + State FE}\egroup{}} \\
 \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
