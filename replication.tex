@@ -326,7 +326,7 @@ keywords associated with AI development and use. The dependent variable
 \(AI_{it}\) is defined as:
 
 \[
-AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{2}
+AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{1}
 \]
 
 \textbf{Demographic Variables}: From the American Community Survey
@@ -362,7 +362,7 @@ endogeneity concerns. The baseline specification relates the dependent
 variable to these covariates using the following model:
 
 \[
-AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} \tag{1}
+AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} \tag{2}
 \]
 
 where \(AIShare_{ct}\) denotes the proportion of AI-related job postings
@@ -389,45 +389,45 @@ Jobs}
 
 \centering\centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{14}{16}\selectfont
+\fontsize{18}{20}\selectfont
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{5.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{6.5cm}>{\centering\arraybackslash}p{2.4cm}>{\centering\arraybackslash}p{2.4cm}>{\centering\arraybackslash}p{2.4cm}>{\centering\arraybackslash}p{2.4cm}>{\centering\arraybackslash}p{2.4cm}}
 \toprule
-\multicolumn{1}{c}{\textbf{ }} & \multicolumn{1}{c}{\textbf{Demographics}} & \multicolumn{1}{c}{\textbf{Innovation}} & \multicolumn{1}{c}{\textbf{Industry}} & \multicolumn{1}{c}{\textbf{All Controls}} & \multicolumn{1}{c}{\textbf{All + State FE}} \\
+\multicolumn{1}{c}{\bgroup\fontsize{18}{20}\selectfont \textbf{ }\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{18}{20}\selectfont \textbf{Demographics}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{18}{20}\selectfont \textbf{Innovation}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{18}{20}\selectfont \textbf{Industry}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{18}{20}\selectfont \textbf{All Controls}\egroup{}} & \multicolumn{1}{c}{\bgroup\fontsize{18}{20}\selectfont \textbf{All + State FE}\egroup{}} \\
 \cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-\Large{Bachelor's share, z-score} & \num{0.160}*** &  &  & \num{0.188}*** & \num{0.085}\\
+\huge{Bachelor's share, z-score} & \num{0.160}*** &  &  & \num{0.188}*** & \num{0.085}\\
  & (\num{0.047}) &  &  & (\num{0.067}) & (\num{0.059})\\
-\Large{Black pop, z-score} & \num{-0.121} &  &  & \num{-0.121} & \num{0.000}\\
+\huge{Black pop, z-score} & \num{-0.121} &  &  & \num{-0.121} & \num{0.000}\\
  & (\num{0.127}) &  &  & (\num{0.185}) & (\num{0.162})\\
-\Large{Poverty share, z-score} & \num{0.044} &  &  & \num{0.067}* & \num{-0.003}\\
+\huge{Poverty share, z-score} & \num{0.044} &  &  & \num{0.067}* & \num{-0.003}\\
  & (\num{0.028}) &  &  & (\num{0.040}) & (\num{0.037})\\
-\Large{log(Population), z-score} & \num{0.807}** &  &  & \num{0.219} & \num{0.146}\\
+\huge{log(Population), z-score} & \num{0.807}** &  &  & \num{0.219} & \num{0.146}\\
 \addlinespace[1em]
  & (\num{0.367}) &  &  & (\num{0.444}) & (\num{0.544})\\
-\Large{House Price Growth, z-score} & \num{-0.019}** &  &  & \num{-0.028}** & \num{-0.032}***\\
+\huge{House Price Growth, z-score} & \num{-0.019}** &  &  & \num{-0.028}** & \num{-0.032}***\\
  & (\num{0.008}) &  &  & (\num{0.012}) & (\num{0.011})\\
-\Large{log(Median Income), z-score} & \num{-0.022} &  &  & \num{-0.001} & \num{0.032}\\
+\huge{log(Median Income), z-score} & \num{-0.022} &  &  & \num{-0.001} & \num{0.032}\\
 \addlinespace[1em]
  & (\num{0.047}) &  &  & (\num{0.065}) & (\num{0.060})\\
-\Large{Labor Market Tightness, z-score} & \num{0.255}*** &  &  & \num{0.315}*** & \num{0.372}***\\
+\huge{Labor Market Tightness, z-score} & \num{0.255}*** &  &  & \num{0.315}*** & \num{0.372}***\\
  & (\num{0.050}) &  &  & (\num{0.063}) & (\num{0.065})\\
-\Large{Patents per employee, z-score} &  & \num{0.031}*** &  & \num{0.028}** & \num{0.031}**\\
+\huge{Patents per employee, z-score} &  & \num{0.031}*** &  & \num{0.028}** & \num{0.031}**\\
  &  & (\num{0.012}) &  & (\num{0.012}) & (\num{0.014})\\
-\Large{AI patents' share, z-score} &  & \num{0.009} &  & \num{0.009} & \num{0.003}\\
+\huge{AI patents' share, z-score} &  & \num{0.009} &  & \num{0.009} & \num{0.003}\\
  &  & (\num{0.007}) &  & (\num{0.006}) & (\num{0.005})\\
-\Large{Degrees awarded per capita, z-score} &  & \num{0.013} &  & \num{0.034} & \num{0.034}\\
+\huge{Degrees awarded per capita, z-score} &  & \num{0.013} &  & \num{0.034} & \num{0.034}\\
  &  & (\num{0.026}) &  & (\num{0.026}) & (\num{0.027})\\
-\Large{STEM Degrees' share, z-score} &  & \num{0.072}*** &  & \num{0.058}*** & \num{0.048}**\\
+\huge{STEM Degrees' share, z-score} &  & \num{0.072}*** &  & \num{0.058}*** & \num{0.048}**\\
  &  & (\num{0.023}) &  & (\num{0.022}) & (\num{0.020})\\
-\Large{Large Establishments, z-score} &  &  & \num{-0.002} & \num{-0.037} & \num{-0.036}\\
+\huge{Large Establishments, z-score} &  &  & \num{-0.002} & \num{-0.037} & \num{-0.036}\\
  &  &  & (\num{0.025}) & (\num{0.028}) & (\num{0.029})\\
-\Large{ICT sector Intensity, z-score} &  &  & \num{0.010} & \num{0.038}** & \num{0.040}**\\
+\huge{ICT sector Intensity, z-score} &  &  & \num{0.010} & \num{0.038}** & \num{0.040}**\\
  &  &  & (\num{0.014}) & (\num{0.017}) & (\num{0.016})\\
-\Large{Manufacturing Intensity, z-score} &  &  & \num{-0.057}*** & \num{-0.048}*** & \num{-0.034}**\\
+\huge{Manufacturing Intensity, z-score} &  &  & \num{-0.057}*** & \num{-0.048}*** & \num{-0.034}**\\
  &  &  & (\num{0.012}) & (\num{0.014}) & (\num{0.015})\\
-\Large{Turnover Rate, z-score} &  &  & \num{0.034}*** & \num{0.016} & \num{0.010}\\
+\huge{Turnover Rate, z-score} &  &  & \num{0.034}*** & \num{0.016} & \num{0.010}\\
  &  &  & (\num{0.011}) & (\num{0.017}) & (\num{0.016})\\
 \textit{Fixed-effects} &  &  &  &  & \\
 Year & Yes & Yes & Yes & Yes & Yes\\
@@ -539,13 +539,12 @@ Claims}\label{critical-assessment-of-causal-claims}
 \subsubsection{Identification of Problematic Causal
 Language}\label{identification-of-problematic-causal-language}
 
-The original study by Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) frequently employs language that
-suggests causal relationships, even though the analysis relies on
-observational county-level data with multiple potentially endogenous
-predictors. Several passages illustrate this concern.
+The original study by Andreadis et al.~(2025) often employs language
+that suggests causal relationships, even though the empirical analysis
+is based on observational county-level data with multiple potentially
+endogenous predictors. Several passages illustrate this concern.
 
-From the \emph{Introduction}, the authors write:\\
+In the \emph{Introduction}, the authors state:\\
 \textgreater{} ``Second, we identify several key drivers of AI job
 intensity, including demographics, innovation, and industry factors,
 after controlling for county and year fixed effects. Specifically,
@@ -553,13 +552,13 @@ higher shares of STEM degrees, labor market tightness, and patent
 activity significantly predict greater AI adoption, underscoring the
 importance of education, innovation, and dynamic labor markets.''
 
-From \emph{Section III}, they conclude:\\
+In \emph{Section III}, they conclude:\\
 \textgreater{} ``Labor market tightness emerges as a key driver, with a
 positive and highly significant coefficient\ldots{} highlighting the
 importance of technical education and local innovation capacity in
 fostering AI job growth.''
 
-And from the \emph{Conclusion}:\\
+And in the \emph{Conclusion}:\\
 \textgreater{} ``Counties with stronger innovation ecosystems, higher
 STEM degree attainment, and tighter labor markets have seen greater AI
 job growth, whereas manufacturing-heavy regions and areas with high
@@ -567,13 +566,15 @@ labor turnover have faced challenges in integrating AI. These findings
 point to the role of place-based policies to attract and retain top-tier
 talent for economic development.''
 
-Each of these statements frames correlational associations as if they
-were causal mechanisms. Phrases such as ``drivers,'' ``emerges as a key
-driver,'' ``underscoring the importance,'' and ``findings point to the
-role of policy'' imply that manipulating these variables would directly
-change AI adoption outcomes. However, the study's empirical
-design---regressions on observational county characteristics---cannot
-identify such causal effects, only statistical associations.
+Each of these statements frames correlational results as causal
+mechanisms. Terms such as ``drivers,'' ``emerges as a key driver,''
+``underscoring the importance,'' and ``findings point to the role of
+policy'' imply that altering these variables would directly change AI
+adoption outcomes. Yet the empirical strategy---fixed-effects
+regressions on observational county characteristics---does not support
+such causal inference. The results can only be interpreted as
+conditional associations, not as estimates of the effects of education,
+innovation, or labor market conditions on AI employment.
 
 \section{Extension: Log-Population Weighting
 Analysis}\label{extension-log-population-weighting-analysis}
@@ -664,63 +665,62 @@ beyond just large metropolitan areas.
 consistently shows negative relationships with AI adoption, while ICT
 intensity shows positive effects. These patterns persist across
 weighting schemes, suggesting structural differences in how traditional
-vs.~technology-oriented industries adopt AI.
+versus technology-oriented industries adopt AI.
 
 \emph{County Size Effects}: The divergence between weighting schemes is
 most pronounced for variables like bachelor's share and population size
-itself, indicating that large counties drive many of the education-AI
+itself, indicating that large counties drive many of the education--AI
 relationships found in the original analysis.
 
 \section{Conclusion}\label{conclusion}
 
-This replication and extension of Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) demonstrates both the technical
-reproducibility and limitations of their findings. The successful
-reproduction confirms that local labor market conditions, human capital,
-and innovation capacity are correlated with AI job concentration across
-U.S. counties. However, our analysis reveals three important
-qualifications to the original study's conclusions.
+This replication and extension of Andreadis et al.~(2025) demonstrates
+both the reproducibility and the limitations of their findings. The
+successful reproduction confirms that local labor market conditions,
+human capital, and innovation capacity are correlated with AI job
+concentration across U.S. counties. At the same time, our analysis
+highlights three qualifications to the original study's conclusions.
 
-\emph{First}, the original study employ causal language that overstates
-the nature of the relationships identified. Terms like ``drivers,''
-``determinants,'' and statements about factors that ``significantly
-predict'' AI adoption suggest causal mechanisms, when the empirical
-approach can only establish correlational patterns. Without exogenous
-variation or quasi-experimental identification strategies, these
-relationships likely reflect a complex mixture of causal effects,
-reverse causation, and selection processes.
+\emph{First}, the original study employs causal language that overstates
+what the empirical design can support. Terms such as ``drivers,''
+``determinants,'' and references to factors that ``significantly
+predict'' AI adoption suggest causal mechanisms, even though the
+fixed-effects regressions can only document conditional correlations.
+Without exogenous variation or quasi-experimental identification
+strategies, these patterns likely reflect some combination of causal
+effects, reverse causality, and selection processes.
 
-\emph{Second}, the alternative log-population weighting analysis reveals
-that some relationships are sensitive to the influence of large
-metropolitan areas. The most consistent predictor across both weighting
-schemes is labor market tightness, which maintains strong associations
-regardless of county size. However, educational attainment shows notably
-weaker relationships when log-population weights reduce the influence of
-large metros, suggesting this factor may be less universally important
-for AI adoption than the original analysis suggests.
+\emph{Second}, the alternative log-population weighting analysis shows
+that several relationships are sensitive to the influence of large
+metropolitan counties. Labor market tightness remains the most
+consistent predictor across both weighting schemes and both dependent
+variables, suggesting that tight labor markets foster conditions
+conducive to AI adoption regardless of county size. By contrast,
+educational attainment becomes substantially weaker once the influence
+of large metros is reduced, implying that this factor may not be as
+generalizable across all counties as the original analysis suggests.
 
 \emph{Third}, the industry composition effects prove relatively stable
-across weighting strategies, with manufacturing intensity consistently
-showing negative associations and ICT sector concentration showing
-positive relationships with AI adoption. This suggests that structural
-economic factors may be more fundamental determinants of technological
-adoption patterns than demographic characteristics.
+across weighting schemes. Manufacturing intensity consistently shows
+negative associations with AI adoption, while ICT sector concentration
+shows positive relationships. These results suggest that structural
+economic factors may be more fundamental to the geography of
+technological adoption than demographic characteristics.
 
-\emph{Policy Implications}: These findings suggest that while the
-correlational patterns documented by Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) represent meaningful empirical
-regularities, their policy implications should be interpreted
-cautiously. Our interpretation suggests that interventions targeting
-labor market conditions and industry composition may have broader
-applicability across different county types, while education-focused
-policies may yield the highest returns in larger metropolitan areas
-where network effects and complementary institutions are stronger.
+\emph{Policy implications}: Taken together, these findings indicate that
+the empirical regularities documented by Andreadis et al.~(2025) should
+be interpreted with caution. Policies that seek to strengthen labor
+markets and industry composition appear relevant across a wide range of
+counties, while education-focused interventions may generate the largest
+benefits in large metropolitan areas where complementary institutions
+and network effects are strongest.
 
-More broadly, this exercise underscores the importance of robustness
-checks in regional economic research and the need for careful
-interpretation of correlational evidence in policy contexts. Simple
-changes in weighting can meaningfully shift both the interpretation and
-the policy relevance of empirical findings about technological change.
+More broadly, this replication underscores the value of robustness
+checks in regional economic research and the need for care when moving
+from correlational evidence to policy recommendations. Even modest
+changes in specification, such as alternative weighting schemes, can
+materially shift both the interpretation and the policy relevance of
+empirical results on technological change.
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
