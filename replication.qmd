@@ -24,6 +24,14 @@ format:
 
 <!-- DK:  -->
 
+<!-- Search for plot making code by searching in files for a string like "2023 average". May appear in many places! Goal is to get the font for the legen bigger. If that doesn't work, email your author contact. -->
+
+<!-- Original Weights should be Equal Weights. -->
+
+<!-- I am suspicious of Bachelor share versus Bachelor %. -->
+
+<!-- Why are replication_files junk showing up in Source pane? -->
+
 <!-- Listing of variables, without punctuation seems wrong.  -->
 
 <!-- Delete pdf files. Commit/push. Then add pdf files to .gitignore. Also replication_files. Also aux and log. Keep pdf papers, of course.  And add published version. -->
@@ -32,20 +40,8 @@ format:
 
 <!-- Causal discussion comes at end. -->
 
-<!-- DK: Do not use two different terms for our key variable, e.g., AI job concentration and AI employment.Done  -->
-
 <!-- 9 over Official Weights -->
 
-<!-- Exention plot legend text should be bigger. axis labels bigger. Same x-axis tick marks. Done -->
-
-<!-- Two columns for plots. Done. -->
-
-<!-- Extension titles/captions should be like replication title/captions, not headers.Done -->
-
-
-<!-- DK: Make the font in the tables a little bigger. Font in tables can not be different sizes! Done-->
-
-<!-- DK: Make introduction more connected to our new abstract. First paragraph is general why this is important. Second paragraph explains the left side variables. Third explains the right side variables. Fourth paragraph explains their main results. Fifth paragraph explains what happens when you log-pop weight. Last paragraph talks about causal stuff. Done  -->
 
 *JEL: J24, O33, R11*
 
@@ -673,7 +669,7 @@ This transformation addresses concerns that extremely populous counties (e.g., L
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Original weights vs Log(population) weights. This panel plot displays the coefficient estimates and 95% confidence intervals for seven key predictors across five regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' original weights and one using log(population) weights. This comparison illustrates how model weighting influences the interpretation of each predictor."
+#| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Original weights vs Log(population) weights. This panel plot displays the coefficient estimates and 95% confidence intervals for seven key predictors across five regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' original weights and one using log(population) weights. The associations remain statistically significant, though most magnitudes shrink.  "
 #| fig-cap-location: top
 #| fig-pos: "H"
 #| fig-width: 12
