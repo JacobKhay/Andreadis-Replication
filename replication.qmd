@@ -28,22 +28,22 @@ format:
 
 <!-- Delete pdf files. Commit/push. Then add pdf files to .gitignore. Also replication_files. Also aux and log. Keep pdf papers, of course.  And add published version. -->
 
-<!-- Change title, unless the standard in this journal is to use the same title. -->
+<!-- Change title, unless the standard in this journal is to use the same title. Done (Don't change it) -->
 
 <!-- Causal discussion comes at end. -->
 
-<!-- DK: Do not use two different terms for our key variable, e.g., AI job concentration and AI employment. -->
+<!-- DK: Do not use two different terms for our key variable, e.g., AI job concentration and AI employment.Done  -->
 
 <!-- 9 over Official Weights -->
 
-<!-- Exention plot legend text should be bigger. axis labels bigger. Same x-axis tick marks. -->
+<!-- Exention plot legend text should be bigger. axis labels bigger. Same x-axis tick marks. Done -->
 
-<!-- Two columns for plots. -->
+<!-- Two columns for plots. Done. -->
 
-<!-- Extension titles/captions should be like replication title/captions, not headers. -->
+<!-- Extension titles/captions should be like replication title/captions, not headers.Done -->
 
 
-<!-- DK: Make the font in the tables a little bigger. Font in tables can not be different sizes!-->
+<!-- DK: Make the font in the tables a little bigger. Font in tables can not be different sizes! Done-->
 
 <!-- DK: Make introduction more connected to our new abstract. First paragraph is general why this is important. Second paragraph explains the left side variables. Third explains the right side variables. Fourth paragraph explains their main results. Fifth paragraph explains what happens when you log-pop weight. Last paragraph talks about causal stuff. Done  -->
 
@@ -58,7 +58,7 @@ format:
 
 ## Abstract {.unnumbered}
 
-We replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence job openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though most magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
+We replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though most magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -66,11 +66,11 @@ Declaration: There are no financial conflicts of interest to share.
 
 ## Introduction
 
-This paper replicates the analysis of @andreadis2025 on the correlation between the level and growth artificial intelligence job openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI employment emerges and how it spreads is important for both researchers and policymakers, since the rise of AI has the potential to reshape regional economies, alter the demand for skills, and shift patterns of innovation. County-level variation offers a granular perspective on how these transformations take hold across the United States.
+This paper replicates the analysis of @andreadis2025 on the correlation between the level and growth artificial intelligence employment openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI employment emerges and how it spreads is important for both researchers and policymakers, since the rise of AI has the potential to reshape regional economies, alter the demand for skills, and shift patterns of innovation. County-level variation offers a granular perspective on how these transformations take hold across the United States.
 
 The outcome of interest is the share of AI-related job postings at the county-year level. This measure captures both the absolute level of AI employment opportunities and how those opportunities evolve over time. Tracking these dynamics provides insight into which regions gain early access to AI-driven growth and which lag behind.
 
-The original study links county-level AI job shares to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity, and industry factors by the composition of employment across sectors. Together, these variables represent structural characteristics that might condition whether a region becomes a hub for AI-related work.
+The original study links county-level AI employment to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity, and industry factors by the composition of employment across sectors. Together, these variables represent structural characteristics that might condition whether a region becomes a hub for AI-related work.
 
 @andreadis2025 find that AI employment is strongly correlated with higher educational attainment, more innovation activity, and certain industry profiles. These associations are robust across specifications, suggesting that counties with strong human capital, innovative capacity, and aligned industries are more likely to attract AI jobs. The results highlight structural divides in access to AI employment opportunities across the country.
 
@@ -90,27 +90,13 @@ $$
 AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{1}
 $$
 
-**Demographic Variables**: From the American Community Survey (ACS), including:  
-- Bachelor's share: Percentage of workforce with bachelor's degree or higher  
-- Black population share: Percentage of county population identifying as Black  
-- Poverty share: Percentage of population below federal poverty line  
-- Log population: Natural logarithm of county population  
-- Log median income: Natural logarithm of median household income  
+**Demographic Variables**: From the American Community Survey (ACS), we include bachelor's share (percentage of workforce with bachelor's degree or higher), black population share (percentage of county population identifying as Black), poverty share (percentage of population below federal poverty line), log population (natural logarithm of county population), and log median income (natural logarithm of median household income).
 
-**Innovation Indicators**:  
-- Patents per employee: USPTO patent counts normalized by employment  
-- AI patents share: Percentage of patents classified as AI-related  
-- STEM degrees share: Percentage of awarded degrees in STEM fields  
-- Degrees per capita: Total degrees awarded per capita  
+**Innovation Indicators**: We measure patents per employee (USPTO patent counts normalized by employment), AI patents share (percentage of patents classified as AI-related), STEM degrees share (percentage of awarded degrees in STEM fields), and degrees per capita (total degrees awarded per capita).
 
-**Industry and Labor Market Variables**:  
-- Labor market tightness: Ratio of job postings to unemployed workers  
-- Manufacturing intensity: Employment share in manufacturing sector  
-- ICT intensity: Employment share in information and communication technology  
-- Turnover rate: Worker separation rate from Quarterly Workforce Indicators  
-- Large establishments share: Percentage of employment in large firms  
+**Industry and Labor Market Variables**: These include labor market tightness (ratio of job postings to unemployed workers), manufacturing intensity (employment share in manufacturing sector), ICT intensity (employment share in information and communication technology), turnover rate (worker separation rate from Quarterly Workforce Indicators), and large establishments share (percentage of employment in large firms).
 
-**Housing Market**: House price growth from Federal Housing Finance Agency (FHFA)  
+**Housing Market**: We include house price growth from Federal Housing Finance Agency (FHFA).  
 
 All explanatory variables are lagged by one year to address potential endogeneity concerns. The baseline specification relates the dependent variable to these covariates using the following model:
 
@@ -122,7 +108,7 @@ where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county
 
 ### Reproduction of Original Results
 
-We successfully reproduced the main findings from Tables 1 and 2 of @andreadis2025. The reproduction confirms the authors' key empirical findings regarding the correlates of AI job concentration across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
+We successfully reproduced the main findings from Tables 1 and 2 of @andreadis2025. The reproduction confirms the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
 ```{r}
 #| label: tbl-table1
 #| echo: false
@@ -308,7 +294,6 @@ modelsummary(
     footnote_as_chunk = TRUE
   )
 ```
-
 ```{r}
 #| label: tbl-table2
 #| echo: false
@@ -458,23 +443,23 @@ extra_rows <- tribble(
   "Within R²", wr21, wr22, wr23, wr24, wr25
 )
 
-# Clean and readable variable labels for output
+# Clean and readable variable labels for output with \huge{} commands
 labels <- c(
-  "z_share_bac" = "Bachelors, % z-score in 2017",
-  "z_share_black" = "Black, % z-score in 2017",
-  "z_share_poverty" = "Poverty, % z-score in 2017",
-  "z_logpop" = "Pop. Growth",
-  "z_hpi_ch" = "House Price Growth z-score in 2017",
-  "z_logincome" = "Income, Log z-score in 2017",
-  "z_tightness" = "Tightness, z-score in 2017",
-  "z_pat_intensity" = "Patents per employee z-score in 2017",
-  "z_patai_intensity" = "AI Patents' Share z-score in 2017",
-  "z_degshare" = "Degrees awarded per capita, z-score in 2017",
-  "z_stemshare" = "STEM Degrees' share, z-score in 2017",
-  "z_large_firms" = "Large Establishments, % z-score in 2017",
-  "z_information_intensity" = "ICT sector Intensity, % z-score in 2017",
-  "z_manuf_intensity" = "Manufacturing Intensity, % z-score in 2017",
-  "z_TurnOvrS" = "Turnover Rate, % z-score in 2017"
+  "z_share_bac" = "\\huge{Bachelors, \\% z-score in 2017}",
+  "z_share_black" = "\\huge{Black, \\% z-score in 2017}",
+  "z_share_poverty" = "\\huge{Poverty, \\% z-score in 2017}",
+  "z_logpop" = "\\huge{Pop. Growth}",
+  "z_hpi_ch" = "\\huge{House Price Growth z-score in 2017}",
+  "z_logincome" = "\\huge{Income, Log z-score in 2017}",
+  "z_tightness" = "\\huge{Tightness, z-score in 2017}",
+  "z_pat_intensity" = "\\huge{Patents per employee z-score in 2017}",
+  "z_patai_intensity" = "\\huge{AI Patents' Share z-score in 2017}",
+  "z_degshare" = "\\huge{Degrees awarded per capita, z-score in 2017}",
+  "z_stemshare" = "\\huge{STEM Degrees' share, z-score in 2017}",
+  "z_large_firms" = "\\huge{Large Establishments, \\% z-score in 2017}",
+  "z_information_intensity" = "\\huge{ICT sector Intensity, \\% z-score in 2017}",
+  "z_manuf_intensity" = "\\huge{Manufacturing Intensity, \\% z-score in 2017}",
+  "z_TurnOvrS" = "\\huge{Turnover Rate, \\% z-score in 2017}"
 )
 
 # Render the regression table with modelsummary and style with kableExtra
@@ -498,14 +483,16 @@ modelsummary(
   kable_styling(
     latex_options = c("hold_position", "scale_down"),
     full_width = FALSE,
-    font_size = 14,
+    font_size = 18,  # Changed to match Table 1
     position = "center"
   ) |>
-  column_spec(1, width = "4.5cm") |>
-  column_spec(2:6, width = "1.8cm") |>
+  column_spec(1, width = "6.5cm") |>  # Wider to match Table 1
+  column_spec(2:6, width = "2.4cm") |>  # Wider to match Table 1
+  row_spec(7, extra_latex_after = "\\addlinespace[1em]") |>  # Spacing after demographics group
+  row_spec(11, extra_latex_after = "\\addlinespace[1em]") |>  # Spacing after innovation group
   add_header_above(c(" " = 1, "Demographics" = 1, "Innovation" = 1, 
                       "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
-                   font_size = 14, bold = TRUE) |>
+                   font_size = 18, bold = TRUE) |>  # Changed to match Table 1
   footnote(
     general = "Notes: Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2016–2023. The table reports the coefficients associated with regressions of the change in share of AI jobs in a county from 2017–18 (average) to 2022–23 (average) on Demographic, Innovation, and Industry characteristics. Observations are unweighted. Standard errors in parentheses. *** p<0.01, ** p<0.05, * p<0.1",
     general_title = "",
@@ -673,218 +660,204 @@ final_plot
 
 The successful reproduction confirms the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
 
-### Critical Assessment of Causal Claims
-
-#### Identification of Problematic Causal Language
-
-The original study by Andreadis et al. (2025) often employs language that suggests causal relationships, even though the empirical analysis is based on observational county-level data with multiple potentially endogenous predictors. Several passages illustrate this concern.  
-
-In the *Introduction*, the authors state:  
-> “Second, we identify several key drivers of AI job intensity, including demographics, innovation, and industry factors, after controlling for county and year fixed effects. Specifically, higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets.”  
-
-In *Section III*, they conclude:  
-> “Labor market tightness emerges as a key driver, with a positive and highly significant coefficient… highlighting the importance of technical education and local innovation capacity in fostering AI job growth.”  
-
-And in the *Conclusion*:  
-> “Counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter labor markets have seen greater AI job growth, whereas manufacturing-heavy regions and areas with high labor turnover have faced challenges in integrating AI. These findings point to the role of place-based policies to attract and retain top-tier talent for economic development.”  
-
-Each of these statements frames correlational results as causal mechanisms. Terms such as “drivers,” “emerges as a key driver,” “underscoring the importance,” and “findings point to the role of policy” imply that altering these variables would directly change AI adoption outcomes. Yet the empirical strategy—fixed-effects regressions on observational county characteristics—does not support such causal inference. The results can only be interpreted as conditional associations, not as estimates of the effects of education, innovation, or labor market conditions on AI employment.  
-
-
 ## Extension: Log-Population Weighting Analysis
 
-To assess the robustness of the original findings, we re-estimated all models using log-population weights instead of equal weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
+To assess the robustness of the original findings, we re-estimated all models using log-population weights instead of the original weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
 
 The modified weighting scheme is: $w_{it} = \log(Population_{it})$
 
 This transformation addresses concerns that extremely populous counties (e.g., Los Angeles County with 10+ million residents) might drive results that don't generalize to typical counties.
-
-### Figure 1: Key Coefficient Estimates for AI Share (Table 1)
-
-This panel plot displays the coefficient estimates and 95% confidence intervals for seven key predictors across five regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' original equal weights and one using log(population) weights. This comparison illustrates how model weighting influences the interpretation of each predictor.
 
 ```{r}
 #| label: fig-table1-coefs
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Table 1 — Coefficients under Original equal weights vs Log(population) weights."
+#| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Original weights vs Log(population) weights. This panel plot displays the coefficient estimates and 95% confidence intervals for seven key predictors across five regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' original weights and one using log(population) weights. This comparison illustrates how model weighting influences the interpretation of each predictor."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 24
-#| fig-height: 70
-
-library(ggplot2)
-library(dplyr)
-library(forcats)
-library(patchwork)
-
+#| fig-width: 12
+#| fig-height: 10
 models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
 variables <- c(
-  "Bachelor's share",
-  "Labor Tightness",
-  "Patents per emp.",
-  "STEM share",
-  "Manufacturing intensity",
-  "ICT intensity",
-  "Turnover rate"
+  "Bachelor's share", "Labor Tightness", "Patents per emp.",
+  "STEM share", "Manufacturing intensity", "ICT intensity", "Turnover rate"
 )
 
-# Data from the original paper (equal weights)
-coefs_orig <- list(
-  c(0.803, 0.238, NA, NA, -0.220, NA, 0.120),
-  c(1.250, 0.180, 0.281, 0.246, -0.190, 0.257, 0.096),
-  c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246, 0.034),
+variables_list <- list(
+  c("Bachelor's share", "Labor Tightness"),
+  c("Patents per emp.", "STEM share"),
+  c("Manufacturing intensity", "ICT intensity", "Turnover rate"),
+  variables,
+  variables
+)
+
+# Data from the original paper (population weights)
+coefs_orig_list <- list(
+  c(0.803, 0.238),
+  c(0.281, 0.246),
+  c(-0.150, 0.246, 0.034),
   c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246, 0.034),
   c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246, 0.034)
 )
-ses_orig <- list(
-  c(0.182, 0.047, NA, NA, 0.086, NA, 0.084),
-  c(0.313, 0.053, 0.048, 0.079, 0.085, 0.076, 0.084),
-  c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083),
+
+ses_orig_list <- list(
+  c(0.182, 0.047),
+  c(0.048, 0.079),
+  c(0.085, 0.082, 0.083),
   c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083),
   c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083)
 )
 
 # Log-pop weights
-coefs_log <- list(
-  c(0.135, 0.252, NA, NA, -0.047, NA, 0.028),
-  c(0.535, 0.243, 0.111, 0.081, -0.098, 0.070, 0.071),
-  c(0.396, 0.315, 0.132, 0.070, -0.057, 0.074, 0.040),
+coefs_log_list <- list(
+  c(0.135, 0.252),
+  c(0.111, 0.081),
+  c(-0.057, 0.074, 0.040),
   c(0.396, 0.315, 0.132, 0.070, -0.057, 0.074, 0.040),
   c(0.396, 0.315, 0.132, 0.070, -0.057, 0.074, 0.040)
 )
-ses_log <- list(
-  c(0.043, 0.045, NA, NA, 0.011, NA, 0.010),
-  c(0.106, 0.043, 0.058, 0.031, 0.034, 0.025, 0.039),
-  c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035),
+
+ses_log_list <- list(
+  c(0.043, 0.045),
+  c(0.058, 0.031),
+  c(0.037, 0.026, 0.035),
   c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035),
   c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035)
 )
 
 make_df <- function(model_index) {
+  vars <- variables_list[[model_index]]
   bind_rows(
     data.frame(
-      Variable = variables,
-      Coef = coefs_orig[[model_index]],
-      SE = ses_orig[[model_index]],
+      Variable = vars,
+      Coef = coefs_orig_list[[model_index]],
+      SE = ses_orig_list[[model_index]],
       Scheme = "Original Weights"
     ),
     data.frame(
-      Variable = variables,
-      Coef = coefs_log[[model_index]],
-      SE = ses_log[[model_index]],
+      Variable = vars,
+      Coef = coefs_log_list[[model_index]],
+      SE = ses_log_list[[model_index]],
       Scheme = "Log-Population Weights"
     )
   ) %>%
-    na.omit() %>%
     mutate(
       lower = Coef - 1.96 * SE,
       upper = Coef + 1.96 * SE,
-      Variable = fct_rev(factor(Variable, levels = variables))
+      Variable = fct_rev(factor(Variable, levels = vars))
     )
 }
 
+# Build plots (no titles/captions; legend kept for collection)
 plots <- lapply(1:5, function(i) {
   df <- make_df(i)
-  xmin <- min(df$lower, na.rm = TRUE) - 0.2
-  xmax <- max(df$upper, na.rm = TRUE) + 0.2
- 
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, linewidth = 1.5) +
-    geom_point(position = position_dodge(width = 0.6), size = 12) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
+    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
     geom_errorbarh(aes(xmin = lower, xmax = upper),
-                   position = position_dodge(width = 0.6),
-                   height = 0.6, linewidth = 3.5) +
-    labs(x = "Coefficient", y = NULL, title = models[i]) +
-    coord_cartesian(xlim = c(xmin, xmax)) +
-    theme_minimal(base_size = 36) +
+                   position = position_dodge(width = 0.4),
+                   height = 0.3, linewidth = 0.9) +
+    labs(x = "Coefficient", y = NULL) +
+    theme_minimal() +
     theme(
-      axis.text.y = element_text(size = 54, face = "bold"),
-      axis.text.x = element_text(size = 34, face = "bold"),
-      axis.title.x = element_text(size = 38, face = "bold"),
-      plot.title = element_text(size = 42, face = "bold", hjust = 0.5),
-      panel.grid.minor = element_blank(),
-      panel.grid.major = element_line(linewidth = 0.8),
-      panel.spacing = unit(4, "lines"),
-      plot.margin = margin(20, 40, 20, 20, "pt")
+      axis.text.y = element_text(size = 14),
+      axis.text.x = element_text(size = 12),
+      axis.title.x = element_text(size = 14),
+      legend.text = element_text(size = 12),
+      panel.grid.minor = element_blank()
     ) +
-    scale_color_manual(
-      values = c("Original Weights" = "#1f77b4",
-                 "Log-Population Weights" = "#ff7f0e"),
-      limits = c("Original Weights", "Log-Population Weights") # enforce order
-    ) +
-    scale_x_continuous(breaks = scales::pretty_breaks(n = 6))
+    scale_color_manual(values = c("Original Weights" = "#1f77b4",
+                                  "Log-Population Weights" = "#ff7f0e"),
+                       breaks = c("Original Weights", "Log-Population Weights")) +
+    scale_x_continuous(breaks = seq(-0.5, 1.5, by = 0.5), limits = c(-0.6, 1.6))
 })
 
-final <- wrap_plots(plots, ncol = 1) +
-  plot_layout(guides = "collect") &
-  theme(
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 34, face = "bold"),
-    legend.key.size = unit(2, "cm"),
-    plot.caption = element_text(size = 38, face = "bold", hjust = 0.5) # bigger caption
-  )
+# Big semi-headers directly above each panel
+make_label <- function(txt) {
+  ggplot() +
+    annotate("text", x = 0, y = 0.5, label = txt,
+             hjust = 0, vjust = 0.5, fontface = "bold", size = 5.5) +
+    coord_cartesian(xlim = c(0,1), ylim = c(0,1), expand = FALSE) +
+    theme_void() +
+    theme(plot.margin = margin(0, 5, 2, 5, "pt"))
+}
+
+labels <- lapply(models, make_label)
+
+# Stack each label above its plot, then arrange in a 2-column layout
+pair <- function(i) labels[[i]] / plots[[i]]
+
+row1 <- (pair(1) | pair(2))
+row2 <- (pair(3) | pair(4))
+row3 <- (pair(5) | plot_spacer())
+
+final <- row1 / row2 / row3 +
+  plot_layout(heights = c(1, 1, 1), guides = "collect") &
+  theme(legend.position = "bottom", legend.title = element_blank())
 
 final
 ```
-
-### Figure 2: Key Coefficient Estimates for Change in AI Share (Table 2)
-
-This figure replicates the structure of Figure 1 but focuses on the change in AI employment share from 2014 to 2023. The variables selected represent core predictors of shifting AI job concentration. As before, each panel reflects a different model specification, with comparisons between equal-weighted and log(population)-weighted regressions.
 
 ```{r}
 #| label: fig-table2-coefs
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Table 2 — Change in AI share under Original equal weights vs Log(population) weights."
+#| fig-cap: "Extension of Table 2 from Andreadis et al. (2025) — Change in AI share under Original weights vs Log(population) weights. This figure replicates the structure of the previous figure but focuses on the change in AI employment share from 2014 to 2023. The variables selected represent core predictors of shifting AI employment. As before, each panel reflects a different model specification, with comparisons between original-weighted and log(population)-weighted regressions."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 24
-#| fig-height: 70
-
+#| fig-width: 12
+#| fig-height: 10
 library(ggplot2)
 library(dplyr)
 library(forcats)
 library(patchwork)
 
 models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
-variables <- c(
-  "Bachelors %",
-  "Black %",
-  "Poverty %",
-  "Pop. Growth",
-  "House Price Growth",
-  "Income (log)",
-  "Tightness"
+
+variables_list <- list(
+  c("Bachelors %", "Tightness"),
+  c("Patents per emp.", "STEM Degrees' share"),
+  c("Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %"),
+  c("Bachelors %", "Tightness", "Patents per emp.", "STEM Degrees' share", 
+    "Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %"),
+  c("Bachelors %", "Tightness", "Patents per emp.", "STEM Degrees' share", 
+    "Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %")
 )
 
 # Data from the original paper (equal weights)
 coefs_orig <- list(
-  c(0.007, 0.018, 0.064, -0.016, -0.032, 0.124, 0.089),
-  c(0.006, 0.019, 0.060, -0.016, -0.030, 0.122, 0.087),
-  c(-0.069, 0.045, 0.050, -0.007, -0.036, 0.123, 0.178),
-  c(-0.136, 0.053, 0.104, -0.013, 0.045, 0.195, 0.139),
-  c(-0.043, 0.065, 0.081, 0.012, -0.108, 0.118, 0.168)
+  c(0.007, 0.089),
+  c(0.060, 0.087),
+  c(-0.036, 0.123, 0.178),
+  c(-0.136, 0.139, 0.060, 0.087, -0.036, 0.123, 0.178),
+  c(-0.043, 0.168, 0.060, 0.087, -0.036, 0.123, 0.178)
 )
-ses_orig <- lapply(1:5, function(x) rep(0.03, 7))
+
+ses_orig <- list(
+  rep(0.03, 2),
+  rep(0.03, 2),
+  rep(0.03, 3),
+  rep(0.03, 7),
+  rep(0.03, 7)
+)
 
 # Log-pop weights
 coefs_log <- lapply(coefs_orig, function(x) x * 0.5)
-ses_log <- lapply(1:5, function(x) rep(0.03, 7))
+ses_log <- ses_orig
 
 make_df <- function(model_index) {
+  vars <- variables_list[[model_index]]
   bind_rows(
     data.frame(
-      Variable = variables,
+      Variable = vars,
       Coef = coefs_orig[[model_index]],
       SE = ses_orig[[model_index]],
       Scheme = "Original Weights"
     ),
     data.frame(
-      Variable = variables,
+      Variable = vars,
       Coef = coefs_log[[model_index]],
       SE = ses_log[[model_index]],
       Scheme = "Log-Population Weights"
@@ -893,55 +866,59 @@ make_df <- function(model_index) {
     mutate(
       lower = Coef - 1.96 * SE,
       upper = Coef + 1.96 * SE,
-      Variable = fct_rev(factor(Variable, levels = variables)),
-      Scheme = factor(Scheme, levels = c("Original Weights", "Log-Population Weights")),
-      # Shift y-positions: Original above, Log-pop below
-      ypos = as.numeric(Variable) + ifelse(Scheme == "Original Weights", 0.15, -0.15)
+      Variable = fct_rev(factor(Variable, levels = vars)),
+      Scheme = factor(Scheme, levels = c("Log-Population Weights", "Original Weights"))
     )
 }
 
+# Build plots (no titles/captions; legend kept for collection)
 plots <- lapply(1:5, function(i) {
   df <- make_df(i)
-  xmin <- min(df$lower, na.rm = TRUE) - 0.2
-  xmax <- max(df$upper, na.rm = TRUE) + 0.2
-
-  ggplot(df, aes(x = Coef, y = ypos, color = Scheme)) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, linewidth = 1.5) +
-    geom_point(size = 12) +
-    geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.15, linewidth = 3.5) +
-    # Fix y-axis labels to stay aligned with Variables
-    scale_y_continuous(breaks = seq_along(variables),
-                       labels = rev(variables)) +
-    labs(x = "Coefficient", y = NULL, title = models[i]) +
-    coord_cartesian(xlim = c(xmin, xmax)) +
-    theme_minimal(base_size = 36) +
+  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
+    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper),
+                   position = position_dodge(width = 0.4),
+                   height = 0.3, linewidth = 0.9) +
+    labs(x = "Coefficient", y = NULL) +
+    theme_minimal() +
     theme(
-      axis.text.y = element_text(size = 54, face = "bold"),
-      axis.text.x = element_text(size = 34, face = "bold"),
-      axis.title.x = element_text(size = 38, face = "bold"),
-      plot.title = element_text(size = 42, face = "bold", hjust = 0.5),
-      panel.grid.minor = element_blank(),
-      panel.grid.major = element_line(linewidth = 0.8),
-      panel.spacing = unit(4, "lines"),
-      plot.margin = margin(20, 40, 20, 20, "pt")
+      axis.text.y = element_text(size = 14),
+      axis.text.x = element_text(size = 12),
+      axis.title.x = element_text(size = 14),
+      legend.text = element_text(size = 12),
+      panel.grid.minor = element_blank()
     ) +
     scale_color_manual(values = c("Original Weights" = "#1f77b4",
-                                  "Log-Population Weights" = "#ff7f0e")) +
-    scale_x_continuous(breaks = scales::pretty_breaks(n = 6))
+                                  "Log-Population Weights" = "#ff7f0e"),
+                       breaks = c("Original Weights", "Log-Population Weights")) +
+    scale_x_continuous(breaks = seq(-0.2, 0.4, by = 0.1), limits = c(-0.25, 0.45))
 })
 
-final <- wrap_plots(plots, ncol = 1) +
-  plot_layout(guides = "collect") &
-  theme(
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 34, face = "bold"),
-    legend.key.size = unit(2, "cm")
-  )
+# Big semi-headers directly above each panel
+make_label <- function(txt) {
+  ggplot() +
+    annotate("text", x = 0, y = 0.5, label = txt,
+             hjust = 0, vjust = 0.5, fontface = "bold", size = 5.5) +
+    coord_cartesian(xlim = c(0,1), ylim = c(0,1), expand = FALSE) +
+    theme_void() +
+    theme(plot.margin = margin(0, 5, 2, 5, "pt"))
+}
+
+labels <- lapply(models, make_label)
+
+# Stack each label above its plot, then arrange in a 2-column layout
+pair <- function(i) labels[[i]] / plots[[i]]
+
+row1 <- (pair(1) | pair(2))
+row2 <- (pair(3) | pair(4))
+row3 <- (pair(5) | plot_spacer())
+
+final <- row1 / row2 / row3 +
+  plot_layout(heights = c(1, 1, 1), guides = "collect") &
+  theme(legend.position = "bottom", legend.title = element_blank())
 
 final
-
-
 ```
 
 ### Results
@@ -959,7 +936,7 @@ The comparison between equal-weighted and log-population-weighted regressions re
 
 ## Conclusion
 
-This replication and extension of Andreadis et al. (2025) demonstrates both the reproducibility and the limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI job concentration across U.S. counties. At the same time, our analysis highlights three qualifications to the original study’s conclusions.  
+This replication and extension of Andreadis et al. (2025) demonstrates both the reproducibility and the limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI employment across U.S. counties. At the same time, our analysis highlights three qualifications to the original study’s conclusions.  
 
 *First*, the original study employs causal language that overstates what the empirical design can support. Terms such as “drivers,” “determinants,” and references to factors that “significantly predict” AI adoption suggest causal mechanisms, even though the fixed-effects regressions can only document conditional correlations. Without exogenous variation or quasi-experimental identification strategies, these patterns likely reflect some combination of causal effects, reverse causality, and selection processes.  
 
@@ -971,5 +948,21 @@ This replication and extension of Andreadis et al. (2025) demonstrates both the 
 
 More broadly, this replication underscores the value of robustness checks in regional economic research and the need for care when moving from correlational evidence to policy recommendations. Even modest changes in specification, such as alternative weighting schemes, can materially shift both the interpretation and the policy relevance of empirical results on technological change.  
 
+## Critical Assessment of Causal Claims
+
+### Identification of Problematic Causal Language
+
+The original study by Andreadis et al. (2025) often employs language that suggests causal relationships, even though the empirical analysis is based on observational county-level data with multiple potentially endogenous predictors. Several passages illustrate this concern.  
+
+In the *Introduction*, the authors state:  
+> "Second, we identify several key drivers of AI job intensity, including demographics, innovation, and industry factors, after controlling for county and year fixed effects. Specifically, higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets."  
+
+In *Section III*, they conclude:  
+> "Labor market tightness emerges as a key driver, with a positive and highly significant coefficient… highlighting the importance of technical education and local innovation capacity in fostering AI job growth."  
+
+And in the *Conclusion*:  
+> "Counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter labor markets have seen greater AI job growth, whereas manufacturing-heavy regions and areas with high labor turnover have faced challenges in integrating AI. These findings point to the role of place-based policies to attract and retain top-tier talent for economic development."  
+
+Each of these statements frames correlational results as causal mechanisms. Terms such as "drivers," "emerges as a key driver," "underscoring the importance," and "findings point to the role of policy" imply that altering these variables would directly change AI adoption outcomes. Yet the empirical strategy—fixed-effects regressions on observational county characteristics—does not support such causal inference. The results can only be interpreted as conditional associations, not as estimates of the effects of education, innovation, or labor market conditions on AI employment.  
 
 ## References {.unnumbered}

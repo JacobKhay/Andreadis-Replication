@@ -1,3 +1,11 @@
 /.quarto/
+replication_files/
+*.pdf
+*.aux
+*.log
+*.tex
+
+# Keep papers directory PDFs
+!papers/*.pdf
 
 .DS_Store
