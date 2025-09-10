@@ -26,19 +26,21 @@ format:
 
 <!-- Clean up garbage. Only keep files you need. -->
 
-<!-- Search for plot making code by searching in files for a string like "2023 average". May appear in many places! Goal is to get the font for the legen bigger. If that doesn't work, email your author contact. -->
-
-<!-- Why are replication_files junk showing up in Source pane? -->
-
-<!-- Listing of variables, without punctuation seems wrong. Done  -->
-
-<!-- Delete pdf files. Commit/push. Then add pdf files to .gitignore. Also replication_files. Also aux and log. Keep pdf papers, of course.  And add published version. -->
-
-<!-- Change title, unless the standard in this journal is to use the same title. Done (Don't change it) -->
+<!-- Search for plot making code by searching in files for a string like "2023 average". May appear in many places! Goal is to get the font for the legend bigger. If that doesn't work, email your author contact. -->
 
 <!-- Causal discussion comes at end. -->
 
 <!-- 9 over Official Weights -->
+
+<!-- All of our plots are one column panels. -->
+
+<!-- Fix references.  -->
+
+<!-- Is the last reference in their paper really Makridis, Christos A.,? Check the text of the paper. -->
+
+<!-- Ask AI to give you a paragraph summary of each reference. Read it. Confirm, by hand, that you are using the references correctly! -->
+
+<!-- Our bibliography does not match the journals formatting. Probably need a different csl. AI will help. -->
 
 
 *JEL: J24, O33, R11*
@@ -52,7 +54,7 @@ format:
 
 ## Abstract {.unnumbered}
 
-We replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though most magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
+We replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
