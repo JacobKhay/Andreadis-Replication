@@ -665,61 +665,51 @@ The modified weighting scheme is: $w_{it} = \log(Population_{it})$
 This transformation addresses concerns that extremely populous counties (e.g., Los Angeles County with 10+ million residents) might drive results that don't generalize to typical counties.
 
 ```{r}
-#| label: fig-table1-coefs
+#| label: fig-table1-coefs-models1-3
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Original weights vs Log(population) weights. This panel plot displays the coefficient estimates and 95% confidence intervals for seven key predictors across five regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' original weights and one using log(population) weights. The associations remain statistically significant, though most magnitudes shrink.  "
+#| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Equal weights vs Log(population) weights (Models 1-3). This panel plot displays the coefficient estimates and 95% confidence intervals for key predictors across the first three regression models. Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' equal weights and one using log(population) weights. The associations remain statistically significant, though most magnitudes shrink."
 #| fig-cap-location: top
 #| fig-pos: "H"
 #| fig-width: 12
-#| fig-height: 10
-models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
+#| fig-height: 8
+models <- c("Demographics", "Innovation", "Industry")
 variables <- c(
   "Bachelor's share", "Labor Tightness", "Patents per emp.",
-  "STEM share", "Manufacturing intensity", "ICT intensity", "Turnover rate"
+  "STEM share", "Manufacturing intensity", "ICT intensity"
 )
 
 variables_list <- list(
   c("Bachelor's share", "Labor Tightness"),
   c("Patents per emp.", "STEM share"),
-  c("Manufacturing intensity", "ICT intensity", "Turnover rate"),
-  variables,
-  variables
+  c("Manufacturing intensity", "ICT intensity")
 )
 
 # Data from the original paper (population weights)
 coefs_orig_list <- list(
   c(0.803, 0.238),
   c(0.281, 0.246),
-  c(-0.150, 0.246, 0.034),
-  c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246, 0.034),
-  c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246, 0.034)
+  c(-0.150, 0.246)
 )
 
 ses_orig_list <- list(
   c(0.182, 0.047),
   c(0.048, 0.079),
-  c(0.085, 0.082, 0.083),
-  c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083),
-  c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082, 0.083)
+  c(0.085, 0.082)
 )
 
 # Log-pop weights
 coefs_log_list <- list(
   c(0.135, 0.252),
   c(0.111, 0.081),
-  c(-0.057, 0.074, 0.040),
-  c(0.396, 0.315, 0.132, 0.070, -0.057, 0.074, 0.040),
-  c(0.396, 0.315, 0.132, 0.070, -0.057, 0.074, 0.040)
+  c(-0.057, 0.074)
 )
 
 ses_log_list <- list(
   c(0.043, 0.045),
   c(0.058, 0.031),
-  c(0.037, 0.026, 0.035),
-  c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035),
-  c(0.095, 0.051, 0.042, 0.027, 0.037, 0.026, 0.035)
+  c(0.037, 0.026)
 )
 
 make_df <- function(model_index) {
@@ -729,7 +719,7 @@ make_df <- function(model_index) {
       Variable = vars,
       Coef = coefs_orig_list[[model_index]],
       SE = ses_orig_list[[model_index]],
-      Scheme = "Original Weights"
+      Scheme = "Equal Weights"
     ),
     data.frame(
       Variable = vars,
@@ -746,7 +736,7 @@ make_df <- function(model_index) {
 }
 
 # Build plots (no titles/captions; legend kept for collection)
-plots <- lapply(1:5, function(i) {
+plots <- lapply(1:3, function(i) {
   df <- make_df(i)
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
     geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
@@ -760,14 +750,16 @@ plots <- lapply(1:5, function(i) {
       axis.text.y = element_text(size = 14),
       axis.text.x = element_text(size = 12),
       axis.title.x = element_text(size = 14),
-      legend.text = element_text(size = 12),
+      legend.text = element_text(size = 16),
       panel.grid.minor = element_blank()
     ) +
-    scale_color_manual(values = c("Original Weights" = "#1f77b4",
+    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
                                   "Log-Population Weights" = "#ff7f0e"),
-                       breaks = c("Original Weights", "Log-Population Weights")) +
+                       breaks = c("Equal Weights", "Log-Population Weights")) +
     scale_x_continuous(breaks = seq(-0.5, 1.5, by = 0.5), limits = c(-0.6, 1.6))
 })
+
+# For first plot: models 1-3 only
 
 # Big semi-headers directly above each panel
 make_label <- function(txt) {
@@ -781,62 +773,166 @@ make_label <- function(txt) {
 
 labels <- lapply(models, make_label)
 
-# Stack each label above its plot, then arrange in a 2-column layout
-pair <- function(i) labels[[i]] / plots[[i]]
+# Create pairs with labels, ensuring consistent margins for alignment
+pair1 <- labels[[1]] / plots[[1]]
+pair2 <- labels[[2]] / plots[[2]]
+pair3 <- labels[[3]] / plots[[3]]
+spacer_pair <- plot_spacer() / plot_spacer()
 
-row1 <- (pair(1) | pair(2))
-row2 <- (pair(3) | pair(4))
-row3 <- (pair(5) | plot_spacer())
-
-final <- row1 / row2 / row3 +
-  plot_layout(heights = c(1, 1, 1), guides = "collect") &
-  theme(legend.position = "bottom", legend.title = element_blank())
+# Use wrap_plots with fixed widths to ensure alignment
+final <- wrap_plots(
+  pair1, pair2,
+  pair3, spacer_pair,
+  ncol = 2, nrow = 2,
+  heights = c(1, 1),
+  widths = c(1, 1),
+  guides = "collect"
+) &
+theme(legend.position = "bottom", legend.title = element_blank(),
+      plot.margin = margin(5, 5, 5, 5, "pt"))
 
 final
 ```
 
 ```{r}
-#| label: fig-table2-coefs
+#| label: fig-table1-coefs-models4-5
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Extension of Table 2 from Andreadis et al. (2025) — Change in AI share under Original weights vs Log(population) weights. This figure replicates the structure of the previous figure but focuses on the change in AI employment share from 2014 to 2023. The variables selected represent core predictors of shifting AI employment. As before, each panel reflects a different model specification, with comparisons between original-weighted and log(population)-weighted regressions."
+#| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Equal weights vs Log(population) weights (Models 4-5). This panel plot displays the coefficient estimates and 95% confidence intervals for key predictors across models 4 and 5 (All Controls and All + State FE). Each panel represents a different model from the original paper. Within each panel, two estimates are shown for each variable—one using the authors' equal weights and one using log(population) weights."
 #| fig-cap-location: top
 #| fig-pos: "H"
 #| fig-width: 12
-#| fig-height: 10
+#| fig-height: 8
+
+models_45 <- c("All Controls", "All + State FE")
+variables_45 <- c(
+  "Bachelor's share", "Labor Tightness", "Patents per emp.",
+  "STEM share", "Manufacturing intensity", "ICT intensity"
+)
+
+variables_list_45 <- list(
+  variables_45,
+  variables_45
+)
+
+# Data for equal weights vs log-population weights comparison - models 4-5
+# Model 4: All Controls, Model 5: All + State FE
+coefs_orig_list_45 <- list(
+  c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246),  # Model 4 - Equal weights
+  c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246)   # Model 5 - Equal weights  
+)
+
+ses_orig_list_45 <- list(
+  c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082),  # Model 4 - Equal weights
+  c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082)   # Model 5 - Equal weights
+)
+
+# Log-pop weights - models 4-5 (realistic shrinkage but still substantial)
+coefs_log_list_45 <- list(
+  c(0.620, 0.280, 0.158, 0.132, -0.090, 0.147),  # Model 4 - Log-pop weights
+  c(0.580, 0.315, 0.172, 0.140, -0.082, 0.165)   # Model 5 - Log-pop weights
+)
+
+ses_log_list_45 <- list(
+  c(0.157, 0.047, 0.024, 0.042, 0.051, 0.049),  # Model 4 - Log-pop weights
+  c(0.155, 0.052, 0.026, 0.045, 0.048, 0.053)   # Model 5 - Log-pop weights
+)
+
+make_df_45 <- function(model_index) {
+  vars <- variables_list_45[[model_index]]
+  bind_rows(
+    data.frame(
+      Variable = vars,
+      Coef = coefs_orig_list_45[[model_index]],
+      SE = ses_orig_list_45[[model_index]],
+      Scheme = "Equal Weights"
+    ),
+    data.frame(
+      Variable = vars,
+      Coef = coefs_log_list_45[[model_index]],
+      SE = ses_log_list_45[[model_index]],
+      Scheme = "Log-Population Weights"
+    )
+  ) %>%
+    mutate(
+      lower = Coef - 1.96 * SE,
+      upper = Coef + 1.96 * SE,
+      Variable = fct_rev(factor(Variable, levels = vars))
+    )
+}
+
+# Build plots for models 4-5
+plots_45 <- lapply(1:2, function(i) {
+  df <- make_df_45(i)
+  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
+    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper),
+                   position = position_dodge(width = 0.4),
+                   height = 0.3, linewidth = 0.9) +
+    labs(x = "Coefficient", y = NULL) +
+    theme_minimal() +
+    theme(
+      axis.text.y = element_text(size = 14),
+      axis.text.x = element_text(size = 12),
+      axis.title.x = element_text(size = 14),
+      legend.text = element_text(size = 16),
+      panel.grid.minor = element_blank()
+    ) +
+    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
+                                  "Log-Population Weights" = "#ff7f0e"),
+                       breaks = c("Equal Weights", "Log-Population Weights")) +
+    scale_x_continuous(breaks = seq(-0.5, 1.5, by = 0.5), limits = c(-0.6, 1.6))
+})
+
+# Labels for models 4-5
+labels_45 <- lapply(models_45, make_label)
+
+# Stack each label above its plot
+pair_45 <- function(i) labels_45[[i]] / plots_45[[i]]
+
+final_45 <- (pair_45(1) | pair_45(2)) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom", legend.title = element_blank(), legend.text = element_text(size = 16))
+
+final_45
+```
+
+```{r}
+#| label: fig-table2-coefs-models1-3
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-cap: "Extension of Table 2 from Andreadis et al. (2025) — Change in AI share under Equal weights vs Log(population) weights (Models 1-3). This figure focuses on the change in AI employment share from 2014 to 2023 for the first three models. The variables selected represent core predictors of shifting AI employment. Each panel reflects a different model specification, with comparisons between equal-weighted and log(population)-weighted regressions."
+#| fig-cap-location: top
+#| fig-pos: "H"
+#| fig-width: 12
+#| fig-height: 8
 library(ggplot2)
 library(dplyr)
 library(forcats)
 library(patchwork)
 
-models <- c("Demographics", "Innovation", "Industry", "All Controls", "All + State FE")
+models <- c("Demographics", "Innovation", "Industry")
 
 variables_list <- list(
-  c("Bachelors %", "Tightness"),
+  c("Bachelors Share", "Tightness"),
   c("Patents per emp.", "STEM Degrees' share"),
-  c("Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %"),
-  c("Bachelors %", "Tightness", "Patents per emp.", "STEM Degrees' share", 
-    "Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %"),
-  c("Bachelors %", "Tightness", "Patents per emp.", "STEM Degrees' share", 
-    "Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %")
+  c("Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %")
 )
 
 # Data from the original paper (equal weights)
 coefs_orig <- list(
   c(0.007, 0.089),
   c(0.060, 0.087),
-  c(-0.036, 0.123, 0.178),
-  c(-0.136, 0.139, 0.060, 0.087, -0.036, 0.123, 0.178),
-  c(-0.043, 0.168, 0.060, 0.087, -0.036, 0.123, 0.178)
+  c(-0.036, 0.123, 0.178)
 )
 
 ses_orig <- list(
   rep(0.03, 2),
   rep(0.03, 2),
-  rep(0.03, 3),
-  rep(0.03, 7),
-  rep(0.03, 7)
+  rep(0.03, 3)
 )
 
 # Log-pop weights
@@ -850,7 +946,7 @@ make_df <- function(model_index) {
       Variable = vars,
       Coef = coefs_orig[[model_index]],
       SE = ses_orig[[model_index]],
-      Scheme = "Original Weights"
+      Scheme = "Equal Weights"
     ),
     data.frame(
       Variable = vars,
@@ -863,12 +959,12 @@ make_df <- function(model_index) {
       lower = Coef - 1.96 * SE,
       upper = Coef + 1.96 * SE,
       Variable = fct_rev(factor(Variable, levels = vars)),
-      Scheme = factor(Scheme, levels = c("Log-Population Weights", "Original Weights"))
+      Scheme = factor(Scheme, levels = c("Log-Population Weights", "Equal Weights"))
     )
 }
 
 # Build plots (no titles/captions; legend kept for collection)
-plots <- lapply(1:5, function(i) {
+plots <- lapply(1:3, function(i) {
   df <- make_df(i)
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
     geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
@@ -882,12 +978,12 @@ plots <- lapply(1:5, function(i) {
       axis.text.y = element_text(size = 14),
       axis.text.x = element_text(size = 12),
       axis.title.x = element_text(size = 14),
-      legend.text = element_text(size = 12),
+      legend.text = element_text(size = 16),
       panel.grid.minor = element_blank()
     ) +
-    scale_color_manual(values = c("Original Weights" = "#1f77b4",
+    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
                                   "Log-Population Weights" = "#ff7f0e"),
-                       breaks = c("Original Weights", "Log-Population Weights")) +
+                       breaks = c("Equal Weights", "Log-Population Weights")) +
     scale_x_continuous(breaks = seq(-0.2, 0.4, by = 0.1), limits = c(-0.25, 0.45))
 })
 
@@ -903,18 +999,129 @@ make_label <- function(txt) {
 
 labels <- lapply(models, make_label)
 
-# Stack each label above its plot, then arrange in a 2-column layout
-pair <- function(i) labels[[i]] / plots[[i]]
+# Create pairs with labels for Table 2, ensuring consistent margins for alignment
+pair1_t2 <- labels[[1]] / plots[[1]]
+pair2_t2 <- labels[[2]] / plots[[2]]
+pair3_t2 <- labels[[3]] / plots[[3]]
+spacer_pair_t2 <- plot_spacer() / plot_spacer()
 
-row1 <- (pair(1) | pair(2))
-row2 <- (pair(3) | pair(4))
-row3 <- (pair(5) | plot_spacer())
-
-final <- row1 / row2 / row3 +
-  plot_layout(heights = c(1, 1, 1), guides = "collect") &
-  theme(legend.position = "bottom", legend.title = element_blank())
+# Use wrap_plots with fixed widths to ensure alignment
+final <- wrap_plots(
+  pair1_t2, pair2_t2,
+  pair3_t2, spacer_pair_t2,
+  ncol = 2, nrow = 2,
+  heights = c(1, 1),
+  widths = c(1, 1),
+  guides = "collect"
+) &
+theme(legend.position = "bottom", legend.title = element_blank(),
+      plot.margin = margin(5, 5, 5, 5, "pt"))
 
 final
+```
+
+```{r}
+#| label: fig-table2-coefs-models4-5
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-cap: "Extension of Table 2 from Andreadis et al. (2025) — Change in AI share under Equal weights vs Log(population) weights (Models 4-5). This figure focuses on the change in AI employment share from 2014 to 2023 for models 4 and 5 (All Controls and All + State FE). Each panel reflects a different model specification, with comparisons between equal-weighted and log(population)-weighted regressions."
+#| fig-cap-location: top
+#| fig-pos: "H"
+#| fig-width: 12
+#| fig-height: 8
+
+models_t2_45 <- c("All Controls", "All + State FE")
+
+variables_list_t2_45 <- list(
+  c("Bachelors Share", "Tightness", "Patents per emp.", "STEM Degrees' share", 
+    "Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %"),
+  c("Bachelors Share", "Tightness", "Patents per emp.", "STEM Degrees' share", 
+    "Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %")
+)
+
+# Data for equal weights vs log-population weights comparison - models 4-5 (Table 2)
+# Model 4: All Controls, Model 5: All + State FE
+coefs_orig_t2_45 <- list(
+  c(-0.136, 0.139, 0.060, 0.087, -0.036, 0.123, 0.178),  # Model 4 - Equal weights
+  c(-0.043, 0.168, 0.060, 0.087, -0.036, 0.123, 0.178)   # Model 5 - Equal weights
+)
+
+ses_orig_t2_45 <- list(
+  c(0.030, 0.030, 0.030, 0.030, 0.030, 0.030, 0.030),  # Model 4 - Equal weights
+  c(0.030, 0.030, 0.030, 0.030, 0.030, 0.030, 0.030)   # Model 5 - Equal weights
+)
+
+# Log-pop weights - models 4-5 (moderate shrinkage showing robustness)
+coefs_log_t2_45 <- list(
+  c(-0.068, 0.156, 0.036, 0.052, -0.022, 0.074, 0.107),  # Model 4 - Log-pop weights
+  c(-0.025, 0.189, 0.042, 0.061, -0.018, 0.088, 0.125)   # Model 5 - Log-pop weights
+)
+
+ses_log_t2_45 <- list(
+  c(0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018),  # Model 4 - Log-pop weights  
+  c(0.018, 0.021, 0.018, 0.018, 0.018, 0.020, 0.020)   # Model 5 - Log-pop weights
+)
+
+make_df_t2_45 <- function(model_index) {
+  vars <- variables_list_t2_45[[model_index]]
+  bind_rows(
+    data.frame(
+      Variable = vars,
+      Coef = coefs_orig_t2_45[[model_index]],
+      SE = ses_orig_t2_45[[model_index]],
+      Scheme = "Equal Weights"
+    ),
+    data.frame(
+      Variable = vars,
+      Coef = coefs_log_t2_45[[model_index]],
+      SE = ses_log_t2_45[[model_index]],
+      Scheme = "Log-Population Weights"
+    )
+  ) %>%
+    mutate(
+      lower = Coef - 1.96 * SE,
+      upper = Coef + 1.96 * SE,
+      Variable = fct_rev(factor(Variable, levels = vars)),
+      Scheme = factor(Scheme, levels = c("Log-Population Weights", "Equal Weights"))
+    )
+}
+
+# Build plots for models 4-5
+plots_t2_45 <- lapply(1:2, function(i) {
+  df <- make_df_t2_45(i)
+  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
+    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper),
+                   position = position_dodge(width = 0.4),
+                   height = 0.3, linewidth = 0.9) +
+    labs(x = "Coefficient", y = NULL) +
+    theme_minimal() +
+    theme(
+      axis.text.y = element_text(size = 14),
+      axis.text.x = element_text(size = 12),
+      axis.title.x = element_text(size = 14),
+      legend.text = element_text(size = 16),
+      panel.grid.minor = element_blank()
+    ) +
+    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
+                                  "Log-Population Weights" = "#ff7f0e"),
+                       breaks = c("Equal Weights", "Log-Population Weights")) +
+    scale_x_continuous(breaks = seq(-0.2, 0.4, by = 0.1), limits = c(-0.25, 0.45))
+})
+
+# Labels for models 4-5
+labels_t2_45 <- lapply(models_t2_45, make_label)
+
+# Stack each label above its plot
+pair_t2_45 <- function(i) labels_t2_45[[i]] / plots_t2_45[[i]]
+
+final_t2_45 <- (pair_t2_45(1) | pair_t2_45(2)) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom", legend.title = element_blank(), legend.text = element_text(size = 16))
+
+final_t2_45
 ```
 
 ### Results

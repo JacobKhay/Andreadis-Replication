@@ -1,5 +1,6 @@
 /.quarto/
 replication_files/
+*_files/
 *.pdf
 *.aux
 *.log
@@ -7,5 +8,10 @@ replication_files/
 
 # Keep papers directory PDFs
 !papers/*.pdf
+
+# Ignore specific generated files
+replication.tex
+fig-map*
+**/fig-map-*.pdf
 
 .DS_Store
