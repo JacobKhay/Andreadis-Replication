@@ -24,11 +24,9 @@ format:
 
 <!-- DK:  -->
 
+<!-- Clean up garbage. Only keep files you need. -->
+
 <!-- Search for plot making code by searching in files for a string like "2023 average". May appear in many places! Goal is to get the font for the legen bigger. If that doesn't work, email your author contact. -->
-
-<!-- Original Weights should be Equal Weights. done -->
-
-<!-- I am suspicious of Bachelor share versus Bachelor %. Fixed - checked the paper -->
 
 <!-- Why are replication_files junk showing up in Source pane? -->
 
