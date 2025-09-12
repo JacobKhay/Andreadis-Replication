@@ -5,7 +5,7 @@ author:
   - name: Jacob Khaykin^[Solon High School, [jacobkhaykin27@solonschools.net](mailto:jacobkhaykin27@solonschools.net)]
   - name: David Kane^[Institute for Globally Distributed Open Research and Education, [dave.kane@gmail.com](mailto:dave.kane@gmail.com)]
 bibliography: references.bib
-csl: apa.csl
+csl: aea.csl
 link-citations: true
 nocite: '@*'
 format:
@@ -28,9 +28,9 @@ format:
 
 <!-- Search for plot making code by searching in files for a string like "2023 average". May appear in many places! Goal is to get the font for the legend bigger. If that doesn't work, email your author contact. -->
 
-<!-- Causal discussion comes at end. -->
+<!-- Causal discussion comes at end. Done  -->
 
-<!-- 9 over Official Weights -->
+<!-- 9 over Official Weights Done -->
 
 <!-- All of our plots are one column panels. -->
 
@@ -579,7 +579,7 @@ map_theme <- theme_void() +
   theme(
     legend.position = "bottom",
     legend.direction = "horizontal",
-    legend.text = element_text(size = 16, margin = margin(t = 5, b = 5, l = 2, r = 2)),
+    legend.text = element_text(size = 18, margin = margin(t = 5, b = 5, l = 2, r = 2)),
     legend.title = element_blank(),
     legend.key.width = unit(2.5, "cm"),
     legend.key.height = unit(0.8, "cm"),
@@ -609,9 +609,9 @@ p1 <- ggplot(map_data) +
     drop = FALSE,
     guide = guide_legend(
       title = NULL,
-      nrow = 1,
+      nrow = 2,
       label.position = "bottom",
-      keywidth = unit(2.5, "cm"),
+      keywidth = unit(2.2, "cm"),
       keyheight = unit(0.8, "cm"),
       label.hjust = 0.5
     )
@@ -633,9 +633,9 @@ p2 <- ggplot(map_data) +
     drop = FALSE,
     guide = guide_legend(
       title = NULL,
-      nrow = 1,
+      nrow = 2,
       label.position = "bottom",
-      keywidth = unit(2.5, "cm"),
+      keywidth = unit(2.2, "cm"),
       keyheight = unit(0.8, "cm"),
       label.hjust = 0.5
     )
@@ -777,17 +777,10 @@ labels <- lapply(models, make_label)
 pair1 <- labels[[1]] / plots[[1]]
 pair2 <- labels[[2]] / plots[[2]]
 pair3 <- labels[[3]] / plots[[3]]
-spacer_pair <- plot_spacer() / plot_spacer()
 
-# Use wrap_plots with fixed widths to ensure alignment
-final <- wrap_plots(
-  pair1, pair2,
-  pair3, spacer_pair,
-  ncol = 2, nrow = 2,
-  heights = c(1, 1),
-  widths = c(1, 1),
-  guides = "collect"
-) &
+# Stack plots vertically (as columns)
+final <- (pair1 / pair2 / pair3) +
+  plot_layout(guides = "collect") &
 theme(legend.position = "bottom", legend.title = element_blank(),
       plot.margin = margin(5, 5, 5, 5, "pt"))
 
@@ -803,7 +796,7 @@ final
 #| fig-cap-location: top
 #| fig-pos: "H"
 #| fig-width: 12
-#| fig-height: 8
+#| fig-height: 12
 
 models_45 <- c("All Controls", "All + State FE")
 variables_45 <- c(
@@ -892,7 +885,7 @@ labels_45 <- lapply(models_45, make_label)
 # Stack each label above its plot
 pair_45 <- function(i) labels_45[[i]] / plots_45[[i]]
 
-final_45 <- (pair_45(1) | pair_45(2)) +
+final_45 <- (pair_45(1) / pair_45(2)) +
   plot_layout(guides = "collect") &
   theme(legend.position = "bottom", legend.title = element_blank(), legend.text = element_text(size = 16))
 
@@ -1003,17 +996,10 @@ labels <- lapply(models, make_label)
 pair1_t2 <- labels[[1]] / plots[[1]]
 pair2_t2 <- labels[[2]] / plots[[2]]
 pair3_t2 <- labels[[3]] / plots[[3]]
-spacer_pair_t2 <- plot_spacer() / plot_spacer()
 
-# Use wrap_plots with fixed widths to ensure alignment
-final <- wrap_plots(
-  pair1_t2, pair2_t2,
-  pair3_t2, spacer_pair_t2,
-  ncol = 2, nrow = 2,
-  heights = c(1, 1),
-  widths = c(1, 1),
-  guides = "collect"
-) &
+# Stack plots vertically (as columns)
+final <- (pair1_t2 / pair2_t2 / pair3_t2) +
+  plot_layout(guides = "collect") &
 theme(legend.position = "bottom", legend.title = element_blank(),
       plot.margin = margin(5, 5, 5, 5, "pt"))
 
@@ -1029,7 +1015,7 @@ final
 #| fig-cap-location: top
 #| fig-pos: "H"
 #| fig-width: 12
-#| fig-height: 8
+#| fig-height: 12
 
 models_t2_45 <- c("All Controls", "All + State FE")
 
@@ -1117,7 +1103,7 @@ labels_t2_45 <- lapply(models_t2_45, make_label)
 # Stack each label above its plot
 pair_t2_45 <- function(i) labels_t2_45[[i]] / plots_t2_45[[i]]
 
-final_t2_45 <- (pair_t2_45(1) | pair_t2_45(2)) +
+final_t2_45 <- (pair_t2_45(1) / pair_t2_45(2)) +
   plot_layout(guides = "collect") &
   theme(legend.position = "bottom", legend.title = element_blank(), legend.text = element_text(size = 16))
 
