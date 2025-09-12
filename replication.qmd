@@ -3,7 +3,7 @@ title: "Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space"
 subtitle: "A Replication Study of Andreadis et al. (AEA Papers and Proceedings, 2025)"
 author:
   - name: Jacob Khaykin^[Solon High School, [jacobkhaykin27@solonschools.net](mailto:jacobkhaykin27@solonschools.net)]
-  - name: David Kane^[Institute for Globally Distributed Open Research and Education, [dave.kane@gmail.com](mailto:dave.kane@gmail.com)]
+  - name: David Kane^[New College of Florida, [dakane@ncf.edu](mailto:dakane@ncf.edu)]
 bibliography: references.bib
 csl: aea.csl
 link-citations: true
@@ -24,15 +24,13 @@ format:
 
 <!-- DK:  -->
 
-<!-- Clean up garbage. Only keep files you need. -->
+<!-- Fix tables. Coeeficient estimates must match up with wording, with standard errors directly below. -->
 
-<!-- Search for plot making code by searching in files for a string like "2023 average". May appear in many places! Goal is to get the font for the legend bigger. If that doesn't work, email your author contact. -->
+<!-- Bigger legend for maps. -->
 
-<!-- Causal discussion comes at end. Done  -->
+<!-- Maps go beyond square, seem off-kilter. -->
 
-<!-- 9 over Official Weights Done -->
-
-<!-- All of our plots are one column panels. Done -->
+<!-- Avoid "original weights" as a term. The original analysis used "equal weights." A phrase like " instead of the original weights." should be replaced with something like "instead of equal weights, as used by Andrediids et al 2025. -->
 
 <!-- Fix references.  -->
 
@@ -40,7 +38,8 @@ format:
 
 <!-- Ask AI to give you a paragraph summary of each reference. Read it. Confirm, by hand, that you are using the references correctly! -->
 
-<!-- Our bibliography does not match the journals formatting. Probably need a different csl. AI will help. Done-->
+<!-- Reread everything closely. -->
+
 
 
 *JEL: J24, O33, R11*
@@ -48,8 +47,6 @@ format:
 *Keywords:* Artificial Intelligence, Regional Economics, Labor Markets
 
 *Data Availability:* The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/Andreadis-Replication.
-
-
 
 
 ## Abstract {.unnumbered}
@@ -658,11 +655,7 @@ The successful reproduction confirms the technical reliability of the original a
 
 ## Extension: Log-Population Weighting Analysis
 
-To assess the robustness of the original findings, we re-estimated all models using log-population weights instead of the original weights. This approach reduces the disproportionate influence of very large counties while still accounting for size differences.
-
-The modified weighting scheme is: $w_{it} = \log(Population_{it})$
-
-This transformation addresses concerns that extremely populous counties (e.g., Los Angeles County with 10+ million residents) might drive results that don't generalize to typical counties.
+To assess the robustness of the original findings, we re-estimated all models using log-population weights instead of the original weights. 
 
 ```{r}
 #| label: fig-table1-coefs-models1-3
