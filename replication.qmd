@@ -32,7 +32,7 @@ format:
 
 <!-- 9 over Official Weights Done -->
 
-<!-- All of our plots are one column panels. -->
+<!-- All of our plots are one column panels. Done -->
 
 <!-- Fix references.  -->
 
@@ -40,7 +40,7 @@ format:
 
 <!-- Ask AI to give you a paragraph summary of each reference. Read it. Confirm, by hand, that you are using the references correctly! -->
 
-<!-- Our bibliography does not match the journals formatting. Probably need a different csl. AI will help. -->
+<!-- Our bibliography does not match the journals formatting. Probably need a different csl. AI will help. Done-->
 
 
 *JEL: J24, O33, R11*
