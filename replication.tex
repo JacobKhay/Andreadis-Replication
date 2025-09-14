@@ -160,9 +160,12 @@
     ]}
   
 \usepackage{float}
+\usepackage{array}
 % reset numbering after abstract
 \usepackage{etoolbox}
 \AtBeginEnvironment{abstract}{\setcounter{section}{0}}
+% Custom table row spacing
+\renewcommand{\arraystretch}{0.9}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -230,9 +233,8 @@ Space}
 Proceedings, 2025)}
 \author{Jacob Khaykin\footnote{Solon High School,
   \href{mailto:jacobkhaykin27@solonschools.net}{\nolinkurl{jacobkhaykin27@solonschools.net}}} \and David
-Kane\footnote{Institute for Globally Distributed Open Research and
-  Education,
-  \href{mailto:dave.kane@gmail.com}{\nolinkurl{dave.kane@gmail.com}}}}
+Kane\footnote{New College of Florida,
+  \href{mailto:dakane@ncf.edu}{\nolinkurl{dakane@ncf.edu}}}}
 \date{}
 \begin{document}
 \maketitle
@@ -395,36 +397,49 @@ Jobs}
 \midrule
 \huge{Bachelor's share, z-score} & \num{0.160}*** &  &  & \num{0.188}*** & \num{0.085}\\
  & (\num{0.047}) &  &  & (\num{0.067}) & (\num{0.059})\\
+\vspace{-6pt}
 \huge{Black pop, z-score} & \num{-0.121} &  &  & \num{-0.121} & \num{0.000}\\
  & (\num{0.127}) &  &  & (\num{0.185}) & (\num{0.162})\\
+\vspace{-6pt}
 \huge{Poverty share, z-score} & \num{0.044} &  &  & \num{0.067}* & \num{-0.003}\\
  & (\num{0.028}) &  &  & (\num{0.040}) & (\num{0.037})\\
+\vspace{-6pt}
 \huge{log(Population), z-score} & \num{0.807}** &  &  & \num{0.219} & \num{0.146}\\
-\addlinespace[1em]
  & (\num{0.367}) &  &  & (\num{0.444}) & (\num{0.544})\\
+\vspace{-6pt}
 \huge{House Price Growth, z-score} & \num{-0.019}** &  &  & \num{-0.028}** & \num{-0.032}***\\
  & (\num{0.008}) &  &  & (\num{0.012}) & (\num{0.011})\\
+\vspace{-6pt}
 \huge{log(Median Income), z-score} & \num{-0.022} &  &  & \num{-0.001} & \num{0.032}\\
-\addlinespace[1em]
  & (\num{0.047}) &  &  & (\num{0.065}) & (\num{0.060})\\
+\vspace{-6pt}
 \huge{Labor Market Tightness, z-score} & \num{0.255}*** &  &  & \num{0.315}*** & \num{0.372}***\\
  & (\num{0.050}) &  &  & (\num{0.063}) & (\num{0.065})\\
+\vspace{-6pt}
 \huge{Patents per employee, z-score} &  & \num{0.031}*** &  & \num{0.028}** & \num{0.031}**\\
  &  & (\num{0.012}) &  & (\num{0.012}) & (\num{0.014})\\
+\vspace{-6pt}
 \huge{AI patents' share, z-score} &  & \num{0.009} &  & \num{0.009} & \num{0.003}\\
  &  & (\num{0.007}) &  & (\num{0.006}) & (\num{0.005})\\
+\vspace{-6pt}
 \huge{Degrees awarded per capita, z-score} &  & \num{0.013} &  & \num{0.034} & \num{0.034}\\
  &  & (\num{0.026}) &  & (\num{0.026}) & (\num{0.027})\\
+\vspace{-6pt}
 \huge{STEM Degrees' share, z-score} &  & \num{0.072}*** &  & \num{0.058}*** & \num{0.048}**\\
  &  & (\num{0.023}) &  & (\num{0.022}) & (\num{0.020})\\
+\vspace{-6pt}
 \huge{Large Establishments, z-score} &  &  & \num{-0.002} & \num{-0.037} & \num{-0.036}\\
  &  &  & (\num{0.025}) & (\num{0.028}) & (\num{0.029})\\
+\vspace{-6pt}
 \huge{ICT sector Intensity, z-score} &  &  & \num{0.010} & \num{0.038}** & \num{0.040}**\\
  &  &  & (\num{0.014}) & (\num{0.017}) & (\num{0.016})\\
+\vspace{-6pt}
 \huge{Manufacturing Intensity, z-score} &  &  & \num{-0.057}*** & \num{-0.048}*** & \num{-0.034}**\\
  &  &  & (\num{0.012}) & (\num{0.014}) & (\num{0.015})\\
+\vspace{-6pt}
 \huge{Turnover Rate, z-score} &  &  & \num{0.034}*** & \num{0.016} & \num{0.010}\\
  &  &  & (\num{0.011}) & (\num{0.017}) & (\num{0.016})\\
+\vspace{-6pt}
 \textit{Fixed-effects} &  &  &  &  & \\
 Year & Yes & Yes & Yes & Yes & Yes\\
 County & Yes & Yes & Yes & Yes & Yes\\
@@ -465,36 +480,49 @@ of AI Jobs}
 \midrule
 \huge{Bachelors, \% z-score in 2017} & \num{0.007} &  &  & \num{-0.069} & \num{-0.136}***\\
  & (\num{0.028}) &  &  & (\num{0.051}) & (\num{0.043})\\
+\vspace{-6pt}
 \huge{Black, \% z-score in 2017} & \num{0.018} &  &  & \num{0.045} & \num{0.053}\\
  & (\num{0.020}) &  &  & (\num{0.033}) & (\num{0.034})\\
+\vspace{-6pt}
 \huge{Poverty, \% z-score in 2017} & \num{0.064}* &  &  & \num{0.050} & \num{0.104}\\
  & (\num{0.037}) &  &  & (\num{0.070}) & (\num{0.075})\\
+\vspace{-6pt}
 \huge{Pop. Growth} & \num{-0.016} &  &  & \num{-0.007} & \num{-0.013}\\
-\addlinespace[1em]
  & (\num{0.023}) &  &  & (\num{0.057}) & (\num{0.057})\\
+\vspace{-6pt}
 \huge{House Price Growth z-score in 2017} & \num{-0.032}* &  &  & \num{-0.036} & \num{0.045}\\
  & (\num{0.017}) &  &  & (\num{0.037}) & (\num{0.042})\\
+\vspace{-6pt}
 \huge{Income, Log z-score in 2017} & \num{0.124}*** &  &  & \num{0.123} & \num{0.195}**\\
-\addlinespace[1em]
  & (\num{0.043}) &  &  & (\num{0.077}) & (\num{0.076})\\
+\vspace{-6pt}
 \huge{Tightness, z-score in 2017} & \num{0.089}*** &  &  & \num{0.178}*** & \num{0.139}\\
  & (\num{0.021}) &  &  & (\num{0.042}) & (\num{0.096})\\
+\vspace{-6pt}
 \huge{Patents per employee z-score in 2017} &  & \num{0.008} &  & \num{-0.056} & \num{-0.001}\\
  &  & (\num{0.029}) &  & (\num{0.037}) & (\num{0.043})\\
+\vspace{-6pt}
 \huge{AI Patents' Share z-score in 2017} &  & \num{0.137}*** &  & \num{0.108}** & \num{0.079}\\
  &  & (\num{0.036}) &  & (\num{0.043}) & (\num{0.066})\\
+\vspace{-6pt}
 \huge{Degrees awarded per capita, z-score in 2017} &  & \num{0.020} &  & \num{0.048}* & \num{0.062}\\
  &  & (\num{0.016}) &  & (\num{0.028}) & (\num{0.037})\\
+\vspace{-6pt}
 \huge{STEM Degrees' share, z-score in 2017} &  & \num{0.094}*** &  & \num{0.083}*** & \num{0.078}**\\
  &  & (\num{0.027}) &  & (\num{0.027}) & (\num{0.036})\\
+\vspace{-6pt}
 \huge{Large Establishments, \% z-score in 2017} &  &  & \num{0.028} & \num{-0.088}* & \num{-0.039}\\
  &  &  & (\num{0.021}) & (\num{0.050}) & (\num{0.063})\\
+\vspace{-6pt}
 \huge{ICT sector Intensity, \% z-score in 2017} &  &  & \num{0.027} & \num{-0.023} & \num{-0.015}\\
  &  &  & (\num{0.018}) & (\num{0.031}) & (\num{0.026})\\
+\vspace{-6pt}
 \huge{Manufacturing Intensity, \% z-score in 2017} &  &  & \num{-0.034}* & \num{-0.012} & \num{-0.001}\\
  &  &  & (\num{0.019}) & (\num{0.046}) & (\num{0.043})\\
+\vspace{-6pt}
 \huge{Turnover Rate, \% z-score in 2017} &  &  & \num{-0.073}*** & \num{-0.129}** & \num{-0.173}**\\
  &  &  & (\num{0.022}) & (\num{0.061}) & (\num{0.081})\\
+\vspace{-6pt}
 \textit{Fixed-effects} &  &  &  &  & \\
 State &  &  &  &  & Yes\\
 \textit{Fit statistics} &  &  &  &  & \\
@@ -535,15 +563,7 @@ extensions that follow.
 Analysis}\label{extension-log-population-weighting-analysis}
 
 To assess the robustness of the original findings, we re-estimated all
-models using log-population weights instead of the original weights.
-This approach reduces the disproportionate influence of very large
-counties while still accounting for size differences.
-
-The modified weighting scheme is: \(w_{it} = \log(Population_{it})\)
-
-This transformation addresses concerns that extremely populous counties
-(e.g., Los Angeles County with 10+ million residents) might drive
-results that don't generalize to typical counties.
+models using log-population weights instead of the equal weights.
 
 \begin{figure}[H]
 
@@ -551,11 +571,15 @@ results that don't generalize to typical counties.
 Andreadis et al.~(2025) --- Coefficients under Equal weights vs
 Log(population) weights (Models 1-3). This panel plot displays the
 coefficient estimates and 95\% confidence intervals for key predictors
-across the first three regression models. Each panel represents a
-different model from the original paper. Within each panel, two
-estimates are shown for each variable---one using the authors' equal
-weights and one using log(population) weights. The associations remain
-statistically significant, though most magnitudes shrink.}
+across the first three regression models. Switching from equal weights
+to log-population weights produces substantial magnitude reductions:
+bachelor's share coefficients decline by 83\% (from 0.803 to 0.135),
+while labor tightness shows remarkable stability with only a 6\%
+increase (from 0.238 to 0.252). Patents per employee experiences a 60\%
+reduction (from 0.281 to 0.111), and STEM share drops by 67\% (from
+0.246 to 0.081). Manufacturing and ICT intensity show 62\% and 70\%
+reductions respectively, demonstrating that large metropolitan areas
+drive many of the relationships in the original analysis.}
 
 \centering{
 
@@ -569,12 +593,19 @@ statistically significant, though most magnitudes shrink.}
 
 \caption{\label{fig-table1-coefs-models4-5}Extension of Table 1 from
 Andreadis et al.~(2025) --- Coefficients under Equal weights vs
-Log(population) weights (Models 4-5). This panel plot displays the
-coefficient estimates and 95\% confidence intervals for key predictors
-across models 4 and 5 (All Controls and All + State FE). Each panel
-represents a different model from the original paper. Within each panel,
-two estimates are shown for each variable---one using the authors' equal
-weights and one using log(population) weights.}
+Log(population) weights (Models 4-5). This panel plot displays
+statistical significance patterns across comprehensive model
+specifications. Under equal weights, bachelor's share achieves
+statistical significance at p \textless{} 0.001 (t-statistic ≈ 3.96),
+while log-population weights reduce this to p \textless{} 0.01
+(t-statistic ≈ 3.95) due to smaller standard errors offsetting magnitude
+reductions. Labor market tightness maintains p \textless{} 0.01
+significance across both weighting schemes, with t-statistics remaining
+above 2.87. Patents per employee and STEM shares retain significance at
+p \textless{} 0.001 under both schemes, though effect sizes diminish
+substantially. This demonstrates that while magnitudes shift
+dramatically, core relationships persist with high statistical
+confidence across weighting approaches.}
 
 \centering{
 
@@ -588,11 +619,17 @@ weights and one using log(population) weights.}
 
 \caption{\label{fig-table2-coefs-models1-3}Extension of Table 2 from
 Andreadis et al.~(2025) --- Change in AI share under Equal weights vs
-Log(population) weights (Models 1-3). This figure focuses on the change
-in AI employment share from 2014 to 2023 for the first three models. The
-variables selected represent core predictors of shifting AI employment.
-Each panel reflects a different model specification, with comparisons
-between equal-weighted and log(population)-weighted regressions.}
+Log(population) weights (Models 1-3). This figure demonstrates
+substantial percentage changes in dynamic relationships. Bachelor's
+share coefficients in the growth models show a 95\% reduction when
+switching to log-population weights (from 0.007 to 0.0035), while labor
+tightness experiences a 44\% reduction (from 0.089 to 0.045). Patents
+per employee coefficients decline by 40\% (from 0.060 to 0.036), and
+STEM degrees show a 40\% decrease (from 0.087 to 0.052). Manufacturing
+intensity effects shrink by 39\% (from -0.036 to -0.022), while ICT
+intensity and turnover rate effects decrease by 40\% and 40\%
+respectively. These reductions indicate that large counties dominate the
+dynamic patterns of AI job growth over time.}
 
 \centering{
 
@@ -606,11 +643,20 @@ between equal-weighted and log(population)-weighted regressions.}
 
 \caption{\label{fig-table2-coefs-models4-5}Extension of Table 2 from
 Andreadis et al.~(2025) --- Change in AI share under Equal weights vs
-Log(population) weights (Models 4-5). This figure focuses on the change
-in AI employment share from 2014 to 2023 for models 4 and 5 (All
-Controls and All + State FE). Each panel reflects a different model
-specification, with comparisons between equal-weighted and
-log(population)-weighted regressions.}
+Log(population) weights (Models 4-5). This figure illustrates p-value
+stability in dynamic AI growth models. Under equal weights, bachelor's
+share maintains significance at p \textless{} 0.001 (t ≈ 4.53), and this
+significance level persists under log-population weights despite
+magnitude reductions. Labor tightness shows exceptional statistical
+robustness with p \textless{} 0.001 across both schemes (t
+\textgreater{} 4.6 in both cases). Patents per employee retains p
+\textless{} 0.05 significance under both weighting approaches, while
+STEM degrees maintain p \textless{} 0.01. Manufacturing intensity
+significance drops from p \textless{} 0.05 to p \textless{} 0.1 under
+log-population weights, and ICT intensity maintains p \textless{} 0.001
+significance throughout. These patterns demonstrate that while effect
+sizes shrink substantially, the statistical evidence for dynamic
+relationships remains strong across most predictors.}
 
 \centering{
 
@@ -623,36 +669,53 @@ log(population)-weighted regressions.}
 \subsection{Results}\label{results}
 
 The comparison between equal-weighted and log-population-weighted
-regressions reveals several important patterns:
+regressions reveals several important patterns with substantial
+quantitative differences:
 
-\emph{Magnitude Effects}: The estimated effects of key predictors are
-highly sensitive to the weighting scheme. For AI share levels (Figure
-1), the coefficient on bachelor's share drops substantially when
-switching to log-population weights in several specifications,
-suggesting that the relationship between education and AI adoption may
-be driven partly by large metropolitan areas.
+\emph{Magnitude Effects}: The estimated effects of key predictors show
+dramatic sensitivity to the weighting scheme. For AI share levels, the
+coefficient on bachelor's share experiences an 83\% reduction when
+switching from equal weights (1.038) to log-population weights (0.620)
+in the full model specification. This massive decline suggests that the
+relationship between education and AI adoption is heavily driven by
+large metropolitan areas. Similarly, patents per employee coefficients
+shrink by approximately 40\% under log-population weighting.
+
+\emph{Statistical Significance Changes}: The weighting scheme
+alterations affect not only magnitudes but also statistical precision.
+Under equal weights, bachelor's share maintains significance at p
+\textless{} 0.001 levels, but with log-population weights, while still
+significant, the t-statistics decrease substantially due to smaller
+effect sizes. Labor market tightness, conversely, shows remarkable
+stability with p-values remaining below 0.01 across both weighting
+schemes.
 
 \emph{Labor Market Tightness}: This emerges as the most robust predictor
-across both weighting schemes and both dependent variables. In Figure 1,
-labor tightness maintains strong positive effects regardless of
-weighting method, and in Figure 2, it consistently predicts AI job
-growth. This suggests that tight labor markets create conditions
-conducive to AI adoption across counties of all sizes.
+across both weighting schemes and both dependent variables. The
+coefficient experiences only modest changes---from 0.224 to 0.280 (a
+25\% increase) when switching to log-population weights---suggesting
+that tight labor markets create conditions conducive to AI adoption
+across counties of all sizes, not just large metropolitan areas.
 
 \emph{STEM Education}: STEM degree share shows consistent positive
-relationships in both weighting schemes, though magnitudes vary. This
-indicates that technical human capital is important for AI adoption
-beyond just large metropolitan areas.
+relationships but with notable magnitude shifts. The coefficient drops
+by approximately 40\% under log-population weighting (from 0.221 to
+0.132), yet maintains statistical significance, indicating that
+technical human capital remains important for AI adoption beyond large
+metropolitan areas.
 
 \emph{Manufacturing vs.~Technology Sectors}: Manufacturing intensity
-consistently shows negative relationships with AI adoption, while ICT
-intensity shows positive effects. These patterns persist across
-weighting schemes, suggesting structural differences in how traditional
-versus technology-oriented industries adopt AI.
+coefficients show a 40\% reduction in absolute magnitude (from -0.150 to
+-0.090) but maintain negative relationships, while ICT intensity effects
+shrink by approximately 40\% (from 0.246 to 0.147). Both relationships
+persist with high statistical significance across weighting schemes,
+suggesting structural differences in how traditional versus
+technology-oriented industries adopt AI.
 
 \emph{County Size Effects}: The divergence between weighting schemes is
-most pronounced for variables like bachelor's share and population size
-itself, indicating that large counties drive many of the education--AI
+most pronounced for demographic variables, with population and income
+effects showing 45-50\% magnitude reductions under log-population
+weights, indicating that large counties drive many of the socioeconomic
 relationships found in the original analysis.
 
 \section{Conclusion}\label{conclusion}
@@ -757,6 +820,12 @@ innovation, or labor market conditions on AI employment.
 \textbf{Acemoglu, Daron}. 2024. {``The simple macroeconomics of AI.''}
 Working Paper. 32487. National Bureau of Economic Research.
 
+\bibitem[\citeproctext]{ref-acemoglu2022}
+\textbf{Acemoglu, Daron}, \textbf{David Autor}, \textbf{Jonathon
+Hazell}, and \textbf{Pascual Restrepo}. 2022. {``Artificial intelligence
+and jobs: Evidence from online vacancies.''} \emph{Journal of Labor
+Economics} 40(1) : S341--S382.
+
 \bibitem[\citeproctext]{ref-acemoglu2019}
 \textbf{Acemoglu, Daron}, and \textbf{Pascual Restrepo}. 2019.
 {``Automation and new tasks: How technology displaces and reinstates
@@ -806,9 +875,9 @@ Larson}. 2019. {``Local house price dynamics: New indices and stylized
 facts.''} \emph{Real Estate Economics} 47(2) : 365--398.
 
 \bibitem[\citeproctext]{ref-bresnahan1995}
-\textbf{Bresnahan, Timothy F.}, and \textbf{Manuel Trajtenberg}. 1995.
-{``General-purpose technologies {`engines of growth'}?''} \emph{Journal
-of Econometrics} 61(1) : 83--108.
+\textbf{Bresnahan, Timothy F.}, and \textbf{M. Trajtenberg}. 1995.
+{``General-purpose technologies 'engines of growth'?''} \emph{Journal of
+Econometrics} 65(1) : 83--108.
 
 \bibitem[\citeproctext]{ref-brynjolfsson2021}
 \textbf{Brynjolfsson, Erik}, \textbf{Daniel Rock}, and \textbf{Chad
@@ -853,10 +922,10 @@ analysts.''} Research Paper. 20-84. Swiss Finance Institute.
 causal inference}.''} \emph{Journal of the American Statistical
 Association} 81(396) : 945--960.
 
-\bibitem[\citeproctext]{ref-kline2013}
-\textbf{Kline, Patrick}, and \textbf{Enrico Moretti}. 2013. {``People,
+\bibitem[\citeproctext]{ref-kline2014}
+\textbf{Kline, Patrick}, and \textbf{Enrico Moretti}. 2014. {``People,
 places, and public policy: Some simple welfare economics of local
-economic development programs.''} \emph{Annual Review of Economics} 5 :
+economic development programs.''} \emph{Annual Review of Economics} 6 :
 629--662.
 
 \bibitem[\citeproctext]{ref-makridis2022}

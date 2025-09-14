@@ -3,7 +3,10 @@
     "allow": [
       "WebSearch",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(Rscript:*)",
+      "Bash(quarto render:*)",
+      "WebFetch(domain:www.aeaweb.org)"
     ],
     "deny": [],
     "ask": []
