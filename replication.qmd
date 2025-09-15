@@ -27,13 +27,7 @@ format:
 
 <!-- DK:  -->
 
-<!-- Fix tables. Coeeficient estimates must match up with wording, with standard errors directly below. Need help-->
-
-<!-- Bigger legend for maps. Done -->
-
-<!-- Maps go beyond square, seem off-kilter. Done -->
-
-<!-- Avoid "original weights" as a term. The original analysis used "equal weights." A phrase like " instead of the original weights." should be replaced with something like "instead of equal weights, as used by Andrediids et al 2025. Done -->
+<!-- Fix tables. Coeeficient estimates must match up with wording, with standard errors directly below. Do the whole plot in a .R file first. Make it look nice. Then add it to the paper. Do NOT mess with raw LaTeX.-->
 
 <!-- Fix references.  -->
 
@@ -70,7 +64,7 @@ The original study links county-level AI employment to several explanatory facto
 
 @andreadis2025 find that AI employment is strongly correlated with higher educational attainment, more innovation activity, and certain industry profiles. These associations are robust across specifications, suggesting that counties with strong human capital, innovative capacity, and aligned industries are more likely to attract AI jobs. The results highlight structural divides in access to AI employment opportunities across the country.
 
-We reproduce these results and then extend the analysis by applying log-population weights. This alternative weighting scheme reduces the influence of the largest counties while still reflecting the relative size of local labor markets. Under this adjustment, the core relationships persist but the estimated magnitudes generally shrink. This indicates that while large counties contribute to the overall pattern, the relationships hold across the broader distribution of counties.
+We reproduce these results and then extend the analysis by applying log-population weights. This alternative weighting scheme reduces the influence of the largest counties while still reflecting the relative size of local labor markets. Under this adjustment, the core relationships persist but the estimated magnitudes generally shrink. 
 
 Finally, we note that some of the causal interpretations in @andreadis2025 are not supported by the observational nature of the data. While the correlations are informative and highlight important regional patterns, they do not establish that education, innovation, or industry factors directly cause higher AI employment. Our replication underscores the value of the evidence while also emphasizing the limits of what can be inferred from the design.
 
