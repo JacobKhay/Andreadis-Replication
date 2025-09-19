@@ -37,7 +37,7 @@ format:
 
 <!-- Reread everything closely. -->
 
-
+<!-- JK: realized that the panel plot font(s) might be too small. Sorry, will fix next time.  -->
 
 *JEL: J24, O33, R11*
 
