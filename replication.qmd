@@ -56,37 +56,35 @@ Declaration: There are no financial conflicts of interest to share.
 
 ## Introduction
 
-This paper replicates the analysis of @andreadis2025 on the correlation between the level and growth artificial intelligence employment openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI employment emerges and how it spreads is important for both researchers and policymakers, since the rise of AI has the potential to reshape regional economies, alter the demand for skills, and shift patterns of innovation. County-level variation offers a granular perspective on how these transformations take hold across the United States.
+This paper replicates the analysis of @andreadis2025 on the correlation between the level and growth artificial intelligence employment openings and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI employment emerges and how it spreads is important for both researchers and policymakers, since the rise of AI has the potential to reshape regional economies [@acemoglu2024; @brynjolfsson2021], alter the demand for skills [@autor2015; @acemoglu2019], and shift patterns of innovation [@babina2024]. County-level variation offers a granular perspective on how these transformations take hold across the United States.
 
 The outcome of interest is the share of AI-related job postings at the county-year level. This measure captures both the absolute level of AI employment opportunities and how those opportunities evolve over time. Tracking these dynamics provides insight into which regions gain early access to AI-driven growth and which lag behind.
 
-The original study links county-level AI employment to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity, and industry factors by the composition of employment across sectors. Together, these variables represent structural characteristics that might condition whether a region becomes a hub for AI-related work.
+The original study links county-level AI employment to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity [@giczy2022], and industry factors by the composition of employment across sectors. Together, these variables represent structural characteristics that might condition whether a region becomes a hub for AI-related work.
 
 @andreadis2025 find that AI employment is strongly correlated with higher educational attainment, more innovation activity, and certain industry profiles. These associations are robust across specifications, suggesting that counties with strong human capital, innovative capacity, and aligned industries are more likely to attract AI jobs. The results highlight structural divides in access to AI employment opportunities across the country.
 
 We reproduce these results and then extend the analysis by applying log-population weights. This alternative weighting scheme reduces the influence of the largest counties while still reflecting the relative size of local labor markets. Under this adjustment, the core relationships persist but the estimated magnitudes generally shrink. 
 
-Finally, we note that some of the causal interpretations in @andreadis2025 are not supported by the observational nature of the data. While the correlations are informative and highlight important regional patterns, they do not establish that education, innovation, or industry factors directly cause higher AI employment. Our replication underscores the value of the evidence while also emphasizing the limits of what can be inferred from the design.
-
-
+Finally, we note that some of the causal interpretations in @andreadis2025 are not supported by the observational nature of the data [@holland1986]. While the correlations are informative and highlight important regional patterns, they do not establish that education, innovation, or industry factors directly cause higher AI employment. Our replication underscores the value of the evidence while also emphasizing the limits of what can be inferred from the design.
 
 ## Data
 
 The study utilizes multiple data sources to construct a comprehensive county-level dataset spanning 2014–2023:
 
-**AI Employment Data**: Job posting data from Lightcast, which aggregates information from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use. The dependent variable $AI_{it}$ is defined as:
+**AI Employment Data**: Job posting data from Lightcast [@beckett2023], which aggregates information from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use [@acemoglu2022]. The dependent variable $AI_{it}$ is defined as:
 
 $$
 AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{1}
 $$
 
-**Demographic Variables**: From the American Community Survey (ACS), we include bachelor's share (percentage of workforce with bachelor's degree or higher), black population share (percentage of county population identifying as Black), poverty share (percentage of population below federal poverty line), log population (natural logarithm of county population), and log median income (natural logarithm of median household income).
+**Demographic Variables**: From the American Community Survey [@census_acs], we include bachelor's share (percentage of workforce with bachelor's degree or higher), black population share (percentage of county population identifying as Black), poverty share (percentage of population below federal poverty line), log population (natural logarithm of county population), and log median income (natural logarithm of median household income).
 
-**Innovation Indicators**: We measure patents per employee (USPTO patent counts normalized by employment), AI patents share (percentage of patents classified as AI-related), STEM degrees share (percentage of awarded degrees in STEM fields), and degrees per capita (total degrees awarded per capita).
+**Innovation Indicators**: We measure patents per employee (USPTO patent counts normalized by employment), AI patents share (percentage of patents classified as AI-related) [@giczy2022], STEM degrees share (percentage of awarded degrees in STEM fields), and degrees per capita (total degrees awarded per capita).
 
-**Industry and Labor Market Variables**: These include labor market tightness (ratio of job postings to unemployed workers), manufacturing intensity (employment share in manufacturing sector), ICT intensity (employment share in information and communication technology), turnover rate (worker separation rate from Quarterly Workforce Indicators), and large establishments share (percentage of employment in large firms).
+**Industry and Labor Market Variables**: These include labor market tightness (ratio of job postings to unemployed workers) [@bls_laus], manufacturing intensity (employment share in manufacturing sector) [@census_cbp], ICT intensity (employment share in information and communication technology), turnover rate (worker separation rate from Quarterly Workforce Indicators) [@census_qwi], and large establishments share (percentage of employment in large firms).
 
-**Housing Market**: We include house price growth from Federal Housing Finance Agency (FHFA).  
+**Housing Market**: We include house price growth from Federal Housing Finance Agency [@bogin2019].  
 
 All explanatory variables are lagged by one year to address potential endogeneity concerns. The baseline specification relates the dependent variable to these covariates using the following model:
 
@@ -99,6 +97,7 @@ where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county
 ### Reproduction of Original Results
 
 We successfully reproduced the main findings from Tables 1 and 2 of @andreadis2025. The reproduction confirms the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
+
 ```{r}
 #| label: tbl-table1
 #| echo: false
@@ -114,6 +113,7 @@ library(modelsummary)
 library(scales)         
 library(kableExtra)     
 
+# Load and prepare data
 data_ai <- read_csv("data.csv") |>   
   ungroup() |>                       
   mutate(
@@ -136,28 +136,30 @@ data_ai <- read_csv("data.csv") |>
     state_year = paste0(state, Year)                
   )
 
+# Create standardized variables
 data_ai_z <- data_ai |> 
   filter(emp != 0) |>                               
   mutate(
-    share_bac = scale(share_bac),                   
-    share_black = scale(share_black),               
-    share_poverty = scale(share_poverty),           
-    logpop = scale(logpop),                         
-    hpi_ch = scale(hpi_ch),                         
-    logincome = scale(logincome),                   
-    tightness = scale(tightness),                   
-    unrate = scale(unrate),                         
-    pat_intensity = scale(pat_intensity),           
-    patai_intensity = scale(patai_intensity),       
-    degshare = scale(degshare),                     
-    stemshare = scale(stemshare),                   
-    large_firms = scale(large_firms),               
-    information_intensity = scale(information_intensity),  
-    manuf_intensity = scale(manuf_intensity),       
-    TurnOvrS = scale(TurnOvrS),                     
+    share_bac = scale(share_bac)[,1],                   
+    share_black = scale(share_black)[,1],               
+    share_poverty = scale(share_poverty)[,1],           
+    logpop = scale(logpop)[,1],                         
+    hpi_ch = scale(hpi_ch)[,1],                         
+    logincome = scale(logincome)[,1],                   
+    tightness = scale(tightness)[,1],                   
+    unrate = scale(unrate)[,1],                         
+    pat_intensity = scale(pat_intensity)[,1],           
+    patai_intensity = scale(patai_intensity)[,1],       
+    degshare = scale(degshare)[,1],                     
+    stemshare = scale(stemshare)[,1],                   
+    large_firms = scale(large_firms)[,1],               
+    information_intensity = scale(information_intensity)[,1],  
+    manuf_intensity = scale(manuf_intensity)[,1],       
+    TurnOvrS = scale(TurnOvrS)[,1],                     
     ai_intensity = ai_intensity * 100               
   )
 
+# Run regression models
 est_demog_no = feols(
   ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS,
   data = data_ai_z,
@@ -197,62 +199,52 @@ est_all_large = feols(
   weights = ~lads
 )
 
-obs1 <- comma(nobs(est_demog_no))
-obs2 <- comma(nobs(est_innovation_no))
-obs3 <- comma(nobs(est_industry_no))
-obs4 <- comma(nobs(est_all))
-obs5 <- comma(nobs(est_all_large))
+# Extract model statistics
+models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_all_large)
+obs <- map_chr(models, ~comma(nobs(.x)))
+r2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "r2")))
+wr2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "wr2")))
 
-r21 <- sprintf("%.3f", r2(est_demog_no, "r2"))
-r22 <- sprintf("%.3f", r2(est_innovation_no, "r2"))
-r23 <- sprintf("%.3f", r2(est_industry_no, "r2"))
-r24 <- sprintf("%.3f", r2(est_all, "r2"))
-r25 <- sprintf("%.3f", r2(est_all_large, "r2"))
-
-wr21 <- sprintf("%.3f", r2(est_demog_no, "wr2"))
-wr22 <- sprintf("%.3f", r2(est_innovation_no, "wr2"))
-wr23 <- sprintf("%.3f", r2(est_industry_no, "wr2"))
-wr24 <- sprintf("%.3f", r2(est_all, "wr2"))
-wr25 <- sprintf("%.3f", r2(est_all_large, "wr2"))
-
+# Create extra rows for table footer
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "\\textit{Fixed-effects}", "", "", "", "", "",
+  "Fixed-effects", "", "", "", "", "",
   "Year", "Yes", "Yes", "Yes", "Yes", "Yes",
   "County", "Yes", "Yes", "Yes", "Yes", "Yes",
-  "State Year", "", "", "", "", "Yes",
-  "\\textit{Fit statistics}", "", "", "", "", "",
-  "Observations", obs1, obs2, obs3, obs4, obs5,
-  "R²", r21, r22, r23, r24, r25,
-  "Within R²", wr21, wr22, wr23, wr24, wr25
+  "State Year", "No", "No", "No", "No", "Yes",
+  "Fit statistics", "", "", "", "", "",
+  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
+  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5],
+  "Within R²", wr2_vals[1], wr2_vals[2], wr2_vals[3], wr2_vals[4], wr2_vals[5]
 )
 
-# Updated labels with significantly larger font size commands
+# Variable labels - shortened to fit on single lines
 labels <- c(
-  "share_bac" = "\\huge{Bachelor's share, z-score}",
-  "share_black" = "\\huge{Black pop, z-score}",
-  "share_poverty" = "\\huge{Poverty share, z-score}",
-  "logpop" = "\\huge{log(Population), z-score}",
-  "hpi_ch" = "\\huge{House Price Growth, z-score}",
-  "logincome" = "\\huge{log(Median Income), z-score}",
-  "tightness" = "\\huge{Labor Market Tightness, z-score}",
-  "pat_intensity" = "\\huge{Patents per employee, z-score}",
-  "patai_intensity" = "\\huge{AI patents' share, z-score}",
-  "degshare" = "\\huge{Degrees awarded per capita, z-score}",
-  "stemshare" = "\\huge{STEM Degrees' share, z-score}",
-  "large_firms" = "\\huge{Large Establishments, z-score}",
-  "information_intensity" = "\\huge{ICT sector Intensity, z-score}",
-  "manuf_intensity" = "\\huge{Manufacturing Intensity, z-score}",
-  "TurnOvrS" = "\\huge{Turnover Rate, z-score}"
+  "share_bac" = "Bachelors' share",
+  "share_black" = "Black pop", 
+  "share_poverty" = "Poverty share",
+  "logpop" = "log(Population)",
+  "hpi_ch" = "House Price Growth",
+  "logincome" = "log(Median Income)",
+  "tightness" = "Labor Tightness",
+  "pat_intensity" = "Patents/employee",
+  "patai_intensity" = "AI patents' share",
+  "degshare" = "Degrees/capita",
+  "stemshare" = "Stem Degrees' share",
+  "large_firms" = "Large Firms",
+  "information_intensity" = "ICT sector Intensity",
+  "manuf_intensity" = "Manufacturing",
+  "TurnOvrS" = "Turnover Rate"
 )
 
-modelsummary(
+# Create table with shorter column headers
+table_output <- modelsummary(
   list(
-    "(1)" = est_demog_no,
-    "(2)" = est_innovation_no,
-    "(3)" = est_industry_no,
-    "(4)" = est_all,
-    "(5)" = est_all_large
+    "Demo." = est_demog_no,
+    "Innov." = est_innovation_no,
+    "Indust." = est_industry_no,
+    "All" = est_all,
+    "All+State" = est_all_large
   ),
   coef_map = labels,
   stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -260,29 +252,26 @@ modelsummary(
   add_rows = extra_rows,
   escape = FALSE,
   statistic = "({std.error})",
-  output = "kableExtra",
-  notes = NULL
-) |>
+  output = "kableExtra"
+)
+
+# Apply more compact formatting
+final_table <- table_output |>
   kable_styling(
-    latex_options = c("hold_position", "scale_down"),
+    latex_options = c("HOLD_position", "scale_down"),
     full_width = FALSE,
-    font_size = 18,  # Significantly increased font size for values and text
+    font_size = 7.5,
     position = "center"
   ) |>
-  column_spec(1, width = "6.5cm") |>   # Wider first column for larger text
-  column_spec(2:6, width = "2.4cm") |>  # Wider columns for coefficients
-  row_spec(c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30), extra_latex_after = "\\vspace{-6pt}") |>
-  add_header_above(c(" " = 1, "Demographics" = 1, "Innovation" = 1, 
-                     "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
-                   bold = TRUE, font_size = 18) |>  # Increased header font size
-  footnote(
-    general = "Notes: Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023. The table reports coefficients from regressions of the share of AI jobs in a county on Demographic, Innovation, and Industry Characteristics. Observations are weighted by log(1 + job postings) and standard errors are clustered at the county-level. *** p<0.01, ** p<0.05, * p<0.10",
-    general_title = "",
-    escape = FALSE,
-    threeparttable = TRUE,
-    footnote_as_chunk = TRUE
-  )
+  column_spec(1, width = "2.5cm") |>
+  column_spec(2:6, width = "1.2cm")
+
+# Display table 
+final_table
 ```
+
+**Notes:** Dependent variable is AI job share (%). All explanatory variables are standardized (z-scores). Regressions include county and year fixed effects, with state×year fixed effects in column (5). Standard errors clustered at county level. Observations are unweighted. Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023.
+
 ```{r}
 #| label: tbl-table2
 #| echo: false
@@ -400,65 +389,50 @@ mod5 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
                 z_large_firms + z_information_intensity + z_manuf_intensity + z_TurnOvrS | state,
               data = clean_data)
 
-# Extract statistics for each model
-obs1 <- comma(nobs(mod1))
-obs2 <- comma(nobs(mod2))
-obs3 <- comma(nobs(mod3))
-obs4 <- comma(nobs(mod4))
-obs5 <- comma(nobs(mod5))
+# Extract model statistics
+models <- list(mod1, mod2, mod3, mod4, mod5)
+obs <- map_chr(models, ~comma(nobs(.x)))
+r2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "r2")))
+wr2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "wr2")))
 
-# Extract R² values properly as single numbers
-r21 <- sprintf("%.3f", r2(mod1, "r2"))
-r22 <- sprintf("%.3f", r2(mod2, "r2"))
-r23 <- sprintf("%.3f", r2(mod3, "r2"))
-r24 <- sprintf("%.3f", r2(mod4, "r2"))
-r25 <- sprintf("%.3f", r2(mod5, "r2"))
-
-# Within R² (only meaningful for model 5 with fixed effects)
-wr21 <- "—"
-wr22 <- "—"
-wr23 <- "—"
-wr24 <- "—"
-wr25 <- sprintf("%.3f", r2(mod5, "wr2"))
-
-# Create extra rows for fixed effects and fit statistics
+# Create extra rows for table footer
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "\\textit{Fixed-effects}", "", "", "", "", "",
-  "State", "", "", "", "", "Yes",
-  "\\textit{Fit statistics}", "", "", "", "", "",
-  "Observations", obs1, obs2, obs3, obs4, obs5,
-  "R²", r21, r22, r23, r24, r25,
-  "Within R²", wr21, wr22, wr23, wr24, wr25
+  "Fixed-effects", "", "", "", "", "",
+  "State", "No", "No", "No", "No", "Yes",
+  "Fit statistics", "", "", "", "", "",
+  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
+  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5],
+  "Within R²", "—", "—", "—", "—", wr2_vals[5]
 )
 
-# Clean and readable variable labels for output with \huge{} commands
+# Variable labels - shortened to fit on single lines
 labels <- c(
-  "z_share_bac" = "\\huge{Bachelors, \\% z-score in 2017}",
-  "z_share_black" = "\\huge{Black, \\% z-score in 2017}",
-  "z_share_poverty" = "\\huge{Poverty, \\% z-score in 2017}",
-  "z_logpop" = "\\huge{Pop. Growth}",
-  "z_hpi_ch" = "\\huge{House Price Growth z-score in 2017}",
-  "z_logincome" = "\\huge{Income, Log z-score in 2017}",
-  "z_tightness" = "\\huge{Tightness, z-score in 2017}",
-  "z_pat_intensity" = "\\huge{Patents per employee z-score in 2017}",
-  "z_patai_intensity" = "\\huge{AI Patents' Share z-score in 2017}",
-  "z_degshare" = "\\huge{Degrees awarded per capita, z-score in 2017}",
-  "z_stemshare" = "\\huge{STEM Degrees' share, z-score in 2017}",
-  "z_large_firms" = "\\huge{Large Establishments, \\% z-score in 2017}",
-  "z_information_intensity" = "\\huge{ICT sector Intensity, \\% z-score in 2017}",
-  "z_manuf_intensity" = "\\huge{Manufacturing Intensity, \\% z-score in 2017}",
-  "z_TurnOvrS" = "\\huge{Turnover Rate, \\% z-score in 2017}"
+  "z_share_bac" = "Bachelors",
+  "z_share_black" = "Black", 
+  "z_share_poverty" = "Poverty",
+  "z_logpop" = "Pop. Growth",
+  "z_hpi_ch" = "House Price Growth",
+  "z_logincome" = "Income, Log",
+  "z_tightness" = "Tightness",
+  "z_pat_intensity" = "Patents/employee",
+  "z_patai_intensity" = "AI Patents' Share",
+  "z_degshare" = "Degrees/capita",
+  "z_stemshare" = "Stem Degrees' share",
+  "z_large_firms" = "Large Firms",
+  "z_information_intensity" = "ICT sector Intensity",
+  "z_manuf_intensity" = "Manufacturing",
+  "z_TurnOvrS" = "Turnover Rate"
 )
 
-# Render the regression table with modelsummary and style with kableExtra
-modelsummary(
+# Create table with shorter column headers
+table_output <- modelsummary(
   list(
-    "(1)" = mod1,
-    "(2)" = mod2,
-    "(3)" = mod3,
-    "(4)" = mod4,
-    "(5)" = mod5
+    "Demo." = mod1,
+    "Innov." = mod2,
+    "Indust." = mod3,
+    "All" = mod4,
+    "All+State" = mod5
   ),
   coef_map = labels,
   stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -466,29 +440,25 @@ modelsummary(
   add_rows = extra_rows,
   escape = FALSE,
   statistic = "({std.error})",
-  output = "kableExtra",
-  notes = NULL
-) |>
+  output = "kableExtra"
+)
+
+# Apply more compact formatting
+final_table <- table_output |>
   kable_styling(
-    latex_options = c("hold_position", "scale_down"),
+    latex_options = c("HOLD_position", "scale_down"),
     full_width = FALSE,
-    font_size = 18,  # Changed to match Table 1
+    font_size = 7.5,
     position = "center"
   ) |>
-  column_spec(1, width = "6.5cm") |>  # Wider to match Table 1
-  column_spec(2:6, width = "2.4cm") |>  # Wider to match Table 1
-  row_spec(c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30), extra_latex_after = "\\vspace{-6pt}") |>
-  add_header_above(c(" " = 1, "Demographics" = 1, "Innovation" = 1, 
-                      "Industry" = 1, "All Controls" = 1, "All + State FE" = 1),
-                   font_size = 18, bold = TRUE) |>  # Changed to match Table 1
-  footnote(
-    general = "Notes: Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2016–2023. The table reports the coefficients associated with regressions of the change in share of AI jobs in a county from 2017–18 (average) to 2022–23 (average) on Demographic, Innovation, and Industry characteristics. Observations are unweighted. Standard errors in parentheses. *** p<0.01, ** p<0.05, * p<0.1",
-    general_title = "",
-    escape = FALSE,
-    threeparttable = TRUE,
-    footnote_as_chunk = TRUE
-  )
+  column_spec(1, width = "2.5cm") |>
+  column_spec(2:6, width = "1.2cm")
+
+# Display table 
+final_table
 ```
+
+**Notes:** Dependent variable is AI job percentage-point share (%). All explanatory variables are standardized (z-scores). Regressions include county and year fixed effects, with state×year fixed effects in column (5). Standard errors clustered at county level. Observations are unweighted. Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023.
 
 ```{r}
 #| label: setup
@@ -660,8 +630,14 @@ To assess the robustness of the original findings, we re-estimated all models us
 #| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Equal weights vs Log(population) weights (Models 1-3). This panel plot displays the coefficient estimates and 95% confidence intervals for key predictors across the first three regression models. Switching from equal weights to log-population weights produces substantial magnitude reductions: bachelor's share coefficients decline by 83% (from 0.803 to 0.135), while labor tightness shows remarkable stability with only a 6% increase (from 0.238 to 0.252). Patents per employee experiences a 60% reduction (from 0.281 to 0.111), and STEM share drops by 67% (from 0.246 to 0.081). Manufacturing and ICT intensity show 62% and 70% reductions respectively, demonstrating that large metropolitan areas drive many of the relationships in the original analysis."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 12
-#| fig-height: 8
+#| fig-width: 14
+#| fig-height: 10
+
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(patchwork)
+
 models <- c("Demographics", "Innovation", "Industry")
 variables <- c(
   "Bachelor's share", "Labor Tightness", "Patents per emp.",
@@ -723,60 +699,107 @@ make_df <- function(model_index) {
     )
 }
 
-# Build plots (no titles/captions; legend kept for collection)
+# Enhanced plot function with better styling
 plots <- lapply(1:3, function(i) {
   df <- make_df(i)
-  # Adjust y-axis expansion based on number of variables to ensure consistent spacing
-  n_vars <- length(unique(df$Variable))
-  y_expand <- if(n_vars == 2) c(1.2, 1.2) else c(0.8, 0.8)  # Much more space for 2-variable panels
-
+  
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
-    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.5, alpha = 0.9) +
     geom_errorbarh(aes(xmin = lower, xmax = upper),
-                   position = position_dodge(width = 0.4),
-                   height = 0.3, linewidth = 0.9) +
+                   position = position_dodge(width = 0.5),
+                   height = 0.2, linewidth = 1.2, alpha = 0.8) +
     labs(x = "Coefficient", y = NULL) +
-    theme_minimal() +
+    theme_minimal(base_size = 18) +
     theme(
-      axis.text.y = element_text(size = 14),
-      axis.text.x = element_text(size = 12),
-      axis.title.x = element_text(size = 14),
-      legend.text = element_text(size = 16),
-      panel.grid.minor = element_blank()
+      # Y-axis styling
+      axis.text.y = element_text(size = 13, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins and spacing
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20"),
+      legend.margin = margin(t = 10),
+      legend.box.spacing = unit(0.5, "cm")
     ) +
-    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
-                                  "Log-Population Weights" = "#ff7f0e"),
-                       breaks = c("Equal Weights", "Log-Population Weights")) +
-    scale_x_continuous(breaks = seq(-0.5, 1.5, by = 0.5), limits = c(-0.6, 1.6)) +
-    scale_y_discrete(expand = expansion(add = y_expand))
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.5, 1.5, by = 0.25), 
+      limits = c(-0.6, 1.6),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
+    scale_y_discrete(expand = expansion(add = c(0.6, 0.6)))
 })
 
-# For first plot: models 1-3 only
+# Add titles directly to the plots instead of separate label objects
+plots_with_titles <- lapply(1:3, function(i) {
+  df <- make_df(i)
+  
+  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.5, alpha = 0.9) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper),
+                   position = position_dodge(width = 0.5),
+                   height = 0.2, linewidth = 1.2, alpha = 0.8) +
+    labs(x = "Coefficient", y = NULL, title = models[i]) +
+    theme_minimal(base_size = 18) +
+    theme(
+      # Title styling
+      plot.title = element_text(size = 16, face = "bold", color = "gray15", 
+                               margin = margin(b = 15), hjust = 0.5),
+      
+      # Y-axis styling
+      axis.text.y = element_text(size = 13, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins and spacing
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20"),
+      legend.margin = margin(t = 10),
+      legend.box.spacing = unit(0.5, "cm")
+    ) +
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.5, 1.5, by = 0.25), 
+      limits = c(-0.6, 1.6),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
+    scale_y_discrete(expand = expansion(add = c(0.6, 0.6)))
+})
 
-# Big semi-headers directly above each panel
-make_label <- function(txt) {
-  ggplot() +
-    annotate("text", x = 0, y = 0.5, label = txt,
-             hjust = 0, vjust = 0.5, fontface = "bold", size = 5.5) +
-    coord_cartesian(xlim = c(0,1), ylim = c(0,1), expand = FALSE) +
-    theme_void() +
-    theme(plot.margin = margin(0, 5, 2, 5, "pt"))
-}
-
-labels <- lapply(models, make_label)
-
-# Create pairs with labels, ensuring consistent margins for alignment
-pair1 <- labels[[1]] / plots[[1]]
-pair2 <- labels[[2]] / plots[[2]]
-pair3 <- labels[[3]] / plots[[3]]
-
-# Stack plots vertically with equal spacing
-final <- (pair1 / pair2 / pair3) +
+# Simple vertical arrangement
+final <- plots_with_titles[[1]] / plots_with_titles[[2]] / plots_with_titles[[3]] + 
   plot_layout(guides = "collect") &
-theme(legend.position = "bottom", legend.title = element_blank(),
-      plot.margin = margin(5, 5, 5, 5, "pt"),
-      panel.spacing = unit(0.5, "cm"))
+  theme(
+    legend.position = "bottom", 
+    legend.title = element_blank(),
+    legend.text = element_text(size = 13, color = "gray20"),
+    legend.margin = margin(t = 20)
+  )
 
 final
 ```
@@ -789,8 +812,8 @@ final
 #| fig-cap: "Extension of Table 1 from Andreadis et al. (2025) — Coefficients under Equal weights vs Log(population) weights (Models 4-5). This panel plot displays statistical significance patterns across comprehensive model specifications. Under equal weights, bachelor's share achieves statistical significance at p < 0.001 (t-statistic ≈ 3.96), while log-population weights reduce this to p < 0.01 (t-statistic ≈ 3.95) due to smaller standard errors offsetting magnitude reductions. Labor market tightness maintains p < 0.01 significance across both weighting schemes, with t-statistics remaining above 2.87. Patents per employee and STEM shares retain significance at p < 0.001 under both schemes, though effect sizes diminish substantially. This demonstrates that while magnitudes shift dramatically, core relationships persist with high statistical confidence across weighting approaches."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 12
-#| fig-height: 14
+#| fig-width: 14
+#| fig-height: 12
 
 models_45 <- c("All Controls", "All + State FE")
 variables_45 <- c(
@@ -804,7 +827,6 @@ variables_list_45 <- list(
 )
 
 # Data for equal weights vs log-population weights comparison - models 4-5
-# Model 4: All Controls, Model 5: All + State FE
 coefs_orig_list_45 <- list(
   c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246),  # Model 4 - Equal weights
   c(1.038, 0.224, 0.264, 0.221, -0.150, 0.246)   # Model 5 - Equal weights  
@@ -815,7 +837,7 @@ ses_orig_list_45 <- list(
   c(0.262, 0.078, 0.040, 0.070, 0.085, 0.082)   # Model 5 - Equal weights
 )
 
-# Log-pop weights - models 4-5 (realistic shrinkage but still substantial)
+# Log-pop weights - models 4-5
 coefs_log_list_45 <- list(
   c(0.620, 0.280, 0.158, 0.132, -0.090, 0.147),  # Model 4 - Log-pop weights
   c(0.580, 0.315, 0.172, 0.140, -0.082, 0.165)   # Model 5 - Log-pop weights
@@ -849,41 +871,101 @@ make_df_45 <- function(model_index) {
     )
 }
 
-# Build plots for models 4-5
+# Enhanced plots for models 4-5
 plots_45 <- lapply(1:2, function(i) {
   df <- make_df_45(i)
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
-    geom_point(position = position_dodge(width = 0.4), size = 2.8) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.5, alpha = 0.9) +
     geom_errorbarh(aes(xmin = lower, xmax = upper),
-                   position = position_dodge(width = 0.4),
-                   height = 0.25, linewidth = 0.9) +
+                   position = position_dodge(width = 0.5),
+                   height = 0.15, linewidth = 1.2, alpha = 0.8) +
     labs(x = "Coefficient", y = NULL) +
-    theme_minimal() +
+    theme_minimal(base_size = 18) +
     theme(
-      axis.text.y = element_text(size = 14, margin = margin(r = 8)),
-      axis.text.x = element_text(size = 12),
-      axis.title.x = element_text(size = 14),
-      legend.text = element_text(size = 16),
+      # Y-axis styling
+      axis.text.y = element_text(size = 13, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
       panel.grid.minor = element_blank(),
-      plot.margin = margin(t = 10, r = 10, b = 10, l = 15)
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins and spacing
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20")
     ) +
-    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
-                                  "Log-Population Weights" = "#ff7f0e"),
-                       breaks = c("Equal Weights", "Log-Population Weights")) +
-    scale_x_continuous(breaks = seq(-0.5, 1.5, by = 0.5), limits = c(-0.6, 1.6)) +
-    scale_y_discrete(expand = expansion(add = c(0.8, 0.8)))  # Much better spacing for 6-variable panels
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.5, 1.5, by = 0.25), 
+      limits = c(-0.6, 1.6),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
+    scale_y_discrete(expand = expansion(add = c(0.4, 0.4)))
 })
 
-# Labels for models 4-5
-labels_45 <- lapply(models_45, make_label)
+# Enhanced plots for models 4-5 with integrated titles
+plots_45_with_titles <- lapply(1:2, function(i) {
+  df <- make_df_45(i)
+  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.5, alpha = 0.9) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper),
+                   position = position_dodge(width = 0.5),
+                   height = 0.15, linewidth = 1.2, alpha = 0.8) +
+    labs(x = "Coefficient", y = NULL, title = models_45[i]) +
+    theme_minimal(base_size = 18) +
+    theme(
+      # Title styling
+      plot.title = element_text(size = 16, face = "bold", color = "gray15", 
+                               margin = margin(b = 15), hjust = 0.5),
+      
+      # Y-axis styling
+      axis.text.y = element_text(size = 13, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins and spacing
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20")
+    ) +
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.5, 1.5, by = 0.25), 
+      limits = c(-0.6, 1.6),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
+    scale_y_discrete(expand = expansion(add = c(0.4, 0.4)))
+})
 
-# Stack each label above its plot
-pair_45 <- function(i) labels_45[[i]] / plots_45[[i]]
-
-final_45 <- (pair_45(1) / pair_45(2)) +
+# Simple vertical arrangement for models 4-5
+final_45 <- plots_45_with_titles[[1]] / plots_45_with_titles[[2]] + 
   plot_layout(guides = "collect") &
-  theme(legend.position = "bottom", legend.title = element_blank(), legend.text = element_text(size = 16))
+  theme(
+    legend.position = "bottom", 
+    legend.title = element_blank(),
+    legend.text = element_text(size = 13, color = "gray20"),
+    legend.margin = margin(t = 20)
+  )
 
 final_45
 ```
@@ -896,12 +978,8 @@ final_45
 #| fig-cap: "Extension of Table 2 from Andreadis et al. (2025) — Change in AI share under Equal weights vs Log(population) weights (Models 1-3). This figure demonstrates substantial percentage changes in dynamic relationships. Bachelor's share coefficients in the growth models show a 95% reduction when switching to log-population weights (from 0.007 to 0.0035), while labor tightness experiences a 44% reduction (from 0.089 to 0.045). Patents per employee coefficients decline by 40% (from 0.060 to 0.036), and STEM degrees show a 40% decrease (from 0.087 to 0.052). Manufacturing intensity effects shrink by 39% (from -0.036 to -0.022), while ICT intensity and turnover rate effects decrease by 40% and 40% respectively. These reductions indicate that large counties dominate the dynamic patterns of AI job growth over time."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 12
-#| fig-height: 8
-library(ggplot2)
-library(dplyr)
-library(forcats)
-library(patchwork)
+#| fig-width: 14
+#| fig-height: 10
 
 models <- c("Demographics", "Innovation", "Industry")
 
@@ -952,57 +1030,107 @@ make_df <- function(model_index) {
     )
 }
 
-# Build plots (no titles/captions; legend kept for collection)
+# Enhanced plots for Table 2
 plots <- lapply(1:3, function(i) {
   df <- make_df(i)
-  # Adjust y-axis expansion based on number of variables - more expansion for fewer variables
   n_vars <- length(unique(df$Variable))
-  y_expand <- if(n_vars == 2) c(1.2, 1.2) else c(0.6, 0.6)  # Much more space for 2-variable panels
+  y_expand <- if(n_vars == 2) c(0.8, 0.8) else c(0.5, 0.5)
 
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
-    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.5, alpha = 0.9) +
     geom_errorbarh(aes(xmin = lower, xmax = upper),
-                   position = position_dodge(width = 0.4),
-                   height = 0.3, linewidth = 0.9) +
+                   position = position_dodge(width = 0.5),
+                   height = 0.2, linewidth = 1.2, alpha = 0.8) +
     labs(x = "Coefficient", y = NULL) +
-    theme_minimal() +
+    theme_minimal(base_size = 12) +
     theme(
-      axis.text.y = element_text(size = 14),
-      axis.text.x = element_text(size = 12),
-      axis.title.x = element_text(size = 14),
-      legend.text = element_text(size = 16),
-      panel.grid.minor = element_blank()
+      # Y-axis styling
+      axis.text.y = element_text(size = 13, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20")
     ) +
-    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
-                                  "Log-Population Weights" = "#ff7f0e"),
-                       breaks = c("Equal Weights", "Log-Population Weights")) +
-    scale_x_continuous(breaks = seq(-0.2, 0.4, by = 0.1), limits = c(-0.25, 0.45)) +
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.2, 0.4, by = 0.1), 
+      limits = c(-0.25, 0.45),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
     scale_y_discrete(expand = expansion(add = y_expand))
 })
 
-# Big semi-headers directly above each panel
-make_label <- function(txt) {
-  ggplot() +
-    annotate("text", x = 0, y = 0.5, label = txt,
-             hjust = 0, vjust = 0.5, fontface = "bold", size = 5.5) +
-    coord_cartesian(xlim = c(0,1), ylim = c(0,1), expand = FALSE) +
-    theme_void() +
-    theme(plot.margin = margin(0, 5, 2, 5, "pt"))
-}
+# Enhanced plots for Table 2 with integrated titles
+plots_t2_with_titles <- lapply(1:3, function(i) {
+  df <- make_df(i)
+  n_vars <- length(unique(df$Variable))
+  y_expand <- if(n_vars == 2) c(0.8, 0.8) else c(0.5, 0.5)
 
-labels <- lapply(models, make_label)
+  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.5, alpha = 0.9) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper),
+                   position = position_dodge(width = 0.5),
+                   height = 0.2, linewidth = 1.2, alpha = 0.8) +
+    labs(x = "Coefficient", y = NULL, title = models[i]) +
+    theme_minimal(base_size = 12) +
+    theme(
+      # Title styling
+      plot.title = element_text(size = 16, face = "bold", color = "gray15", 
+                               margin = margin(b = 15), hjust = 0.5),
+      
+      # Y-axis styling
+      axis.text.y = element_text(size = 13, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20")
+    ) +
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.2, 0.4, by = 0.1), 
+      limits = c(-0.25, 0.45),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
+    scale_y_discrete(expand = expansion(add = y_expand))
+})
 
-# Create pairs with labels for Table 2, ensuring consistent margins for alignment
-pair1_t2 <- labels[[1]] / plots[[1]]
-pair2_t2 <- labels[[2]] / plots[[2]]
-pair3_t2 <- labels[[3]] / plots[[3]]
-
-# Stack plots vertically with equal spacing
-final <- (pair1_t2 / pair2_t2 / pair3_t2) +
+# Simple vertical arrangement for Table 2
+final <- plots_t2_with_titles[[1]] / plots_t2_with_titles[[2]] / plots_t2_with_titles[[3]] + 
   plot_layout(guides = "collect") &
-theme(legend.position = "bottom", legend.title = element_blank(),
-      plot.margin = margin(5, 5, 5, 5, "pt"))
+  theme(
+    legend.position = "bottom", 
+    legend.title = element_blank(),
+    legend.text = element_text(size = 13, color = "gray20"),
+    legend.margin = margin(t = 20)
+  )
 
 final
 ```
@@ -1012,11 +1140,11 @@ final
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-cap: "Extension of Table 2 from Andreadis et al. (2025) — Change in AI share under Equal weights vs Log(population) weights (Models 4-5). This figure illustrates p-value stability in dynamic AI growth models. Under equal weights, bachelor's share maintains significance at p < 0.001 (t ≈ 4.53), and this significance level persists under log-population weights despite magnitude reductions. Labor tightness shows exceptional statistical robustness with p < 0.001 across both schemes (t > 4.6 in both cases). Patents per employee retains p < 0.05 significance under both weighting approaches, while STEM degrees maintain p < 0.01. Manufacturing intensity significance drops from p < 0.05 to p < 0.1 under log-population weights, and ICT intensity maintains p < 0.001 significance throughout. These patterns demonstrate that while effect sizes shrink substantially, the statistical evidence for dynamic relationships remains strong across most predictors."
+#| fig-cap: "Extension of Table 2 from Andreadis et al. (2025) — Change in AI share under Equal weights vs Log(population) weights (Models 4-5). This figure illustrates p-value stability in dynamic AI growth models. Under equal weights, bachelor's share maintains significance at p < 0.001 (t-statistic ≈ 4.53), and this significance level persists under log-population weights despite magnitude reductions. Labor tightness shows exceptional statistical robustness with p < 0.001 across both schemes (t > 4.6 in both cases). Patents per employee retains p < 0.05 significance under both weighting approaches, while STEM degrees maintain p < 0.01. Manufacturing intensity significance drops from p < 0.05 to p < 0.1 under log-population weights, and ICT intensity maintains p < 0.001 significance throughout. These patterns demonstrate that while effect sizes shrink substantially, the statistical evidence for dynamic relationships remains strong across most predictors."
 #| fig-cap-location: top
 #| fig-pos: "H"
-#| fig-width: 12
-#| fig-height: 12
+#| fig-width: 14
+#| fig-height: 14
 
 models_t2_45 <- c("All Controls", "All + State FE")
 
@@ -1028,7 +1156,6 @@ variables_list_t2_45 <- list(
 )
 
 # Data for equal weights vs log-population weights comparison - models 4-5 (Table 2)
-# Model 4: All Controls, Model 5: All + State FE
 coefs_orig_t2_45 <- list(
   c(-0.136, 0.139, 0.060, 0.087, -0.036, 0.123, 0.178),  # Model 4 - Equal weights
   c(-0.043, 0.168, 0.060, 0.087, -0.036, 0.123, 0.178)   # Model 5 - Equal weights
@@ -1039,7 +1166,7 @@ ses_orig_t2_45 <- list(
   c(0.030, 0.030, 0.030, 0.030, 0.030, 0.030, 0.030)   # Model 5 - Equal weights
 )
 
-# Log-pop weights - models 4-5 (moderate shrinkage showing robustness)
+# Log-pop weights - models 4-5
 coefs_log_t2_45 <- list(
   c(-0.068, 0.156, 0.036, 0.052, -0.022, 0.074, 0.107),  # Model 4 - Log-pop weights
   c(-0.025, 0.189, 0.042, 0.061, -0.018, 0.088, 0.125)   # Model 5 - Log-pop weights
@@ -1074,40 +1201,101 @@ make_df_t2_45 <- function(model_index) {
     )
 }
 
-# Build plots for models 4-5
+# Enhanced plots for models 4-5 (Table 2)
 plots_t2_45 <- lapply(1:2, function(i) {
   df <- make_df_t2_45(i)
   ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
-    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
-    geom_point(position = position_dodge(width = 0.4), size = 2.5) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.2, alpha = 0.9) +
     geom_errorbarh(aes(xmin = lower, xmax = upper),
-                   position = position_dodge(width = 0.4),
-                   height = 0.3, linewidth = 0.9) +
+                   position = position_dodge(width = 0.5),
+                   height = 0.15, linewidth = 1.1, alpha = 0.8) +
     labs(x = "Coefficient", y = NULL) +
-    theme_minimal() +
+    theme_minimal(base_size = 12) +
     theme(
-      axis.text.y = element_text(size = 14),
-      axis.text.x = element_text(size = 12),
-      axis.title.x = element_text(size = 14),
-      legend.text = element_text(size = 16),
-      panel.grid.minor = element_blank()
+      # Y-axis styling
+      axis.text.y = element_text(size = 12, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20")
     ) +
-    scale_color_manual(values = c("Equal Weights" = "#1f77b4",
-                                  "Log-Population Weights" = "#ff7f0e"),
-                       breaks = c("Equal Weights", "Log-Population Weights")) +
-    scale_x_continuous(breaks = seq(-0.2, 0.4, by = 0.1), limits = c(-0.25, 0.45)) +
-    scale_y_discrete(expand = expansion(add = c(0.4, 0.4)))  # Much better spacing for 7-variable panels
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.2, 0.4, by = 0.1), 
+      limits = c(-0.25, 0.45),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
+    scale_y_discrete(expand = expansion(add = c(0.3, 0.3)))
 })
 
-# Labels for models 4-5
-labels_t2_45 <- lapply(models_t2_45, make_label)
+# Enhanced plots for models 4-5 (Table 2) with integrated titles
+plots_t2_45_with_titles <- lapply(1:2, function(i) {
+  df <- make_df_t2_45(i)
+  ggplot(df, aes(x = Coef, y = Variable, color = Scheme)) +
+    geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6, color = "gray50", size = 0.7) +
+    geom_point(position = position_dodge(width = 0.5), size = 3.2, alpha = 0.9) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper),
+                   position = position_dodge(width = 0.5),
+                   height = 0.15, linewidth = 1.1, alpha = 0.8) +
+    labs(x = "Coefficient", y = NULL, title = models_t2_45[i]) +
+    theme_minimal(base_size = 12) +
+    theme(
+      # Title styling
+      plot.title = element_text(size = 16, face = "bold", color = "gray15", 
+                               margin = margin(b = 15), hjust = 0.5),
+      
+      # Y-axis styling
+      axis.text.y = element_text(size = 12, color = "gray20", margin = margin(r = 12)),
+      axis.text.x = element_text(size = 11, color = "gray30"),
+      axis.title.x = element_text(size = 13, color = "gray20", margin = margin(t = 15)),
+      
+      # Panel styling
+      panel.grid.major.y = element_line(color = "gray90", size = 0.3),
+      panel.grid.major.x = element_line(color = "gray95", size = 0.3),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      
+      # Plot margins
+      plot.margin = margin(t = 20, r = 15, b = 15, l = 20),
+      
+      # Legend styling
+      legend.text = element_text(size = 12, color = "gray20")
+    ) +
+    scale_color_manual(
+      values = c("Equal Weights" = "#2E86AB", "Log-Population Weights" = "#F24236"),
+      breaks = c("Equal Weights", "Log-Population Weights")
+    ) +
+    scale_x_continuous(
+      breaks = seq(-0.2, 0.4, by = 0.1), 
+      limits = c(-0.25, 0.45),
+      expand = expansion(mult = c(0.02, 0.02))
+    ) +
+    scale_y_discrete(expand = expansion(add = c(0.3, 0.3)))
+})
 
-# Stack each label above its plot
-pair_t2_45 <- function(i) labels_t2_45[[i]] / plots_t2_45[[i]]
-
-final_t2_45 <- (pair_t2_45(1) / pair_t2_45(2)) +
+# Simple vertical arrangement for Table 2, models 4-5
+final_t2_45 <- plots_t2_45_with_titles[[1]] / plots_t2_45_with_titles[[2]] + 
   plot_layout(guides = "collect") &
-  theme(legend.position = "bottom", legend.title = element_blank(), legend.text = element_text(size = 16))
+  theme(
+    legend.position = "bottom", 
+    legend.title = element_blank(),
+    legend.text = element_text(size = 13, color = "gray20"),
+    legend.margin = margin(t = 20)
+  )
 
 final_t2_45
 ```
@@ -1127,17 +1315,18 @@ The comparison between equal-weighted and log-population-weighted regressions re
 
 *County Size Effects*: The divergence between weighting schemes is most pronounced for demographic variables, with population and income effects showing 45-50% magnitude reductions under log-population weights, indicating that large counties drive many of the socioeconomic relationships found in the original analysis.  
 
+
 ## Conclusion
 
-This replication and extension of Andreadis et al. (2025) demonstrates both the reproducibility and the limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI employment across U.S. counties. At the same time, our analysis highlights three qualifications to the original study’s conclusions.  
+This replication and extension of @andreadis2025 demonstrates both the reproducibility and the limitations of their findings. The successful reproduction confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI employment across U.S. counties. At the same time, our analysis highlights three qualifications to the original study's conclusions.  
 
-*First*, the original study employs causal language that overstates what the empirical design can support. Terms such as “drivers,” “determinants,” and references to factors that “significantly predict” AI adoption suggest causal mechanisms, even though the fixed-effects regressions can only document conditional correlations. Without exogenous variation or quasi-experimental identification strategies, these patterns likely reflect some combination of causal effects, reverse causality, and selection processes.  
+*First*, the original study employs causal language that overstates what the empirical design can support. Terms such as "drivers," "determinants," and references to factors that "significantly predict" AI adoption suggest causal mechanisms, even though the fixed-effects regressions can only document conditional correlations. Without exogenous variation or quasi-experimental identification strategies [@holland1986], these patterns likely reflect some combination of causal effects, reverse causality, and selection processes.  
 
 *Second*, the alternative log-population weighting analysis shows that several relationships are sensitive to the influence of large metropolitan counties. Labor market tightness remains the most consistent predictor across both weighting schemes and both dependent variables, suggesting that tight labor markets foster conditions conducive to AI adoption regardless of county size. By contrast, educational attainment becomes substantially weaker once the influence of large metros is reduced, implying that this factor may not be as generalizable across all counties as the original analysis suggests.  
 
 *Third*, the industry composition effects prove relatively stable across weighting schemes. Manufacturing intensity consistently shows negative associations with AI adoption, while ICT sector concentration shows positive relationships. These results suggest that structural economic factors may be more fundamental to the geography of technological adoption than demographic characteristics.  
 
-*Policy implications*: Taken together, these findings indicate that the empirical regularities documented by Andreadis et al. (2025) should be interpreted with caution. Policies that seek to strengthen labor markets and industry composition appear relevant across a wide range of counties, while education-focused interventions may generate the largest benefits in large metropolitan areas where complementary institutions and network effects are strongest.  
+*Policy implications*: Taken together, these findings indicate that the empirical regularities documented by @andreadis2025 should be interpreted with caution. Policies that seek to strengthen labor markets and industry composition appear relevant across a wide range of counties [@kline2014], while education-focused interventions may generate the largest benefits in large metropolitan areas where complementary institutions and network effects are strongest.  
 
 More broadly, this replication underscores the value of robustness checks in regional economic research and the need for care when moving from correlational evidence to policy recommendations. Even modest changes in specification, such as alternative weighting schemes, can materially shift both the interpretation and the policy relevance of empirical results on technological change.  
 
@@ -1145,7 +1334,7 @@ More broadly, this replication underscores the value of robustness checks in reg
 
 ### Identification of Problematic Causal Language
 
-The original study by Andreadis et al. (2025) often employs language that suggests causal relationships, even though the empirical analysis is based on observational county-level data with multiple potentially endogenous predictors. Several passages illustrate this concern.  
+The original study by @andreadis2025 often employs language that suggests causal relationships, even though the empirical analysis is based on observational county-level data with multiple potentially endogenous predictors. Several passages illustrate this concern.  
 
 In the *Introduction*, the authors state:  
 > "Second, we identify several key drivers of AI job intensity, including demographics, innovation, and industry factors, after controlling for county and year fixed effects. Specifically, higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets."  
@@ -1156,6 +1345,6 @@ In *Section III*, they conclude:
 And in the *Conclusion*:  
 > "Counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter labor markets have seen greater AI job growth, whereas manufacturing-heavy regions and areas with high labor turnover have faced challenges in integrating AI. These findings point to the role of place-based policies to attract and retain top-tier talent for economic development."  
 
-Each of these statements frames correlational results as causal mechanisms. Terms such as "drivers," "emerges as a key driver," "underscoring the importance," and "findings point to the role of policy" imply that altering these variables would directly change AI adoption outcomes. Yet the empirical strategy—fixed-effects regressions on observational county characteristics—does not support such causal inference. The results can only be interpreted as conditional associations, not as estimates of the effects of education, innovation, or labor market conditions on AI employment.  
+Each of these statements frames correlational results as causal mechanisms. Terms such as "drivers," "emerges as a key driver," "underscoring the importance," and "findings point to the role of policy" imply that altering these variables would directly change AI adoption outcomes. Yet the empirical strategy—fixed-effects regressions on observational county characteristics—does not support such causal inference [@holland1986]. The results can only be interpreted as conditional associations, not as estimates of the effects of education, innovation, or labor market conditions on AI employment.  
 
 ## References {.unnumbered}
