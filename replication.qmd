@@ -27,7 +27,8 @@ format:
 
 <!-- DK:  -->
 
-<!-- Fix tables. Coeeficient estimates must match up with wording, with standard errors directly below. Do the whole plot in a .R file first. Make it look nice. Then add it to the paper. Do NOT mess with raw LaTeX.-->
+<!-- Make Table 1 and Table 2 look like the published versions. -->
+
 
 <!-- Fix references.  -->
 
