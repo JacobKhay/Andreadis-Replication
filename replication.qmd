@@ -27,7 +27,24 @@ format:
 
 <!-- DK:  -->
 
+<!-- Fix rounding and order of rows but before fixing the variable names. Get rid of ***.
+
+Here is Table 2 from our paper.
+
+<screenshot>
+
+Here is our replication of your Table 2.
+
+<screenshot>
+
+As you can see, every number matches exactly, except for the estimates and standard errors for Bachelor's Share. Any ideas what the problem might be? -->
+
+
+<!-- Placement of R^2 row in table is wrong. Also round R^2 the same as in the paper. -->
+
 <!-- Make Table 1 and Table 2 look like the published versions. Done - question about table 2 Bachelor's share-->
+
+<!-- Same variable names in the tables, e.g., include "2017". Maybe changing document margins to 1 inch, or even 1/2 inch will help. Not critical. -->
 
 
 <!-- Fix references.  Done-->
