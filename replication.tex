@@ -402,46 +402,29 @@ Jobs}
 \fontsize{7.5}{9.5}\selectfont
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}}
 \toprule
-  & Demo. & Innov. & Indust. & All & All+State\\
+\multicolumn{1}{c}{Model} & \multicolumn{5}{c}{ } \\
+\cmidrule(l{3pt}r{3pt}){1-1}
+  & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-Bachelors' share & \num{0.160}*** &  &  & \num{0.188}*** & \num{0.085}\\
- & (\num{0.047}) &  &  & (\num{0.067}) & (\num{0.059})\\
-Black pop & \num{-0.121} &  &  & \num{-0.121} & \num{0.000}\\
- & (\num{0.127}) &  &  & (\num{0.185}) & (\num{0.162})\\
-Poverty share & \num{0.044} &  &  & \num{0.067}* & \num{-0.003}\\
- & (\num{0.028}) &  &  & (\num{0.040}) & (\num{0.037})\\
-log(Population) & \num{0.807}** &  &  & \num{0.219} & \num{0.146}\\
- & (\num{0.367}) &  &  & (\num{0.444}) & (\num{0.544})\\
-House Price Growth & \num{-0.019}** &  &  & \num{-0.028}** & \num{-0.032}***\\
- & (\num{0.008}) &  &  & (\num{0.012}) & (\num{0.011})\\
-log(Median Income) & \num{-0.022} &  &  & \num{-0.001} & \num{0.032}\\
- & (\num{0.047}) &  &  & (\num{0.065}) & (\num{0.060})\\
-Labor Tightness & \num{0.255}*** &  &  & \num{0.315}*** & \num{0.372}***\\
- & (\num{0.050}) &  &  & (\num{0.063}) & (\num{0.065})\\
-Patents/employee &  & \num{0.031}*** &  & \num{0.028}** & \num{0.031}**\\
- &  & (\num{0.012}) &  & (\num{0.012}) & (\num{0.014})\\
-AI patents' share &  & \num{0.009} &  & \num{0.009} & \num{0.003}\\
- &  & (\num{0.007}) &  & (\num{0.006}) & (\num{0.005})\\
-Degrees/capita &  & \num{0.013} &  & \num{0.034} & \num{0.034}\\
- &  & (\num{0.026}) &  & (\num{0.026}) & (\num{0.027})\\
-Stem Degrees' share &  & \num{0.072}*** &  & \num{0.058}*** & \num{0.048}**\\
- &  & (\num{0.023}) &  & (\num{0.022}) & (\num{0.020})\\
-Large Firms &  &  & \num{-0.002} & \num{-0.037} & \num{-0.036}\\
- &  &  & (\num{0.025}) & (\num{0.028}) & (\num{0.029})\\
-ICT sector Intensity &  &  & \num{0.010} & \num{0.038}** & \num{0.040}**\\
- &  &  & (\num{0.014}) & (\num{0.017}) & (\num{0.016})\\
-Manufacturing &  &  & \num{-0.057}*** & \num{-0.048}*** & \num{-0.034}**\\
- &  &  & (\num{0.012}) & (\num{0.014}) & (\num{0.015})\\
-Turnover Rate &  &  & \num{0.034}*** & \num{0.016} & \num{0.010}\\
- &  &  & (\num{0.011}) & (\num{0.017}) & (\num{0.016})\\
-Fixed-effects &  &  &  &  & \\
-Year & Yes & Yes & Yes & Yes & Yes\\
-County & Yes & Yes & Yes & Yes & Yes\\
-State Year & No & No & No & No & Yes\\
-Fit statistics &  &  &  &  & \\
-Observations & 27,497 & 22,744 & 24,651 & 19,184 & 19,184\\
-R² & 0.704 & 0.721 & 0.694 & 0.758 & 0.778\\
-Within R² & 0.052 & 0.003 & 0.002 & 0.086 & 0.095\\
+Bachelors' share & \num{0.1946}*** &  &  & \num{0.1778}*** & \num{0.1104}**\\
+ & (\num{0.0537}) &  &  & (\num{0.0523}) & (\num{0.0501})\\
+House Price Growth & \num{-0.0145}* &  &  & \num{-0.0145}* & \num{-0.0159}**\\
+ & (\num{0.0081}) &  &  & (\num{0.0079}) & (\num{0.0075})\\
+Labor Tightness & \num{0.2806}*** &  &  & \num{0.2782}*** & \num{0.3163}***\\
+ & (\num{0.0564}) &  &  & (\num{0.0569}) & (\num{0.0621})\\
+Patents/employee &  & \num{0.0235}** &  & \num{0.0289}*** & \num{0.0307}**\\
+ &  & (\num{0.0091}) &  & (\num{0.0109}) & (\num{0.0136})\\
+Stem Degrees' share &  & \num{0.0698}*** &  & \num{0.0494}** & \num{0.0395}**\\
+ &  & (\num{0.0238}) &  & (\num{0.0205}) & (\num{0.0185})\\
+ICT sector Intensity &  &  & \num{0.0120} & \num{0.0246}* & \num{0.0264}*\\
+ &  &  & (\num{0.0144}) & (\num{0.0135}) & (\num{0.0136})\\
+Manufacturing &  &  & \num{-0.0630}*** & \num{-0.0361}*** & \num{-0.0269}**\\
+ &  &  & (\num{0.0113}) & (\num{0.0109}) & (\num{0.0112})\\
+Turnover Rate &  &  & \num{0.0346}** & \num{0.0177} & \num{0.0159}\\
+ &  &  & (\num{0.0137}) & (\num{0.0138}) & (\num{0.0131})\\
+Fixed effects & County, Year & County, Year & County, Year & County, Year & County, State\\
+R² & 0.6973 & 0.6800 & 0.6799 & 0.6962 & 0.7135\\
+Observations & 24,645 & 24,645 & 24,645 & 24,714 & 24,714\\
 \bottomrule
 \multicolumn{6}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01}\\
 \end{tabular}}
@@ -470,44 +453,29 @@ of AI Jobs}
 \fontsize{7.5}{9.5}\selectfont
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}}
 \toprule
-  & Demo. & Innov. & Indust. & All & All+State\\
+\multicolumn{1}{c}{Model} & \multicolumn{5}{c}{ } \\
+\cmidrule(l{3pt}r{3pt}){1-1}
+  & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-Bachelors & \num{0.007} &  &  & \num{-0.069} & \num{-0.136}***\\
- & (\num{0.028}) &  &  & (\num{0.051}) & (\num{0.043})\\
-Black & \num{0.018} &  &  & \num{0.045} & \num{0.053}\\
- & (\num{0.020}) &  &  & (\num{0.033}) & (\num{0.034})\\
-Poverty & \num{0.064}* &  &  & \num{0.050} & \num{0.104}\\
- & (\num{0.037}) &  &  & (\num{0.070}) & (\num{0.075})\\
-Pop. Growth & \num{-0.016} &  &  & \num{-0.007} & \num{-0.013}\\
- & (\num{0.023}) &  &  & (\num{0.057}) & (\num{0.057})\\
-House Price Growth & \num{-0.032}* &  &  & \num{-0.036} & \num{0.045}\\
- & (\num{0.017}) &  &  & (\num{0.037}) & (\num{0.042})\\
-Income, Log & \num{0.124}*** &  &  & \num{0.123} & \num{0.195}**\\
- & (\num{0.043}) &  &  & (\num{0.077}) & (\num{0.076})\\
-Tightness & \num{0.089}*** &  &  & \num{0.178}*** & \num{0.139}\\
- & (\num{0.021}) &  &  & (\num{0.042}) & (\num{0.096})\\
-Patents/employee &  & \num{0.008} &  & \num{-0.056} & \num{-0.001}\\
- &  & (\num{0.029}) &  & (\num{0.037}) & (\num{0.043})\\
-AI Patents' Share &  & \num{0.137}*** &  & \num{0.108}** & \num{0.079}\\
- &  & (\num{0.036}) &  & (\num{0.043}) & (\num{0.066})\\
-Degrees/capita &  & \num{0.020} &  & \num{0.048}* & \num{0.062}\\
- &  & (\num{0.016}) &  & (\num{0.028}) & (\num{0.037})\\
-Stem Degrees' share &  & \num{0.094}*** &  & \num{0.083}*** & \num{0.078}**\\
- &  & (\num{0.027}) &  & (\num{0.027}) & (\num{0.036})\\
-Large Firms &  &  & \num{0.028} & \num{-0.088}* & \num{-0.039}\\
- &  &  & (\num{0.021}) & (\num{0.050}) & (\num{0.063})\\
-ICT sector Intensity &  &  & \num{0.027} & \num{-0.023} & \num{-0.015}\\
- &  &  & (\num{0.018}) & (\num{0.031}) & (\num{0.026})\\
-Manufacturing &  &  & \num{-0.034}* & \num{-0.012} & \num{-0.001}\\
- &  &  & (\num{0.019}) & (\num{0.046}) & (\num{0.043})\\
-Turnover Rate &  &  & \num{-0.073}*** & \num{-0.129}** & \num{-0.173}**\\
- &  &  & (\num{0.022}) & (\num{0.061}) & (\num{0.081})\\
-Fixed-effects &  &  &  &  & \\
-State & No & No & No & No & Yes\\
-Fit statistics &  &  &  &  & \\
-Observations & 2,751 & 897 & 2,723 & 810 & 810\\
-R² & 0.025 & 0.039 & 0.009 & 0.075 & 0.187\\
-Within R² & — & — & — & — & 0.065\\
+Bachelors Share & \num{0.0196} &  &  & \num{-0.0322} & \num{-0.0401}\\
+ & (\num{0.0250}) &  &  & (\num{0.0292}) & (\num{0.0263})\\
+Income, Log & \num{0.0784}** &  &  & \num{0.0695}* & \num{0.0614}\\
+ & (\num{0.0382}) &  &  & (\num{0.0391}) & (\num{0.0442})\\
+Tightness & \num{0.0744}*** &  &  & \num{0.0732}*** & \num{0.0726}**\\
+ & (\num{0.0215}) &  &  & (\num{0.0237}) & (\num{0.0352})\\
+Large Firms &  &  & \num{0.0411}** & \num{-0.0158} & \num{-0.0165}\\
+ &  &  & (\num{0.0183}) & (\num{0.0219}) & (\num{0.0198})\\
+Stem Degrees' share &  & \num{0.0742}*** &  & \num{0.0539}*** & \num{0.0455}**\\
+ &  & (\num{0.0151}) &  & (\num{0.0163}) & (\num{0.0184})\\
+ICT sector Intensity &  &  & \num{0.0401}*** & \num{0.0137} & \num{0.0219}\\
+ &  &  & (\num{0.0153}) & (\num{0.0170}) & (\num{0.0182})\\
+Manufacturing &  &  & \num{-0.0447}*** & \num{-0.0128} & \num{0.0001}\\
+ &  &  & (\num{0.0166}) & (\num{0.0181}) & (\num{0.0203})\\
+Turnover Rate &  &  & \num{-0.0556}** & \num{-0.0419}* & \num{-0.0389}\\
+ &  &  & (\num{0.0222}) & (\num{0.0233}) & (\num{0.0271})\\
+Fixed effects & None & None & None & None & State\\
+R² & 0.0213 & 0.0193 & 0.0155 & 0.0315 & 0.0817\\
+Observations & 2,473 & 2,473 & 2,473 & 2,473 & 2,473\\
 \bottomrule
 \multicolumn{6}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01}\\
 \end{tabular}}
@@ -516,12 +484,12 @@ Within R² & — & — & — & — & 0.065\\
 
 \end{table}%
 
-\textbf{Notes:} Dependent variable is AI job percentage-point share
-(\%). All explanatory variables are standardized (z-scores). Regressions
-include county and year fixed effects, with state×year fixed effects in
-column (5). Standard errors clustered at county level. Observations are
-unweighted. Sources: Lightcast, American Community Survey, Quarterly
-Workforce Indicators, 2014-2023.
+\textbf{Notes:} Dependent variable is AI job percentage-point change
+share (\%) in 2017. All explanatory variables are standardized
+(z-scores). Regressions include county and year fixed effects, with
+state×year fixed effects in column (5). Standard errors clustered at
+county level. Observations are unweighted. Sources: Lightcast, American
+Community Survey, Quarterly Workforce Indicators, 2014-2023.
 
 \begin{figure}[H]
 

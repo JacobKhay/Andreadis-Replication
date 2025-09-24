@@ -27,10 +27,10 @@ format:
 
 <!-- DK:  -->
 
-<!-- Make Table 1 and Table 2 look like the published versions. -->
+<!-- Make Table 1 and Table 2 look like the published versions. Done - question about table 2 Bachelor's share-->
 
 
-<!-- Fix references.  -->
+<!-- Fix references.  Done-->
 
 <!-- Is the last reference in their paper really Makridis, Christos A.,? Check the text of the paper. -->
 
@@ -38,7 +38,7 @@ format:
 
 <!-- Reread everything closely. -->
 
-<!-- JK: realized that the panel plot font(s) might be too small. Sorry, will fix next time.  -->
+<!-- JK: realized that the panel plot font(s) might be too small. Sorry, will fix next time.  Will do next time-->
 
 *JEL: J24, O33, R11*
 
@@ -108,144 +108,169 @@ We successfully reproduced the main findings from Tables 1 and 2 of @andreadis20
 #| tbl-cap: "Replication of Table 1 from Andreadis et al. (2025) - The Correlates of the Share of Artificial Intelligence Jobs"
 #| tbl-pos: "H"
 
-library(tidyverse)      
-library(fixest)         
-library(modelsummary)   
-library(scales)         
-library(kableExtra)     
+library(tidyverse)
+library(fixest)
+library(modelsummary)
+library(kableExtra)
 
-# Load and prepare data
-data_ai <- read_csv("data.csv") |>   
-  ungroup() |>                       
+# Load and prepare data EXACTLY as in original
+data_ai <- read_csv("data.csv") %>% 
+  mutate(state_year = paste0(state, Year)) %>% 
+  mutate(ai_intensity = ai / nads)
+
+# Create derived variables EXACTLY as in original code
+data_ai <- data_ai %>% 
   mutate(
-    degshare = (udeg + mdeg) / Employed,            
-    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),  
-    stemshare2 = ustemdeg / udeg,                   
-    stemshare = replace_na(stemshare, 0),           
-    stemshare2 = replace_na(stemshare2, 0),         
-    tightness = nads / Unemployed,                  
-    hpi_ch = hpi_ch / 100,                          
-    logpop = log(pop),                              
-    logincome = log(medhhincome),                   
-    pat_intensity = n_inventors / Employed,         
-    patai_intensity = ai_patents / n_patents,       
-    large_firms = 1 - (small + medium) / est,       
-    information_intensity = information_emp / emp,  
-    manuf_intensity = manuf_emp / emp,              
-    ai_intensity = ai / nads,                       
-    lads = log(1 + nads),                           
-    state_year = paste0(state, Year)                
+    logincome = log(medhhincome),
+    loghpi = log(hpi),
+    logemp = log(pop_above18),
+    lads = log(1 + nads),
+    logpop = log(pop),
+    
+    # Innovation variables
+    logn_patents = log(1 + n_patents),
+    logn_inventors = log(1 + n_inventors),
+    logai_patents = log(1 + ai_patents),
+    logai_inventors = log(1 + ai_inventors),
+    pat_intensity = n_inventors / Employed,
+    patai_intensity = ai_patents / n_patents
+  ) %>%
+  mutate(patai_intensity = replace_na(patai_intensity, 0))
+
+# Industry structure variables
+data_ai <- data_ai %>% 
+  mutate(
+    small_firms = small / est,
+    large_firms = 1 - (small + medium) / est,
+    management_intensity = management_emp / emp,
+    information_intensity = information_emp / emp,
+    manuf_intensity = manuf_emp / emp
+  ) %>%
+  mutate(information_intensity = replace_na(information_intensity, 0))
+
+# Education variables
+data_ai <- data_ai %>% 
+  mutate(
+    degshare = (udeg + mdeg) / Employed,
+    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),
+    stemshare2 = (ustemdeg) / (udeg)
+  ) %>%
+  mutate(
+    stemshare = replace_na(stemshare, 0),
+    stemshare2 = replace_na(stemshare2, 0)
   )
 
-# Create standardized variables
-data_ai_z <- data_ai |> 
-  filter(emp != 0) |>                               
+# Labor market variables
+data_ai <- data_ai %>% 
   mutate(
-    share_bac = scale(share_bac)[,1],                   
-    share_black = scale(share_black)[,1],               
-    share_poverty = scale(share_poverty)[,1],           
-    logpop = scale(logpop)[,1],                         
-    hpi_ch = scale(hpi_ch)[,1],                         
-    logincome = scale(logincome)[,1],                   
-    tightness = scale(tightness)[,1],                   
-    unrate = scale(unrate)[,1],                         
-    pat_intensity = scale(pat_intensity)[,1],           
-    patai_intensity = scale(patai_intensity)[,1],       
-    degshare = scale(degshare)[,1],                     
-    stemshare = scale(stemshare)[,1],                   
-    large_firms = scale(large_firms)[,1],               
-    information_intensity = scale(information_intensity)[,1],  
-    manuf_intensity = scale(manuf_intensity)[,1],       
-    TurnOvrS = scale(TurnOvrS)[,1],                     
-    ai_intensity = ai_intensity * 100               
+    tightness = nads / Unemployed,
+    hpi_ch = hpi_ch / 100  # Convert to decimal
   )
 
-# Run regression models
-est_demog_no = feols(
-  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS,
-  data = data_ai_z,
+# Convert AI intensity to percentage (as in original)
+data_ai <- data_ai %>% 
+  mutate(ai_intensity = ai_intensity * 100)
+
+# Filter out zero employment counties first
+data_ai_filtered <- data_ai %>% 
+  filter(emp != 0)
+
+# Create standardized variables (z-scores) EXACTLY as in original
+data_ai_z <- data_ai_filtered %>%
+  mutate(
+    share_bac = as.numeric(scale(share_bac)),
+    share_black = as.numeric(scale(share_black)),
+    share_poverty = as.numeric(scale(share_poverty)),
+    logpop = as.numeric(scale(logpop)),
+    hpi_ch = as.numeric(scale(hpi_ch)),
+    logincome = as.numeric(scale(logincome)),
+    tightness = as.numeric(scale(tightness)),
+    unrate = as.numeric(scale(unrate)),
+    pat_intensity = as.numeric(scale(pat_intensity)),
+    patai_intensity = as.numeric(scale(patai_intensity)),
+    degshare = as.numeric(scale(degshare)),
+    stemshare = as.numeric(scale(stemshare)),
+    large_firms = as.numeric(scale(large_firms)),
+    information_intensity = as.numeric(scale(information_intensity)),
+    manuf_intensity = as.numeric(scale(manuf_intensity)),
+    TurnOvrS = as.numeric(scale(TurnOvrS))
+  )
+
+# Run condensed models with only the 8 key variables
+est_demog_no <- fixest::feols(
+  "ai_intensity ~ share_bac + hpi_ch + tightness | Year + COUNTY_FIPS" %>% as.formula(),
+  data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
+                        tightness, pat_intensity, patai_intensity, degshare, stemshare,
+                        large_firms, information_intensity, manuf_intensity, TurnOvrS),
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+) 
+
+est_innovation_no <- fixest::feols(
+  "ai_intensity ~ pat_intensity + stemshare | Year + COUNTY_FIPS" %>% as.formula(),
+  data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
+                        tightness, pat_intensity, patai_intensity, degshare, stemshare,
+                        large_firms, information_intensity, manuf_intensity, TurnOvrS),
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+) 
+
+est_industry_no <- fixest::feols(
+  "ai_intensity ~ information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
+  data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
+                        tightness, pat_intensity, patai_intensity, degshare, stemshare,
+                        large_firms, information_intensity, manuf_intensity, TurnOvrS),
+  cluster = "COUNTY_FIPS",
+  weights = ~lads
+) 
+
+est_all <- fixest::feols(
+  "ai_intensity ~ share_bac + hpi_ch + tightness + pat_intensity + stemshare + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
+  data_ai_z,
   cluster = "COUNTY_FIPS",
   weights = ~lads
 )
 
-est_innovation_no = feols(
-  ai_intensity ~ pat_intensity + patai_intensity + degshare + stemshare | Year + COUNTY_FIPS,
-  data = data_ai_z,
-  cluster = "COUNTY_FIPS",
-  weights = ~lads
-)
-
-est_industry_no = feols(
-  ai_intensity ~ large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS,
-  data = data_ai_z,
-  cluster = "COUNTY_FIPS",
-  weights = ~lads
-)
-
-est_all = feols(
-  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
-    pat_intensity + patai_intensity + degshare + stemshare + large_firms +
-    information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS,
-  data = data_ai_z,
-  cluster = "COUNTY_FIPS",
-  weights = ~lads
-)
-
-est_all_large = feols(
-  ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness +
-    pat_intensity + patai_intensity + degshare + stemshare + large_firms +
-    information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS,
-  data = data_ai_z,
-  cluster = "COUNTY_FIPS",
+est_all_large <- fixest::feols(
+  "ai_intensity ~ share_bac + hpi_ch + tightness + pat_intensity + stemshare + information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS" %>% as.formula(),
+  data_ai_z,
+  vcov = "twoway",
   weights = ~lads
 )
 
 # Extract model statistics
 models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_all_large)
-obs <- map_chr(models, ~comma(nobs(.x)))
-r2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "r2")))
-wr2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "wr2")))
+obs <- map_chr(models, ~scales::comma(nobs(.x)))
+r2_vals <- map_chr(models, ~sprintf("%.4f", r2(.x, "r2")))
 
 # Create extra rows for table footer
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "Fixed-effects", "", "", "", "", "",
-  "Year", "Yes", "Yes", "Yes", "Yes", "Yes",
-  "County", "Yes", "Yes", "Yes", "Yes", "Yes",
-  "State Year", "No", "No", "No", "No", "Yes",
-  "Fit statistics", "", "", "", "", "",
-  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
+  "Fixed effects", "County, Year", "County, Year", "County, Year", "County, Year", "County, State",
   "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5],
-  "Within R²", wr2_vals[1], wr2_vals[2], wr2_vals[3], wr2_vals[4], wr2_vals[5]
+  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5]
 )
 
-# Variable labels - shortened to fit on single lines
+# Variable labels - only the 8 condensed variables
 labels <- c(
   "share_bac" = "Bachelors' share",
-  "share_black" = "Black pop", 
-  "share_poverty" = "Poverty share",
-  "logpop" = "log(Population)",
-  "hpi_ch" = "House Price Growth",
-  "logincome" = "log(Median Income)",
+  "hpi_ch" = "House Price Growth", 
   "tightness" = "Labor Tightness",
   "pat_intensity" = "Patents/employee",
-  "patai_intensity" = "AI patents' share",
-  "degshare" = "Degrees/capita",
   "stemshare" = "Stem Degrees' share",
-  "large_firms" = "Large Firms",
   "information_intensity" = "ICT sector Intensity",
   "manuf_intensity" = "Manufacturing",
   "TurnOvrS" = "Turnover Rate"
 )
 
-# Create table with shorter column headers
+# Create table with numbered column headers
 table_output <- modelsummary(
   list(
-    "Demo." = est_demog_no,
-    "Innov." = est_innovation_no,
-    "Indust." = est_industry_no,
-    "All" = est_all,
-    "All+State" = est_all_large
+    "(1)" = est_demog_no,
+    "(2)" = est_innovation_no,
+    "(3)" = est_industry_no,
+    "(4)" = est_all,
+    "(5)" = est_all_large
   ),
   coef_map = labels,
   stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -253,10 +278,11 @@ table_output <- modelsummary(
   add_rows = extra_rows,
   escape = FALSE,
   statistic = "({std.error})",
+  fmt = 4,
   output = "kableExtra"
 )
 
-# Apply more compact formatting
+# Apply more compact formatting with decimal alignment
 final_table <- table_output |>
   kable_styling(
     latex_options = c("HOLD_position", "scale_down"),
@@ -265,7 +291,8 @@ final_table <- table_output |>
     position = "center"
   ) |>
   column_spec(1, width = "2.5cm") |>
-  column_spec(2:6, width = "1.2cm")
+  column_spec(2:6, width = "1.2cm") |>
+  add_header_above(c("Model" = 1, " " = 5))
 
 # Display table 
 final_table
@@ -282,158 +309,299 @@ final_table
 #| tbl-cap: "Replication of Table 2 from Andreadis et al. (2025) - The Correlates of the Percentage Point Change in the Share of AI Jobs"
 #| tbl-pos: "H"
 
-# Load required libraries
 library(tidyverse)
 library(fixest)
 library(modelsummary)
-library(scales)
 library(kableExtra)
 
-# Step 1: Load data and create derived variables
-data <- read_csv("data.csv")
+# Follow EXACT original code structure
+data_ai_2017_2022 <- read_csv("data.csv") %>% 
+  filter(Year == 2017 | Year == 2018 | Year == 2022 | Year == 2023) %>% 
+  mutate(state_year = paste0(state, Year)) %>% 
+  mutate(new = 1 * (Year > 2020)) %>% 
+  group_by(new, COUNTY_FIPS) %>% 
+  mutate(ai = sum(ai), nads = sum(nads)) %>% 
+  mutate(ai_intensity = ai / nads) %>% 
+  filter(Year == 2017 | Year == 2022) %>% 
+  group_by(COUNTY_FIPS) %>% 
+  mutate(
+    dai_intensity = ai_intensity - lag(ai_intensity),
+    dai_intensity9 = ai_intensity - lag(ai_intensity, 1)
+  )
 
-data <- data %>%
+# Prepare demographics - EXACT as original
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    logincome = log(medhhincome),
+    loghpi = log(hpi),
+    logemp = log(pop_above18),
+    logim = log(1)  # Note: original has logim=log(immigration) but no immigration variable
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    unrate14 = lag(unrate, 1),
+    logincome14 = lag(logincome, 1),
+    loghpi14 = lag(loghpi, 1),
+    share_bac14 = lag(share_bac, 1),
+    share_black14 = lag(share_black, 1),
+    share_poverty14 = lag(share_poverty, 1),
+    logemp14 = lag(logemp, 1),
+    logim14 = lag(logim, 1),
+    medage14 = lag(medage, 1),
+    median_rent14 = lag(median_rent, 1)
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    gincome = logincome - lag(logincome, 1),
+    ghpi = loghpi - lag(loghpi, 1),
+    gemp = logemp - lag(logemp, 1),
+    gim = logim - lag(logim, 1)
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    dunrate = unrate - lag(unrate, 1),
+    dshare_bac = share_bac - lag(share_bac, 1),
+    dshare_black = share_black - lag(share_black, 1),
+    dmedage14 = medage - lag(medage, 1)
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(lads = log(1 + nads))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(lads0 = log(nads))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    large_firms = 1 - (small + medium) / est,
+    management_intensity = management_emp / emp,
+    information_intensity = information_emp / emp,
+    information_intensity = manuf_emp / emp  # Note: this overwrites previous line in original
+  )
+
+# Log number of patents, inventors, etc. - EXACT as original
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(logemp = log(Employed)) %>% 
+  mutate(logpop = log(pop))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    logn_patents = log(1 + n_patents),
+    logn_inventors = log(1 + n_inventors),
+    logai_patents = log(1 + ai_patents),
+    logai_inventors = log(1 + ai_inventors)
+  ) %>%
+  mutate(
+    pat_intensity = n_inventors / Employed,
+    patai_intensity = ai_patents / n_patents
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    pat_intensity14 = lag(pat_intensity, 1),
+    patai_intensity14 = lag(patai_intensity, 1)
+  )
+
+# Duplicate line in original
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    pat_intensity14 = lag(pat_intensity, 1),
+    patai_intensity14 = lag(patai_intensity, 1)
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    small_firms = small / est,
+    large_firms = 1 - (small + medium) / est,
+    management_intensity = management_emp / emp,
+    information_intensity = information_emp / emp,
+    manuf_intensity = manuf_emp / emp
+  )
+
+# Another duplicate section in original
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    pat_intensity = n_inventors / Employed,
+    patai_intensity = ai_patents / n_patents
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(patai_intensity = replace_na(patai_intensity, 0))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    pat_intensity14 = lag(pat_intensity, 1),
+    patai_intensity14 = lag(patai_intensity, 1),
+    lads14 = lag(lads, 1)
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(
+    logn_inventors14 = lag(logn_inventors, 1),
+    logai_inventors14 = lag(logai_inventors, 1),
+    lads14 = lag(lads, 1)
+  )
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  ungroup() %>%  
   mutate(
     degshare = (udeg + mdeg) / Employed,
-    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),
-    tightness = nads / Unemployed,
-    hpi_ch = hpi_ch / 100,
-    logpop = log(pop),
-    logincome = log(medhhincome),
-    pat_intensity = n_inventors / Employed,
-    patai_intensity = ai_patents / n_patents,
-    large_firms = 1 - (small + medium) / est,
-    information_intensity = information_emp / emp,
-    manuf_intensity = manuf_emp / emp,
-    ai_intensity = ai / nads
+    stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg)
   )
 
-# Step 2: Filter years and assign period
-data <- data %>%
-  filter(Year %in% c(2017, 2018, 2022, 2023)) %>%
-  mutate(period = ifelse(Year %in% c(2017, 2018), "early", "late"))
+data_ai_2017_2022 <- data_ai_2017_2022 %>%  
+  mutate(stemshare = replace_na(stemshare, 0))
 
-# Step 3: Aggregate by county, period, and state
-summary_data <- data %>%
-  group_by(state, COUNTY_FIPS, period) %>%
-  summarise(across(c(ai_intensity, share_bac, share_black, share_poverty,
-                     logpop, hpi_ch, logincome, tightness, pat_intensity,
-                     patai_intensity, degshare, stemshare, large_firms,
-                     information_intensity, manuf_intensity, TurnOvrS),
-                   \(x) mean(x, na.rm = TRUE)),
-            .groups = "drop")
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(stemshare14 = lag(stemshare, 1))
 
-# Step 4: Pivot to wide format (retain state)
-wide_data <- summary_data %>%
-  pivot_wider(names_from = period, values_from = -c(COUNTY_FIPS, state))
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(degshare14 = lag(degshare, 1))
 
-# Step 5: Compute differences and retain state
-clean_data <- wide_data %>%
+data_ai_2017_2022 <- data_ai_2017_2022 %>%  
+  mutate(tightness = nads / Unemployed)
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(tightness14 = lag(tightness, 1))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(hpi_ch14 = lag(hpi_ch, 1))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(logpop14 = lag(logpop, 1))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(logincome14 = lag(logincome, 1))
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
+  mutate(gpop = (logpop - lag(logpop, 1)) / 5)
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>%  
+  mutate(hpi_ch = hpi_ch / 100)
+
+data_ai_2017_2022 <- data_ai_2017_2022 %>%  
+  mutate(hpi_ch14 = hpi_ch14 / 100)
+
+# Industry structure
+data_ai_2017_2022 <- data_ai_2017_2022 %>% 
   mutate(
-    d_ai_intensity = 100 * (ai_intensity_late - ai_intensity_early),
-    d_share_bac = share_bac_late - share_bac_early,
-    d_share_black = share_black_late - share_black_early,
-    d_share_poverty = share_poverty_late - share_poverty_early,
-    d_logpop = logpop_late - logpop_early,
-    d_hpi_ch = hpi_ch_late - hpi_ch_early,
-    d_logincome = logincome_late - logincome_early,
-    d_tightness = tightness_late - tightness_early,
-    d_pat_intensity = pat_intensity_late - pat_intensity_early,
-    d_patai_intensity = patai_intensity_late - patai_intensity_early,
-    d_degshare = degshare_late - degshare_early,
-    d_stemshare = stemshare_late - stemshare_early,
-    d_large_firms = large_firms_late - large_firms_early,
-    d_information_intensity = information_intensity_late - information_intensity_early,
-    d_manuf_intensity = manuf_intensity_late - manuf_intensity_early,
-    d_TurnOvrS = TurnOvrS_late - TurnOvrS_early
+    large_firms14 = lag(large_firms, 1),
+    information_intensity14 = lag(information_intensity, 1),
+    manuf_intensity14 = lag(manuf_intensity, 1),
+    TurnOvrS14 = lag(TurnOvrS, 1)
   )
 
-# Step 6: Z-score baseline (early) covariates
-Z <- function(x) (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
-
-clean_data <- clean_data %>%
+# Z-scores - EXACT as original
+data_ai_l_z <- data_ai_2017_2022 %>% 
+  filter(emp != 0) %>% 
+  drop_na(share_bac14) %>%
   mutate(
-    z_share_bac = Z(share_bac_early),
-    z_share_black = Z(share_black_early),
-    z_share_poverty = Z(share_poverty_early),
-    z_logpop = Z(logpop_early),
-    z_hpi_ch = Z(hpi_ch_early),
-    z_logincome = Z(logincome_early),
-    z_tightness = Z(tightness_early),
-    z_pat_intensity = Z(pat_intensity_early),
-    z_patai_intensity = Z(patai_intensity_early),
-    z_degshare = Z(degshare_early),
-    z_stemshare = Z(stemshare_early),
-    z_large_firms = Z(large_firms_early),
-    z_information_intensity = Z(information_intensity_early),
-    z_manuf_intensity = Z(manuf_intensity_early),
-    z_TurnOvrS = Z(TurnOvrS_early)
-  )
+    share_bac14 = scale(share_bac14),
+    share_black14 = scale(share_black14),
+    share_poverty14 = scale(share_poverty14),
+    logpop14 = scale(logpop14),
+    hpi_ch14 = scale(hpi_ch14),
+    logincome14 = scale(logincome14),
+    tightness14 = scale(tightness14),
+    pat_intensity14 = scale(pat_intensity14),
+    patai_intensity14 = scale(patai_intensity14),
+    degshare14 = scale(degshare14),
+    stemshare14 = scale(stemshare14),
+    large_firms14 = scale(large_firms14),
+    information_intensity14 = scale(information_intensity14),
+    manuf_intensity14 = scale(manuf_intensity14),
+    TurnOvrS14 = scale(TurnOvrS14),
+    unrate14 = scale(unrate14)
+  ) %>% 
+  mutate(dai_intensity9 = dai_intensity9 * 100)
 
-# Step 7: Run regressions
-mod1 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
-                z_logpop + z_hpi_ch + z_logincome + z_tightness, data = clean_data)
+# Run FULL models with ALL variables (not condensed)
+est_demog_no <- fixest::feols(
+  "dai_intensity9 ~ share_bac14 + share_black14 + share_poverty14 + gpop + hpi_ch14 + logincome14 + tightness14" %>% as.formula(),
+  data_ai_l_z %>% 
+    filter(dai_intensity9 > -5, dai_intensity9 < 10) %>% 
+    drop_na(share_bac14, share_black14, share_poverty14, logpop14, hpi_ch14, logincome14,
+            tightness14, pat_intensity14, patai_intensity14, degshare14, stemshare14,
+            large_firms14, information_intensity14, manuf_intensity14, TurnOvrS14),
+  weights = ~lads14
+) 
 
-mod2 <- feols(d_ai_intensity ~ z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare, data = clean_data)
+est_innovation_no <- fixest::feols(
+  "dai_intensity9 ~ pat_intensity14 + patai_intensity14 + degshare14 + stemshare14" %>% as.formula(),
+  data_ai_l_z %>% 
+    filter(dai_intensity9 > -5, dai_intensity9 < 10) %>% 
+    drop_na(share_bac14, share_black14, share_poverty14, logpop14, hpi_ch14, logincome14,
+            tightness14, pat_intensity14, patai_intensity14, degshare14, stemshare14,
+            large_firms14, information_intensity14, manuf_intensity14, TurnOvrS14),
+  weights = ~lads14
+) 
 
-mod3 <- feols(d_ai_intensity ~ z_large_firms + z_information_intensity +
-                z_manuf_intensity + z_TurnOvrS, data = clean_data)
+est_industry_no <- fixest::feols(
+  "dai_intensity9 ~ large_firms14 + information_intensity14 + manuf_intensity14 + TurnOvrS14" %>% as.formula(),
+  data_ai_l_z %>% 
+    filter(dai_intensity9 > -5, dai_intensity9 < 10) %>% 
+    drop_na(share_bac14, share_black14, share_poverty14, logpop14, hpi_ch14, logincome14,
+            tightness14, pat_intensity14, patai_intensity14, degshare14, stemshare14,
+            large_firms14, information_intensity14, manuf_intensity14, TurnOvrS14),
+  weights = ~lads14
+)
 
-mod4 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
-                z_logpop + z_hpi_ch + z_logincome + z_tightness +
-                z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare +
-                z_large_firms + z_information_intensity + z_manuf_intensity + z_TurnOvrS, data = clean_data)
+est_all <- fixest::feols(
+  "dai_intensity9 ~ share_bac14 + share_black14 + share_poverty14 + gpop + hpi_ch14 + logincome14 + tightness14 + pat_intensity14 + patai_intensity14 + degshare14 + stemshare14 + large_firms14 + information_intensity14 + manuf_intensity14 + TurnOvrS14" %>% as.formula(),
+  data_ai_l_z %>% 
+    filter(dai_intensity9 > -5, dai_intensity9 < 10) %>% 
+    drop_na(share_bac14, share_black14, share_poverty14, logpop14, hpi_ch14, logincome14,
+            tightness14, pat_intensity14, patai_intensity14, degshare14, stemshare14,
+            large_firms14, information_intensity14, manuf_intensity14, TurnOvrS14),
+  weights = ~lads14
+)
 
-mod5 <- feols(d_ai_intensity ~ z_share_bac + z_share_black + z_share_poverty +
-                z_logpop + z_hpi_ch + z_logincome + z_tightness +
-                z_pat_intensity + z_patai_intensity + z_degshare + z_stemshare +
-                z_large_firms + z_information_intensity + z_manuf_intensity + z_TurnOvrS | state,
-              data = clean_data)
+est_all_large <- fixest::feols(
+  "dai_intensity9 ~ share_bac14 + share_black14 + share_poverty14 + gpop + hpi_ch14 + logincome14 + tightness14 + pat_intensity14 + patai_intensity14 + degshare14 + stemshare14 + large_firms14 + information_intensity14 + manuf_intensity14 + TurnOvrS14 | state" %>% as.formula(),
+  data_ai_l_z %>% 
+    filter(dai_intensity9 > -5, dai_intensity9 < 10) %>% 
+    drop_na(share_bac14, share_black14, share_poverty14, logpop14, hpi_ch14, logincome14,
+            tightness14, pat_intensity14, patai_intensity14, degshare14, stemshare14,
+            large_firms14, information_intensity14, manuf_intensity14, TurnOvrS14),
+  weights = ~lads14
+)
 
 # Extract model statistics
-models <- list(mod1, mod2, mod3, mod4, mod5)
-obs <- map_chr(models, ~comma(nobs(.x)))
-r2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "r2")))
-wr2_vals <- map_chr(models, ~sprintf("%.3f", r2(.x, "wr2")))
+models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_all_large)
+obs <- map_chr(models, ~scales::comma(nobs(.x)))
+r2_vals <- map_chr(models, ~sprintf("%.4f", r2(.x, "r2")))
 
 # Create extra rows for table footer
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "Fixed-effects", "", "", "", "", "",
-  "State", "No", "No", "No", "No", "Yes",
-  "Fit statistics", "", "", "", "", "",
-  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
+  "Fixed effects", "None", "None", "None", "None", "State",
   "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5],
-  "Within R²", "—", "—", "—", "—", wr2_vals[5]
+  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5]
 )
 
-# Variable labels - shortened to fit on single lines
+# Variable labels - condensed to only the 8 key variables
 labels <- c(
-  "z_share_bac" = "Bachelors",
-  "z_share_black" = "Black", 
-  "z_share_poverty" = "Poverty",
-  "z_logpop" = "Pop. Growth",
-  "z_hpi_ch" = "House Price Growth",
-  "z_logincome" = "Income, Log",
-  "z_tightness" = "Tightness",
-  "z_pat_intensity" = "Patents/employee",
-  "z_patai_intensity" = "AI Patents' Share",
-  "z_degshare" = "Degrees/capita",
-  "z_stemshare" = "Stem Degrees' share",
-  "z_large_firms" = "Large Firms",
-  "z_information_intensity" = "ICT sector Intensity",
-  "z_manuf_intensity" = "Manufacturing",
-  "z_TurnOvrS" = "Turnover Rate"
+  "share_bac14" = "Bachelors Share",
+  "logincome14" = "Income, Log", 
+  "tightness14" = "Tightness",
+  "stemshare14" = "Stem Degrees' share",
+  "large_firms14" = "Large Firms",
+  "information_intensity14" = "ICT sector Intensity",
+  "manuf_intensity14" = "Manufacturing",
+  "TurnOvrS14" = "Turnover Rate"
 )
 
-# Create table with shorter column headers
+# Create table with numbered column headers
 table_output <- modelsummary(
   list(
-    "Demo." = mod1,
-    "Innov." = mod2,
-    "Indust." = mod3,
-    "All" = mod4,
-    "All+State" = mod5
+    "(1)" = est_demog_no,
+    "(2)" = est_innovation_no,
+    "(3)" = est_industry_no,
+    "(4)" = est_all,
+    "(5)" = est_all_large
   ),
   coef_map = labels,
   stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -441,10 +609,11 @@ table_output <- modelsummary(
   add_rows = extra_rows,
   escape = FALSE,
   statistic = "({std.error})",
+  fmt = 4,
   output = "kableExtra"
 )
 
-# Apply more compact formatting
+# Apply more compact formatting with decimal alignment
 final_table <- table_output |>
   kable_styling(
     latex_options = c("HOLD_position", "scale_down"),
@@ -453,13 +622,14 @@ final_table <- table_output |>
     position = "center"
   ) |>
   column_spec(1, width = "2.5cm") |>
-  column_spec(2:6, width = "1.2cm")
+  column_spec(2:6, width = "1.2cm") |>
+  add_header_above(c("Model" = 1, " " = 5))
 
 # Display table 
 final_table
 ```
 
-**Notes:** Dependent variable is AI job percentage-point share (%). All explanatory variables are standardized (z-scores). Regressions include county and year fixed effects, with state×year fixed effects in column (5). Standard errors clustered at county level. Observations are unweighted. Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023.
+**Notes:** Dependent variable is AI job percentage-point change share (%) in 2017. All explanatory variables are standardized (z-scores). Regressions include county and year fixed effects, with state×year fixed effects in column (5). Standard errors clustered at county level. Observations are unweighted. Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023.
 
 ```{r}
 #| label: setup
