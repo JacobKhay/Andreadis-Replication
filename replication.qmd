@@ -29,6 +29,18 @@ format:
 
 <!-- DK:  -->
 
+<!-- Email authors again about bachelor share issue. NOW. -->
+
+<!-- Fix legend ordering in plot. -->
+
+<!-- Fix table formatting. -->
+
+<!-- There are data problems in the map. Isolate them. Send new email to the authors about them, if the authors are wrong. I see North Slope of ALsaka. And CT as obvious issues. -->
+
+<!-- Cite R (famous 1996 paper), modelsummary fixest and maybe one or two other packages you used. -->
+
+<!-- Add a setup chunk which loads all the libraries you use in one place. -->
+
 <!-- Fix rounding and order of rows but before fixing the variable names. Get rid of ***.
 
 Here is Table 2 from our paper.
@@ -42,22 +54,10 @@ Here is our replication of your Table 2.
 As you can see, every number matches exactly, except for the estimates and standard errors for Bachelor's Share. Any ideas what the problem might be? -->
 
 
-<!-- Placement of R^2 row in table is wrong. Also round R^2 the same as in the paper. Done -->
-
-<!-- Make Table 1 and Table 2 look like the published versions. Done - question about table 2 Bachelor's share-->
 
 <!-- Same variable names in the tables, e.g., include "2017". Maybe changing document margins to 1 inch, or even 1/2 inch will help. Not critical. -->
 
 
-<!-- Fix references.  Done-->
-
-<!-- Is the last reference in their paper really Makridis, Christos A.,? Check the text of the paper. -->
-
-<!-- Ask AI to give you a paragraph summary of each reference. Read it. Confirm, by hand, that you are using the references correctly! -->
-
-<!-- Reread everything closely. -->
-
-<!-- JK: realized that the panel plot font(s) might be too small. Sorry, will fix next time.  Will do next time-->
 
 *JEL: J24, O33, R11*
 
