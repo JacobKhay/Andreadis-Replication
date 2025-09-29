@@ -13,6 +13,8 @@ format:
     keep-tex: true
     number-sections: true
     documentclass: article
+    geometry: 
+      - margin=1in
     include-in-header:
       - text: |
           \usepackage{float}
@@ -40,7 +42,7 @@ Here is our replication of your Table 2.
 As you can see, every number matches exactly, except for the estimates and standard errors for Bachelor's Share. Any ideas what the problem might be? -->
 
 
-<!-- Placement of R^2 row in table is wrong. Also round R^2 the same as in the paper. -->
+<!-- Placement of R^2 row in table is wrong. Also round R^2 the same as in the paper. Done -->
 
 <!-- Make Table 1 and Table 2 look like the published versions. Done - question about table 2 Bachelor's share-->
 
@@ -195,27 +197,27 @@ data_ai_filtered <- data_ai %>%
 # Create standardized variables (z-scores) EXACTLY as in original
 data_ai_z <- data_ai_filtered %>%
   mutate(
-    share_bac = as.numeric(scale(share_bac)),
-    share_black = as.numeric(scale(share_black)),
-    share_poverty = as.numeric(scale(share_poverty)),
-    logpop = as.numeric(scale(logpop)),
-    hpi_ch = as.numeric(scale(hpi_ch)),
-    logincome = as.numeric(scale(logincome)),
-    tightness = as.numeric(scale(tightness)),
-    unrate = as.numeric(scale(unrate)),
-    pat_intensity = as.numeric(scale(pat_intensity)),
-    patai_intensity = as.numeric(scale(patai_intensity)),
-    degshare = as.numeric(scale(degshare)),
-    stemshare = as.numeric(scale(stemshare)),
-    large_firms = as.numeric(scale(large_firms)),
-    information_intensity = as.numeric(scale(information_intensity)),
-    manuf_intensity = as.numeric(scale(manuf_intensity)),
-    TurnOvrS = as.numeric(scale(TurnOvrS))
+    share_bac = scale(share_bac),
+    share_black = scale(share_black),
+    share_poverty = scale(share_poverty),
+    logpop = scale(logpop),
+    hpi_ch = scale(hpi_ch),
+    logincome = scale(logincome),
+    tightness = scale(tightness),
+    unrate = scale(unrate),
+    pat_intensity = scale(pat_intensity),
+    patai_intensity = scale(patai_intensity),
+    degshare = scale(degshare),
+    stemshare = scale(stemshare),
+    large_firms = scale(large_firms),
+    information_intensity = scale(information_intensity),
+    manuf_intensity = scale(manuf_intensity),
+    TurnOvrS = scale(TurnOvrS)
   )
 
-# Run condensed models with only the 8 key variables
+# Run models with full specifications for accuracy
 est_demog_no <- fixest::feols(
-  "ai_intensity ~ share_bac + hpi_ch + tightness | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
                         tightness, pat_intensity, patai_intensity, degshare, stemshare,
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
@@ -224,7 +226,7 @@ est_demog_no <- fixest::feols(
 ) 
 
 est_innovation_no <- fixest::feols(
-  "ai_intensity ~ pat_intensity + stemshare | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ pat_intensity + patai_intensity + degshare + stemshare | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
                         tightness, pat_intensity, patai_intensity, degshare, stemshare,
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
@@ -233,7 +235,7 @@ est_innovation_no <- fixest::feols(
 ) 
 
 est_industry_no <- fixest::feols(
-  "ai_intensity ~ information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
                         tightness, pat_intensity, patai_intensity, degshare, stemshare,
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
@@ -242,52 +244,52 @@ est_industry_no <- fixest::feols(
 ) 
 
 est_all <- fixest::feols(
-  "ai_intensity ~ share_bac + hpi_ch + tightness + pat_intensity + stemshare + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z,
   cluster = "COUNTY_FIPS",
   weights = ~lads
 )
 
-est_all_large <- fixest::feols(
-  "ai_intensity ~ share_bac + hpi_ch + tightness + pat_intensity + stemshare + information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS" %>% as.formula(),
+est_all_state_year <- fixest::feols(
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z,
   vcov = "twoway",
   weights = ~lads
 )
 
 # Extract model statistics
-models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_all_large)
+models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_all_state_year)
 obs <- map_chr(models, ~scales::comma(nobs(.x)))
-r2_vals <- map_chr(models, ~sprintf("%.4f", r2(.x, "r2")))
+r2_vals <- map_chr(models, ~sprintf("%.5f", r2(.x, "r2")))
 
-# Create extra rows for table footer
+# Create table footer
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "Fixed effects", "County, Year", "County, Year", "County, Year", "County, Year", "County, State",
-  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5],
-  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5]
+  "Fixed effects", "County, Year", "County, Year", "County, Year", "County, Year", "County, state-year",
+  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
+  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5]
 )
 
-# Variable labels - only the 8 condensed variables
+# Variable labels - condensed display only
 labels <- c(
-  "share_bac" = "Bachelors' share",
-  "hpi_ch" = "House Price Growth", 
-  "tightness" = "Labor Tightness",
-  "pat_intensity" = "Patents/employee",
-  "stemshare" = "Stem Degrees' share",
-  "information_intensity" = "ICT sector Intensity",
+  "share_bac" = "Bachelor's share",
+  "hpi_ch" = "House price growth",
+  "tightness" = "Labor tightness",
+  "pat_intensity" = "Patents per employee",
+  "stemshare" = "STEM degrees share",
+  "information_intensity" = "ICT sector intensity",
   "manuf_intensity" = "Manufacturing",
-  "TurnOvrS" = "Turnover Rate"
+  "TurnOvrS" = "Turnover rate"
 )
 
-# Create table with numbered column headers
-table_output <- modelsummary(
+# Create and display table
+modelsummary(
   list(
     "(1)" = est_demog_no,
     "(2)" = est_innovation_no,
     "(3)" = est_industry_no,
     "(4)" = est_all,
-    "(5)" = est_all_large
+    "(5)" = est_all_state_year
   ),
   coef_map = labels,
   stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -297,25 +299,19 @@ table_output <- modelsummary(
   statistic = "({std.error})",
   fmt = 4,
   output = "kableExtra"
-)
-
-# Apply more compact formatting with decimal alignment
-final_table <- table_output |>
+) |>
   kable_styling(
     latex_options = c("HOLD_position", "scale_down"),
     full_width = FALSE,
-    font_size = 7.5,
+    font_size = 8,
     position = "center"
   ) |>
-  column_spec(1, width = "2.5cm") |>
-  column_spec(2:6, width = "1.2cm") |>
-  add_header_above(c("Model" = 1, " " = 5))
-
-# Display table 
-final_table
+  column_spec(1, width = "3cm") |>
+  column_spec(2:6, width = "1.3cm")
 ```
 
-**Notes:** Dependent variable is AI job share (%). All explanatory variables are standardized (z-scores). Regressions include county and year fixed effects, with state×year fixed effects in column (5). Standard errors clustered at county level. Observations are unweighted. Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023.
+**Notes:** Notes: The tables report the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are
+clustered at the county level.
 
 ```{r}
 #| label: tbl-table2
@@ -595,8 +591,8 @@ r2_vals <- map_chr(models, ~sprintf("%.4f", r2(.x, "r2")))
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
   "Fixed effects", "None", "None", "None", "None", "State",
-  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5],
-  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5]
+  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
+  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5]
 )
 
 # Variable labels - condensed to only the 8 key variables
@@ -611,7 +607,7 @@ labels <- c(
   "TurnOvrS14" = "Turnover Rate"
 )
 
-# Create table with numbered column headers
+# Create table with numbered column headers - REMOVED stars and p-value notation
 table_output <- modelsummary(
   list(
     "(1)" = est_demog_no,
@@ -621,12 +617,12 @@ table_output <- modelsummary(
     "(5)" = est_all_large
   ),
   coef_map = labels,
-  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+  stars = FALSE,  # REMOVED: No significance stars
   gof_omit = ".*",
   add_rows = extra_rows,
   escape = FALSE,
   statistic = "({std.error})",
-  fmt = 4,
+  fmt = 4,  # CHANGED: Round to 4 decimal places
   output = "kableExtra"
 )
 
@@ -639,14 +635,18 @@ final_table <- table_output |>
     position = "center"
   ) |>
   column_spec(1, width = "2.5cm") |>
-  column_spec(2:6, width = "1.2cm") |>
-  add_header_above(c("Model" = 1, " " = 5))
+  column_spec(2:6, width = "1.2cm")
+
+# Manually add "Model" to the first column header by string replacement
+final_table <- final_table %>%
+  gsub('<thead>\n<tr>\n<th style="text-align:left;">  </th>', 
+       '<thead>\n<tr>\n<th style="text-align:left;"> Model </th>', ., fixed = TRUE)
 
 # Display table 
 final_table
 ```
 
-**Notes:** Dependent variable is AI job percentage-point change share (%) in 2017. All explanatory variables are standardized (z-scores). Regressions include county and year fixed effects, with state×year fixed effects in column (5). Standard errors clustered at county level. Observations are unweighted. Sources: Lightcast, American Community Survey, Quarterly Workforce Indicators, 2014-2023.
+**Notes:** The tables report the demographic, innovation, and industry determinants of the change in AI shares in a county in 2017. Standard errors are clustered at the county level.
 
 ```{r}
 #| label: setup
