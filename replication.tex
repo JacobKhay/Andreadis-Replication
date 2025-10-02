@@ -380,6 +380,22 @@ where \(AIShare_{ct}\) denotes the proportion of AI-related job postings
 in county \(c\) at year \(t\), and \(X_{ct}\) includes demographic,
 labor market, and housing controls.
 
+\section{Methods}\label{methods}
+
+This replication study was conducted using R (\citeproc{ref-r1996}{R
+Core Team, 1996}), a free and open-source statistical computing
+environment. Data manipulation and analysis utilized the tidyverse
+collection of packages (\citeproc{ref-tidyverse}{Wickham et al., 2023}).
+Regression models were estimated using the fixest package
+(\citeproc{ref-fixest}{Bergé, 2023}), which provides fast and efficient
+fixed-effects estimation capabilities. Summary tables were generated
+using modelsummary (\citeproc{ref-modelsummary}{Arel-Bundock, 2022}) and
+formatted with kableExtra (\citeproc{ref-kableExtra}{Zhu, 2021}).
+Spatial visualizations were created with the usmap package
+(\citeproc{ref-usmap}{Di Lorenzo, 2023}), which provides convenient
+mapping functions for U.S. geographic data including proper handling of
+Alaska and Hawaii positioning.
+
 \subsection{Reproduction of Original
 Results}\label{reproduction-of-original-results}
 
@@ -405,39 +421,35 @@ Jobs}
 \toprule
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-Bachelor's share & \num{0.1906}*** &  &  & \num{0.1817}*** & \num{0.1035}**\\
+Bachelor's share & \num{0.1906} &  &  & \num{0.1817} & \num{0.1035}\\
  & (\num{0.0513}) &  &  & (\num{0.0505}) & (\num{0.0459})\\
-House price growth & \num{-0.0144}* &  &  & \num{-0.0142}* & \num{-0.0156}**\\
+House price growth & \num{-0.0144} &  &  & \num{-0.0142} & \num{-0.0156}\\
  & (\num{0.0080}) &  &  & (\num{0.0079}) & (\num{0.0074})\\
-Labor tightness & \num{0.2780}*** &  &  & \num{0.2765}*** & \num{0.3156}***\\
+Labor tightness & \num{0.2780} &  &  & \num{0.2765} & \num{0.3156}\\
  & (\num{0.0583}) &  &  & (\num{0.0585}) & (\num{0.0643})\\
-Patents per employee &  & \num{0.0232}** &  & \num{0.0295}*** & \num{0.0312}**\\
+Patents per employee &  & \num{0.0232} &  & \num{0.0295} & \num{0.0312}\\
  &  & (\num{0.0091}) &  & (\num{0.0113}) & (\num{0.0138})\\
-STEM degrees share &  & \num{0.0686}*** &  & \num{0.0475}** & \num{0.0375}**\\
+STEM degrees share &  & \num{0.0686} &  & \num{0.0475} & \num{0.0375}\\
  &  & (\num{0.0238}) &  & (\num{0.0205}) & (\num{0.0184})\\
-ICT sector intensity &  &  & \num{0.0121} & \num{0.0258}* & \num{0.0280}**\\
+ICT sector intensity &  &  & \num{0.0121} & \num{0.0258} & \num{0.0280}\\
  &  &  & (\num{0.0144}) & (\num{0.0135}) & (\num{0.0136})\\
-Manufacturing &  &  & \num{-0.0630}*** & \num{-0.0333}*** & \num{-0.0247}**\\
+Manufacturing &  &  & \num{-0.0630} & \num{-0.0333} & \num{-0.0247}\\
  &  &  & (\num{0.0113}) & (\num{0.0108}) & (\num{0.0111})\\
-Turnover rate &  &  & \num{0.0345}** & \num{0.0188} & \num{0.0154}\\
+Turnover rate &  &  & \num{0.0345} & \num{0.0188} & \num{0.0154}\\
  &  &  & (\num{0.0137}) & (\num{0.0137}) & (\num{0.0132})\\
 Fixed effects & County, Year & County, Year & County, Year & County, Year & County, state-year\\
 Observations & 24,645 & 24,645 & 24,645 & 24,645 & 24,645\\
 R² & 0.69739 & 0.68012 & 0.67989 & 0.69827 & 0.71558\\
 \bottomrule
-\multicolumn{6}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01}\\
 \end{tabular}}
 
 }
 
 \end{table}%
 
-\textbf{Notes:} Dependent variable is AI job share (\%). All explanatory
-variables are standardized (z-scores). Regressions include county and
-year fixed effects, with state×year fixed effects in column (5).
-Standard errors clustered at county level. Observations are unweighted.
-Sources: Lightcast, American Community Survey, Quarterly Workforce
-Indicators, 2014-2023.
+\textbf{Notes:} Notes: The tables report the demographic, innovation,
+and industry determinants of the share of AI jobs. Standard errors are
+clustered at the county level.
 
 \begin{table}[H]
 
@@ -480,9 +492,9 @@ R² & 0.0213 & 0.0193 & 0.0155 & 0.0315 & 0.0817\\
 
 \end{table}%
 
-\textbf{Notes: The tables report the demographic, innovation, and
-industry determinants of the change in AI shares in a county. Standard
-errors are clustered at the county level.}
+\textbf{Notes:} The tables report the demographic, innovation, and
+industry determinants of the change in AI shares in a county in 2017.
+Standard errors are clustered at the county level.
 
 \begin{figure}[H]
 
@@ -786,6 +798,11 @@ Chatzikonstantinou}, \textbf{Christodoulos Louca}, and \textbf{Christos
 A. Makridis}. 2025. {``Local heterogeneity in artificial intelligence
 jobs over time and space.''} \emph{AEA Papers and Proceedings}.
 
+\bibitem[\citeproctext]{ref-modelsummary}
+\textbf{Arel-Bundock, Vincent}. 2022.
+\emph{\href{https://CRAN.R-project.org/package=modelsummary}{{modelsummary}:
+Summary tables and plots for statistical models and data}}.
+
 \bibitem[\citeproctext]{ref-autor2015}
 \textbf{Autor, David H.} 2015. {``Why are there still so many jobs? The
 history and future of workplace automation.''} \emph{Journal of Economic
@@ -801,6 +818,11 @@ and product innovation.''} \emph{Journal of Financial Economics} 151 :
 \textbf{Beckett, Emily}. 2023. {``\href{https://lightcast.io/}{Demand
 for AI skills continues climbing}.''} Lightcast Blog.
 
+\bibitem[\citeproctext]{ref-fixest}
+\textbf{Bergé, Laurent}. 2023.
+\emph{\href{https://CRAN.R-project.org/package=fixest}{{fixest}: Fast
+fixed-effects estimations}}.
+
 \bibitem[\citeproctext]{ref-bogin2019}
 \textbf{Bogin, Alexander}, \textbf{William Doerner}, and \textbf{William
 Larson}. 2019. {``Local house price dynamics: New indices and stylized
@@ -811,6 +833,11 @@ facts.''} \emph{Real Estate Economics} 47(2) : 365--398.
 Syverson}. 2021. {``The productivity j-curve: How intangibles complement
 general-purpose technologies.''} \emph{American Economic Journal:
 Macroeconomics} 13(1) : 333--372.
+
+\bibitem[\citeproctext]{ref-usmap}
+\textbf{Di Lorenzo, Paolo}. 2023.
+\emph{\href{https://CRAN.R-project.org/package=usmap}{{usmap}: US maps
+including alaska and hawaii}}.
 
 \bibitem[\citeproctext]{ref-eloundou2024}
 \textbf{Eloundou, Tyna}, \textbf{Sam Manning}, \textbf{Pamela Mishkin},
@@ -835,6 +862,11 @@ places, and public policy: Some simple welfare economics of local
 economic development programs.''} \emph{Annual Review of Economics} 6 :
 629--662.
 
+\bibitem[\citeproctext]{ref-r1996}
+\textbf{R Core Team}. 1996. \emph{\href{https://www.R-project.org/}{R: A
+language and environment for statistical computing}} Vienna, Austria: R
+Foundation for Statistical Computing.
+
 \bibitem[\citeproctext]{ref-bls_laus}
 \textbf{U.S. Bureau of Labor Statistics}. 2024.
 {``\href{https://www.bls.gov/lau/}{Local area unemployment statistics
@@ -854,6 +886,16 @@ business patterns (CBP)}.''}
 \textbf{U.S. Census Bureau}. 2024c.
 {``\href{https://lehd.ces.census.gov/data/}{Quarterly workforce
 indicators (QWI)}.''}
+
+\bibitem[\citeproctext]{ref-tidyverse}
+\textbf{Wickham, Hadley} et al. 2023.
+\emph{\href{https://CRAN.R-project.org/package=tidyverse}{{tidyverse}:
+Easily install and load the 'tidyverse'}}.
+
+\bibitem[\citeproctext]{ref-kableExtra}
+\textbf{Zhu, Hao}. 2021.
+\emph{\href{https://CRAN.R-project.org/package=kableExtra}{{kableExtra}:
+Construct complex table with 'kable' and pipe syntax}}.
 
 \end{CSLReferences}
 

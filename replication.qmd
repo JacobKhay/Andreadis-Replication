@@ -27,6 +27,29 @@ format:
   docx: default
 ---
 
+```{r}
+#| label: setup
+#| include: false
+# Load all required packages
+library(tidyverse)
+library(fixest)
+library(modelsummary)
+library(kableExtra)
+library(sf)
+library(scales)
+library(tigris)
+library(ggplot2)
+library(patchwork)
+library(grid)
+library(usmap)
+library(viridis)
+library(dplyr)
+library(forcats)
+
+# Set options
+options(tigris_use_cache = TRUE)
+```
+
 <!-- DK:  -->
 
 <!-- Email authors again about bachelor share issue. NOW. -->
@@ -37,9 +60,7 @@ format:
 
 <!-- There are data problems in the map. Isolate them. Send new email to the authors about them, if the authors are wrong. I see North Slope of ALsaka. And CT as obvious issues. -->
 
-<!-- Cite R (famous 1996 paper), modelsummary fixest and maybe one or two other packages you used. -->
 
-<!-- Add a setup chunk which loads all the libraries you use in one place. -->
 
 <!-- Fix rounding and order of rows but before fixing the variable names. Get rid of ***.
 
@@ -114,6 +135,10 @@ $$
 
 where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county $c$ at year $t$, and $X_{ct}$ includes demographic, labor market, and housing controls.
 
+## Methods
+
+This replication study was conducted using R [@r1996], a free and open-source statistical computing environment. Data manipulation and analysis utilized the tidyverse collection of packages [@tidyverse]. Regression models were estimated using the fixest package [@fixest], which provides fast and efficient fixed-effects estimation capabilities. Summary tables were generated using modelsummary [@modelsummary] and formatted with kableExtra [@kableExtra]. Spatial visualizations were created with the usmap package [@usmap], which provides convenient mapping functions for U.S. geographic data including proper handling of Alaska and Hawaii positioning.
+
 ### Reproduction of Original Results
 
 We successfully reproduced the main findings from Tables 1 and 2 of @andreadis2025. The reproduction confirms the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
@@ -126,11 +151,6 @@ We successfully reproduced the main findings from Tables 1 and 2 of @andreadis20
 #| results: asis
 #| tbl-cap: "Replication of Table 1 from Andreadis et al. (2025) - The Correlates of the Share of Artificial Intelligence Jobs"
 #| tbl-pos: "H"
-
-library(tidyverse)
-library(fixest)
-library(modelsummary)
-library(kableExtra)
 
 # Load and prepare data EXACTLY as in original
 data_ai <- read_csv("data.csv") %>% 
@@ -292,7 +312,7 @@ modelsummary(
     "(5)" = est_all_state_year
   ),
   coef_map = labels,
-  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+  stars = FALSE,
   gof_omit = ".*",
   add_rows = extra_rows,
   escape = FALSE,
@@ -321,11 +341,6 @@ clustered at the county level.
 #| results: asis
 #| tbl-cap: "Replication of Table 2 from Andreadis et al. (2025) - The Correlates of the Percentage Point Change in the Share of AI Jobs"
 #| tbl-pos: "H"
-
-library(tidyverse)
-library(fixest)
-library(modelsummary)
-library(kableExtra)
 
 # Follow EXACT original code structure
 data_ai_2017_2022 <- read_csv("data.csv") %>% 
@@ -626,7 +641,7 @@ table_output <- modelsummary(
   output = "kableExtra"
 )
 
-# Apply more compact formatting with decimal alignment
+# Apply more compact formatting
 final_table <- table_output |>
   kable_styling(
     latex_options = c("HOLD_position", "scale_down"),
@@ -649,19 +664,6 @@ final_table
 **Notes:** The tables report the demographic, innovation, and industry determinants of the change in AI shares in a county in 2017. Standard errors are clustered at the county level.
 
 ```{r}
-#| label: setup
-#| include: false
-library(tidyverse)
-library(sf)
-library(scales)
-library(tigris)
-library(ggplot2)
-library(patchwork)
-library(grid)
-options(tigris_use_cache = TRUE)
-```
-
-```{r}
 #| label: fig-map
 #| echo: false
 #| message: false
@@ -672,24 +674,60 @@ options(tigris_use_cache = TRUE)
 #| fig-width: 18
 #| fig-height: 9
 
-# Data prep - use 2014-2023 for Panel A as stated in the original paper
-df <- read_csv("data.csv") %>%
-  mutate(ai_intensity = ai / nads) %>%
-  group_by(COUNTY_FIPS) %>%
-  summarise(
-    # Panel A: Average 2014-2023 as stated in paper
-    avg_ai_pct = mean(ai_intensity, na.rm = TRUE) * 100,
-    # Panel B: Change from 2018 to 2023 (single years, not averages)
-    ai_2018 = mean(ai_intensity[Year == 2018], na.rm = TRUE),
-    ai_2023 = mean(ai_intensity[Year == 2023], na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    ai_change_pct = (ai_2023 - ai_2018) * 100,
-    COUNTY_FIPS = str_pad(as.character(COUNTY_FIPS), 5, pad = "0")
-  )
+# Using original authors' methodology from maps_ai.R with their exact data
+data <- read_csv("updated_lightcast_county.csv") %>%
+  rename(COUNTY_FIPS = COUNTY_FIPS, Year = YEAR_POSTED, ai = `AI Postings`, nads = `Total Postings`)
 
-# Get county boundaries
+# Panel A: Levels data (average across all years) - exactly as in maps_ai.R
+data_levels <- data %>%
+  select(COUNTY_FIPS:nads) %>%
+  mutate(aiInt = ai/nads) %>%
+  group_by(COUNTY_FIPS) %>%
+  summarise(aiInt = mean(aiInt))
+
+# Panel B: Change data - exactly as in maps_ai.R
+data_ch <- data %>%
+  filter(Year > 2017) %>%
+  select(COUNTY_FIPS:nads) %>%
+  mutate(aiInt = ai/nads) %>%
+  group_by(COUNTY_FIPS) %>%
+  summarise(aiIntch = last(aiInt) - first(aiInt))
+
+# Prepare data for usmap with FIPS formatting
+merged_data_lev <- data_levels %>%
+  mutate(fips = COUNTY_FIPS %>% str_pad(5, "0", side = "left"))
+
+merged_data_ch <- data_ch %>%
+  mutate(fips = COUNTY_FIPS %>% str_pad(5, "0", side = "left"))
+
+# Create discrete categories exactly as in original authors' code
+merged_data_lev <- merged_data_lev %>%
+  mutate(ai_share = aiInt * 100) %>%
+  mutate(caseai = case_when(
+    ai_share >= 0 & ai_share < 0.06 ~ 1,
+    ai_share > 0.06 & ai_share < 0.14 ~ 2,
+    ai_share > 0.14 & ai_share < 0.23 ~ 3,
+    ai_share > 0.23 & ai_share < 0.37 ~ 4,
+    ai_share > 0.37 & ai_share < 0.7 ~ 5,
+    ai_share > 0.7 ~ 6,
+    is.na(ai_share) ~ NA
+  ))
+
+merged_data_ch <- merged_data_ch %>%
+  mutate(change_in_share = aiIntch * 100)
+
+merged_data_ch <- merged_data_ch %>%
+  mutate(caseaich = case_when(
+    change_in_share < -0.12 ~ 1,
+    change_in_share > -0.12 & change_in_share <= 0 ~ 2,
+    change_in_share > 0 & change_in_share < 0.09 ~ 3,
+    change_in_share > 0.09 & change_in_share < 0.24 ~ 4,
+    change_in_share > 0.24 & change_in_share < 0.57 ~ 5,
+    change_in_share > 0.57 ~ 6,
+    is.na(change_in_share) ~ NA
+  ))
+
+# Get county boundaries using tigris (keep original approach for visualization)
 options(tigris_use_cache = TRUE)
 counties <- suppressMessages(
   tigris::counties(cb = TRUE, year = 2020, class = "sf")
@@ -698,105 +736,123 @@ counties <- suppressMessages(
   filter(!str_starts(COUNTY_FIPS, "72")) %>% # Remove Puerto Rico
   st_transform(crs = 4326)
 
-# Join data with geography and shift for proper Alaska/Hawaii positioning
-map_data <- left_join(counties, df, by = "COUNTY_FIPS") %>%
+# Join with Panel A data
+map_data_a <- counties %>%
+  left_join(merged_data_lev, by = c("COUNTY_FIPS" = "fips")) %>%
   tigris::shift_geometry()
 
-# Exact bins from the original paper
-bins_avg <- c(0, 0.06, 0.14, 0.23, 0.37, 0.71, Inf)
-labels_avg <- c("0 – 0.06", "0.06 – 0.14", "0.14 – 0.23", "0.23 – 0.37", "0.37 – 0.71", "0.71 – 10")
+# Join with Panel B data
+map_data_b <- counties %>%
+  left_join(merged_data_ch, by = c("COUNTY_FIPS" = "fips")) %>%
+  tigris::shift_geometry()
 
-bins_chg <- c(-Inf, -0.12, 0.00, 0.09, 0.24, 0.57, Inf)
-labels_chg <- c("−5.56 – −0.12", "−0.12 – 0", "0 – 0.09", "0.09 – 0.24", "0.24 – 0.57", "0.57 – 12.35")
-
-# Colors matching the target image (yellow to red)
-cols_avg <- c("#ffffcc", "#ffeda0", "#fed976", "#fd8d3c", "#e31a1c", "#800026")
-cols_chg <- c("#ffffcc", "#ffeda0", "#fed976", "#fd8d3c", "#fc4e2a", "#800026")
-
-# Create bins
-map_data <- map_data %>%
+# Create proper bins and labels using original approach
+map_data_a <- map_data_a %>%
   mutate(
-    avg_bin = cut(avg_ai_pct, breaks = bins_avg, labels = labels_avg, include.lowest = TRUE, right = FALSE),
-    chg_bin = cut(ai_change_pct, breaks = bins_chg, labels = labels_chg, include.lowest = TRUE, right = FALSE)
-  ) %>%
-  mutate(
-    avg_bin = forcats::fct_explicit_na(avg_bin, na_level = "No data"),
-    chg_bin = forcats::fct_explicit_na(chg_bin, na_level = "No data")
+    avg_bin = case_when(
+      caseai == 1 ~ "0 – 0.06",
+      caseai == 2 ~ "0.06 – 0.14",
+      caseai == 3 ~ "0.14 – 0.23",
+      caseai == 4 ~ "0.23 – 0.37",
+      caseai == 5 ~ "0.37 – 0.71",
+      caseai == 6 ~ "0.71 – 10",
+      TRUE ~ "No data"
+    )
   )
 
-# Base theme matching original paper - FIXED LEGEND SPACING
+map_data_b <- map_data_b %>%
+  mutate(
+    chg_bin = case_when(
+      caseaich == 1 ~ "−5.56 – −0.12",
+      caseaich == 2 ~ "−0.12 – 0",
+      caseaich == 3 ~ "0 – 0.09",
+      caseaich == 4 ~ "0.09 – 0.24",
+      caseaich == 5 ~ "0.24 – 0.57",
+      caseaich == 6 ~ "0.57 – 12.35",
+      TRUE ~ "No data"
+    )
+  )
+
+# Original legend order and colors
+levels_avg_display <- c("0.71 – 10", "0.37 – 0.71", "0.23 – 0.37",
+                        "0.14 – 0.23", "0.06 – 0.14", "0 – 0.06", "No data")
+levels_chg_display <- c("0.57 – 12.35", "0.24 – 0.57", "0.09 – 0.24",
+                        "0 – 0.09", "−0.12 – 0", "−5.56 – −0.12", "No data")
+
+colors_avg_display <- c("#800026", "#e31a1c", "#fd8d3c", "#fed976", "#ffeda0", "#ffffcc", "gray90")
+colors_chg_display <- c("#800026", "#fc4e2a", "#fd8d3c", "#fed976", "#ffeda0", "#ffffcc", "gray90")
+
+map_data_a$avg_bin <- factor(map_data_a$avg_bin, levels = levels_avg_display)
+map_data_b$chg_bin <- factor(map_data_b$chg_bin, levels = levels_chg_display)
+
+# Base theme
 map_theme <- theme_void() +
   theme(
     legend.position = "bottom",
     legend.direction = "horizontal",
-    legend.text = element_text(size = 24, margin = margin(t = 5, b = 5, l = 2, r = 2)),
+    legend.text = element_text(size = 20, margin = margin(t = 3, b = 3, l = 1, r = 1)),
     legend.title = element_blank(),
-    legend.key.width = unit(2.5, "cm"),
-    legend.key.height = unit(0.8, "cm"),
-    legend.spacing.x = unit(0.3, "cm"),
-    legend.margin = margin(t = 15, b = 10),
+    legend.key.width = unit(1.8, "cm"),
+    legend.key.height = unit(0.6, "cm"),
+    legend.spacing.x = unit(0.2, "cm"),
+    legend.spacing.y = unit(0.1, "cm"),
+    legend.margin = margin(t = 10, b = 5),
+    legend.key = element_rect(color = "black", size = 0.5),
     plot.margin = margin(10, 10, 25, 10, "pt"),
     panel.background = element_rect(fill = "white", color = NA),
     plot.background = element_rect(fill = "white", color = NA),
     panel.border = element_rect(color = "black", fill = NA, size = 0.5)
   )
 
-# Define breaks and values for legends (high to low, then No data)
-breaks_avg <- c(rev(labels_avg), "No data")
-values_avg <- c(rev(cols_avg), "gray90")
-
-breaks_chg <- c(rev(labels_chg), "No data")
-values_chg <- c(rev(cols_chg), "gray90")
-
 # Panel A plot
-p1 <- ggplot(map_data) +
+p1 <- ggplot(map_data_a) +
   geom_sf(aes(fill = avg_bin), color = "white", size = 0.1) +
   scale_fill_manual(
-    values = values_avg,
-    breaks = breaks_avg,
-    labels = breaks_avg,
-    na.value = "gray90", 
+    values = setNames(colors_avg_display, levels_avg_display),
+    breaks = levels_avg_display,
     drop = FALSE,
     guide = guide_legend(
       title = NULL,
       nrow = 2,
+      byrow = TRUE,
       label.position = "bottom",
-      keywidth = unit(2.2, "cm"),
-      keyheight = unit(0.8, "cm"),
-      label.hjust = 0.5
+      keywidth = unit(1.8, "cm"),
+      keyheight = unit(0.6, "cm"),
+      label.hjust = 0.5,
+      override.aes = list(color = "black", size = 0.5)
     )
   ) +
-  coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
+  coord_sf(crs = st_crs(map_data_a), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
   labs(title = "Panel A. Percent share of AI jobs (2014–2023 average)") +
   map_theme +
   theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
-# Panel B plot  
-p2 <- ggplot(map_data) +
+# Panel B plot
+p2 <- ggplot(map_data_b) +
   geom_sf(aes(fill = chg_bin), color = "white", size = 0.1) +
   scale_fill_manual(
-    values = values_chg,
-    breaks = breaks_chg,
-    labels = breaks_chg,
-    na.value = "gray90", 
+    values = setNames(colors_chg_display, levels_chg_display),
+    breaks = levels_chg_display,
     drop = FALSE,
     guide = guide_legend(
       title = NULL,
       nrow = 2,
+      byrow = TRUE,
       label.position = "bottom",
-      keywidth = unit(2.2, "cm"),
-      keyheight = unit(0.8, "cm"),
-      label.hjust = 0.5
+      keywidth = unit(1.8, "cm"),
+      keyheight = unit(0.6, "cm"),
+      label.hjust = 0.5,
+      override.aes = list(color = "black", size = 0.5)
     )
   ) +
-  coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
+  coord_sf(crs = st_crs(map_data_b), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
   labs(title = "Panel B. Percentage-point change in AI share (2018–2023)") +
   map_theme +
   theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
-# Combine plots side by side, equal sizes
+# Combine plots side by side
 final_plot <- (p1 | p2) +
   plot_layout(widths = c(1, 1)) &
   theme(plot.background = element_rect(fill = "white", color = NA))

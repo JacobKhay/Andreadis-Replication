@@ -6,7 +6,9 @@
       "WebFetch(domain:github.com)",
       "Bash(Rscript:*)",
       "Bash(quarto render:*)",
-      "WebFetch(domain:www.aeaweb.org)"
+      "WebFetch(domain:www.aeaweb.org)",
+      "Bash(grep:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []
