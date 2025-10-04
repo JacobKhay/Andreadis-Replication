@@ -52,13 +52,15 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- Email authors again about bachelor share issue. NOW. -->
-
 <!-- Fix legend ordering in plot. -->
 
 <!-- Fix table formatting. -->
 
+<!-- Look at the data! How many unique counties? How many unique years? How many states? Do any counties only have data for some years? Do you have multiple counties for each state? -->
+
 <!-- There are data problems in the map. Isolate them. Send new email to the authors about them, if the authors are wrong. I see North Slope of ALsaka. And CT as obvious issues. -->
+
+<!-- Let's focus on percentage of AI jobs (levels not growth) in Connecticut counties. Where does the data for these counties live? Is it located in two different files, one of which feeds the tables and one which feeds the maps? Or is it in one file, from which the code for both the tables and the map lives. -->
 
 
 
