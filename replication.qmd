@@ -320,6 +320,7 @@ modelsummary(
   escape = FALSE,
   statistic = "({std.error})",
   fmt = fmt_decimal(4),
+  align = "lddddd",
   output = "kableExtra"
 ) |>
   kable_styling(
@@ -640,6 +641,7 @@ table_output <- modelsummary(
   escape = FALSE,
   statistic = "({std.error})",
   fmt = 4,  # CHANGED: Round to 4 decimal places
+  align = "lddddd",
   output = "kableExtra"
 )
 
