@@ -52,7 +52,7 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- Fix legend ordering in plot. -->
+<!-- Fix legend ordering in plot. Done -->
 
 <!-- Fix table formatting. -->
 
@@ -175,7 +175,7 @@ data_ai <- data_ai %>%
     logai_inventors = log(1 + ai_inventors),
     pat_intensity = n_inventors / Employed,
     patai_intensity = ai_patents / n_patents
-  ) %>%
+  ) %>% 
   mutate(patai_intensity = replace_na(patai_intensity, 0))
 
 # Industry structure variables
@@ -186,7 +186,7 @@ data_ai <- data_ai %>%
     management_intensity = management_emp / emp,
     information_intensity = information_emp / emp,
     manuf_intensity = manuf_emp / emp
-  ) %>%
+  ) %>% 
   mutate(information_intensity = replace_na(information_intensity, 0))
 
 # Education variables
@@ -195,7 +195,7 @@ data_ai <- data_ai %>%
     degshare = (udeg + mdeg) / Employed,
     stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),
     stemshare2 = (ustemdeg) / (udeg)
-  ) %>%
+  ) %>% 
   mutate(
     stemshare = replace_na(stemshare, 0),
     stemshare2 = replace_na(stemshare2, 0)
@@ -217,7 +217,7 @@ data_ai_filtered <- data_ai %>%
   filter(emp != 0)
 
 # Create standardized variables (z-scores) EXACTLY as in original
-data_ai_z <- data_ai_filtered %>%
+data_ai_z <- data_ai_filtered %>% 
   mutate(
     share_bac = scale(share_bac),
     share_black = scale(share_black),
@@ -245,7 +245,7 @@ est_demog_no <- fixest::feols(
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
   cluster = "COUNTY_FIPS",
   weights = ~lads
-) 
+)
 
 est_innovation_no <- fixest::feols(
   "ai_intensity ~ pat_intensity + patai_intensity + degshare + stemshare | Year + COUNTY_FIPS" %>% as.formula(),
@@ -254,7 +254,7 @@ est_innovation_no <- fixest::feols(
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
   cluster = "COUNTY_FIPS",
   weights = ~lads
-) 
+)
 
 est_industry_no <- fixest::feols(
   "ai_intensity ~ large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
@@ -263,7 +263,7 @@ est_industry_no <- fixest::feols(
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
   cluster = "COUNTY_FIPS",
   weights = ~lads
-) 
+)
 
 est_all <- fixest::feols(
   "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
@@ -304,7 +304,7 @@ labels <- c(
   "TurnOvrS" = "Turnover rate"
 )
 
-# Create and display table
+# ✅ Fixed: only one modelsummary() call and correct parentheses
 modelsummary(
   list(
     "(1)" = est_demog_no,
@@ -319,7 +319,7 @@ modelsummary(
   add_rows = extra_rows,
   escape = FALSE,
   statistic = "({std.error})",
-  fmt = 4,
+  fmt = fmt_decimal(4),
   output = "kableExtra"
 ) |>
   kable_styling(
