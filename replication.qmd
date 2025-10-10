@@ -19,13 +19,30 @@ format:
       - text: |
           \usepackage{float}
           \usepackage{array}
+          \usepackage{siunitx}
+          \usepackage{dcolumn}
+          \newcolumntype{d}[1]{D{.}{.}{#1}}
           % reset numbering after abstract
           \usepackage{etoolbox}
           \AtBeginEnvironment{abstract}{\setcounter{section}{0}}
           % Custom table row spacing
           \renewcommand{\arraystretch}{0.9}
+          % Configure siunitx for modern versions (>=3)
+          \sisetup{
+            detect-all,
+            input-symbols = (),
+            input-signs = + -,
+            table-align-text-pre = false,
+            table-number-alignment = center,
+            table-format = +1.4,
+            group-digits = false,
+            table-space-text-pre = ***,
+            table-space-text-post = ***,
+            mode = math
+          }
   docx: default
 ---
+
 
 ```{r}
 #| label: setup
@@ -284,12 +301,12 @@ models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_al
 obs <- map_chr(models, ~scales::comma(nobs(.x)))
 r2_vals <- map_chr(models, ~sprintf("%.5f", r2(.x, "r2")))
 
-# Create table footer
+# Create table footer - wrap each value in braces and add spacing before values
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "Fixed effects", "County, Year", "County, Year", "County, Year", "County, Year", "County, state-year",
-  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
-  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5]
+  "Fixed effects", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, state-year}",
+  "Observations", paste0("{\\hspace{0.5em}", obs[1], "}"), paste0("{\\hspace{0.5em}", obs[2], "}"), paste0("{\\hspace{0.5em}", obs[3], "}"), paste0("{\\hspace{0.5em}", obs[4], "}"), paste0("{\\hspace{0.5em}", obs[5], "}"),
+  "R²", paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"), paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"), paste0("{\\hspace{0.5em}", r2_vals[5], "}")
 )
 
 # Variable labels - condensed display only
@@ -304,8 +321,8 @@ labels <- c(
   "TurnOvrS" = "Turnover rate"
 )
 
-# ✅ Fixed: only one modelsummary() call and correct parentheses
-modelsummary(
+# Create the table with modelsummary using plain "d" for decimal alignment
+tab <- modelsummary(
   list(
     "(1)" = est_demog_no,
     "(2)" = est_innovation_no,
@@ -321,16 +338,13 @@ modelsummary(
   statistic = "({std.error})",
   fmt = fmt_decimal(4),
   align = "lddddd",
-  output = "kableExtra"
-) |>
-  kable_styling(
-    latex_options = c("HOLD_position", "scale_down"),
-    full_width = FALSE,
-    font_size = 8,
-    position = "center"
-  ) |>
-  column_spec(1, width = "3cm") |>
-  column_spec(2:6, width = "1.3cm")
+  output = "latex"
+)
+
+# Manually replace column alignment to use dcolumn format
+tab <- gsub("lddddd", "ld{3.4}d{3.4}d{3.4}d{3.4}d{3.4}", tab, fixed = TRUE)
+
+cat(tab)
 ```
 
 **Notes:** Notes: The tables report the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are
@@ -605,12 +619,12 @@ models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_al
 obs <- map_chr(models, ~scales::comma(nobs(.x)))
 r2_vals <- map_chr(models, ~sprintf("%.4f", r2(.x, "r2")))
 
-# Create extra rows for table footer
+# Create extra rows for table footer - add spacing before values to shift right
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "Fixed effects", "None", "None", "None", "None", "State",
-  "Observations", obs[1], obs[2], obs[3], obs[4], obs[5],
-  "R²", r2_vals[1], r2_vals[2], r2_vals[3], r2_vals[4], r2_vals[5]
+  "Fixed effects", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}State}",
+  "Observations", paste0("{\\hspace{0.5em}", obs[1], "}"), paste0("{\\hspace{0.5em}", obs[2], "}"), paste0("{\\hspace{0.5em}", obs[3], "}"), paste0("{\\hspace{0.5em}", obs[4], "}"), paste0("{\\hspace{0.5em}", obs[5], "}"),
+  "R²", paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"), paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"), paste0("{\\hspace{0.5em}", r2_vals[5], "}")
 )
 
 # Variable labels - condensed to only the 8 key variables
@@ -625,8 +639,8 @@ labels <- c(
   "TurnOvrS14" = "Turnover Rate"
 )
 
-# Create table with numbered column headers - REMOVED stars and p-value notation
-table_output <- modelsummary(
+# Create the table with modelsummary using plain "d" for decimal alignment
+tab <- modelsummary(
   list(
     "(1)" = est_demog_no,
     "(2)" = est_innovation_no,
@@ -635,34 +649,20 @@ table_output <- modelsummary(
     "(5)" = est_all_large
   ),
   coef_map = labels,
-  stars = FALSE,  # REMOVED: No significance stars
+  stars = FALSE,
   gof_omit = ".*",
   add_rows = extra_rows,
   escape = FALSE,
   statistic = "({std.error})",
-  fmt = 4,  # CHANGED: Round to 4 decimal places
+  fmt = 4,
   align = "lddddd",
-  output = "kableExtra"
+  output = "latex"
 )
 
-# Apply more compact formatting
-final_table <- table_output |>
-  kable_styling(
-    latex_options = c("HOLD_position", "scale_down"),
-    full_width = FALSE,
-    font_size = 7.5,
-    position = "center"
-  ) |>
-  column_spec(1, width = "2.5cm") |>
-  column_spec(2:6, width = "1.2cm")
+# Manually replace column alignment to use dcolumn format
+tab <- gsub("lddddd", "ld{2.4}d{2.4}d{2.4}d{2.4}d{2.4}", tab, fixed = TRUE)
 
-# Manually add "Model" to the first column header by string replacement
-final_table <- final_table %>%
-  gsub('<thead>\n<tr>\n<th style="text-align:left;">  </th>', 
-       '<thead>\n<tr>\n<th style="text-align:left;"> Model </th>', ., fixed = TRUE)
-
-# Display table 
-final_table
+cat(tab)
 ```
 
 **Notes:** The tables report the demographic, innovation, and industry determinants of the change in AI shares in a county in 2017. Standard errors are clustered at the county level.

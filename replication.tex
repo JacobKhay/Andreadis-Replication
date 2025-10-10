@@ -152,21 +152,38 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\usepackage{siunitx}
-
-    \newcolumntype{d}{S[
-      table-align-text-before=false,
-      table-align-text-after=false,
-      input-symbols={-,\*+()}
-    ]}
-  
+\usepackage{tabularray}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx}
+\usepackage{rotating}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
 \usepackage{float}
 \usepackage{array}
+\usepackage{siunitx}
+\usepackage{dcolumn}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
 % reset numbering after abstract
 \usepackage{etoolbox}
 \AtBeginEnvironment{abstract}{\setcounter{section}{0}}
 % Custom table row spacing
 \renewcommand{\arraystretch}{0.9}
+% Configure siunitx for modern versions (>=3)
+\sisetup{
+  detect-all,
+  input-symbols = (),
+  input-signs = + -,
+  table-align-text-pre = false,
+  table-number-alignment = center,
+  table-format = +1.4,
+  group-digits = false,
+  table-space-text-pre = ***,
+  table-space-text-post = ***,
+  mode = math
+}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -414,34 +431,46 @@ Jobs}
 
 \centering{
 
-\centering\centering
-\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{8}{10}\selectfont
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{1.3cm}>{\centering\arraybackslash}p{1.3cm}>{\centering\arraybackslash}p{1.3cm}>{\centering\arraybackslash}p{1.3cm}>{\centering\arraybackslash}p{1.3cm}}
+\centering
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
+column{2}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{2}={guard,halign=c,},
+column{3}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{3}={guard,halign=c,},
+column{4}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{4}={guard,halign=c,},
+column{5}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{5}={guard,halign=c,},
+column{6}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{6}={guard,halign=c,},
+column{1}={}{halign=l,},
+}                     %% tabularray inner close
 \toprule
-  & (1) & (2) & (3) & (4) & (5)\\
-\midrule
-Bachelor's share & \num{0.1906} &  &  & \num{0.1817} & \num{0.1035}\\
- & (\num{0.0513}) &  &  & (\num{0.0505}) & (\num{0.0459})\\
-House price growth & \num{-0.0144} &  &  & \num{-0.0142} & \num{-0.0156}\\
- & (\num{0.0080}) &  &  & (\num{0.0079}) & (\num{0.0074})\\
-Labor tightness & \num{0.2780} &  &  & \num{0.2765} & \num{0.3156}\\
- & (\num{0.0583}) &  &  & (\num{0.0585}) & (\num{0.0643})\\
-Patents per employee &  & \num{0.0232} &  & \num{0.0295} & \num{0.0312}\\
- &  & (\num{0.0091}) &  & (\num{0.0113}) & (\num{0.0138})\\
-STEM degrees share &  & \num{0.0686} &  & \num{0.0475} & \num{0.0375}\\
- &  & (\num{0.0238}) &  & (\num{0.0205}) & (\num{0.0184})\\
-ICT sector intensity &  &  & \num{0.0121} & \num{0.0258} & \num{0.0280}\\
- &  &  & (\num{0.0144}) & (\num{0.0135}) & (\num{0.0136})\\
-Manufacturing &  &  & \num{-0.0630} & \num{-0.0333} & \num{-0.0247}\\
- &  &  & (\num{0.0113}) & (\num{0.0108}) & (\num{0.0111})\\
-Turnover rate &  &  & \num{0.0345} & \num{0.0188} & \num{0.0154}\\
- &  &  & (\num{0.0137}) & (\num{0.0137}) & (\num{0.0132})\\
-Fixed effects & County, Year & County, Year & County, Year & County, Year & County, state-year\\
-Observations & 24,645 & 24,645 & 24,645 & 24,645 & 24,645\\
-R² & 0.69739 & 0.68012 & 0.67989 & 0.69827 & 0.71558\\
+& (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
+Bachelor's share & 0.1906 &  &  & 0.1817 & 0.1035 \\
+& (0.0513) &  &  & (0.0505) & (0.0459) \\
+House price growth & -0.0144 &  &  & -0.0142 & -0.0156 \\
+& (0.0080) &  &  & (0.0079) & (0.0074) \\
+Labor tightness & 0.2780 &  &  & 0.2765 & 0.3156 \\
+& (0.0583) &  &  & (0.0585) & (0.0643) \\
+Patents per employee &  & 0.0232 &  & 0.0295 & 0.0312 \\
+&  & (0.0091) &  & (0.0113) & (0.0138) \\
+STEM degrees share &  & 0.0686 &  & 0.0475 & 0.0375 \\
+&  & (0.0238) &  & (0.0205) & (0.0184) \\
+ICT sector intensity &  &  & 0.0121 & 0.0258 & 0.0280 \\
+&  &  & (0.0144) & (0.0135) & (0.0136) \\
+Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
+&  &  & (0.0113) & (0.0108) & (0.0111) \\
+Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
+&  &  & (0.0137) & (0.0137) & (0.0132) \\
+Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
+Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
+R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
 \bottomrule
-\end{tabular}}
+\end{tblr}
 
 }
 
@@ -459,34 +488,46 @@ of AI Jobs}
 
 \centering{
 
-\centering\centering
-\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{7.5}{9.5}\selectfont
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}>{\centering\arraybackslash}p{1.2cm}}
+\centering
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
+column{2}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{2}={guard,halign=c,},
+column{3}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{3}={guard,halign=c,},
+column{4}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{4}={guard,halign=c,},
+column{5}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{5}={guard,halign=c,},
+column{6}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{6}={guard,halign=c,},
+column{1}={}{halign=l,},
+}                     %% tabularray inner close
 \toprule
-  & (1) & (2) & (3) & (4) & (5)\\
-\midrule
-Bachelors Share & \num{0.0196} &  &  & \num{-0.0322} & \num{-0.0401}\\
- & (\num{0.0250}) &  &  & (\num{0.0292}) & (\num{0.0263})\\
-Income, Log & \num{0.0784} &  &  & \num{0.0695} & \num{0.0614}\\
- & (\num{0.0382}) &  &  & (\num{0.0391}) & (\num{0.0442})\\
-Tightness & \num{0.0744} &  &  & \num{0.0732} & \num{0.0726}\\
- & (\num{0.0215}) &  &  & (\num{0.0237}) & (\num{0.0352})\\
-Stem Degrees' share &  & \num{0.0742} &  & \num{0.0539} & \num{0.0455}\\
- &  & (\num{0.0151}) &  & (\num{0.0163}) & (\num{0.0184})\\
-Large Firms &  &  & \num{0.0411} & \num{-0.0158} & \num{-0.0165}\\
- &  &  & (\num{0.0183}) & (\num{0.0219}) & (\num{0.0198})\\
-ICT sector Intensity &  &  & \num{0.0401} & \num{0.0137} & \num{0.0219}\\
- &  &  & (\num{0.0153}) & (\num{0.0170}) & (\num{0.0182})\\
-Manufacturing &  &  & \num{-0.0447} & \num{-0.0128} & \num{0.0001}\\
- &  &  & (\num{0.0166}) & (\num{0.0181}) & (\num{0.0203})\\
-Turnover Rate &  &  & \num{-0.0556} & \num{-0.0419} & \num{-0.0389}\\
- &  &  & (\num{0.0222}) & (\num{0.0233}) & (\num{0.0271})\\
-Fixed effects & None & None & None & None & State\\
-Observations & 2,473 & 2,473 & 2,473 & 2,473 & 2,473\\
-R² & 0.0213 & 0.0193 & 0.0155 & 0.0315 & 0.0817\\
+& (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
+Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
+& (0.0250) &  &  & (0.0292) & (0.0263) \\
+Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
+& (0.0382) &  &  & (0.0391) & (0.0442) \\
+Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
+& (0.0215) &  &  & (0.0237) & (0.0352) \\
+Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
+&  & (0.0151) &  & (0.0163) & (0.0184) \\
+Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
+&  &  & (0.0183) & (0.0219) & (0.0198) \\
+ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
+&  &  & (0.0153) & (0.0170) & (0.0182) \\
+Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
+&  &  & (0.0166) & (0.0181) & (0.0203) \\
+Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
+&  &  & (0.0222) & (0.0233) & (0.0271) \\
+Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
 \bottomrule
-\end{tabular}}
+\end{tblr}
 
 }
 
