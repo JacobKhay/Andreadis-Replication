@@ -69,34 +69,34 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- Fix legend ordering in plot. Done -->
+<!-- Send one email to all authors, informing them about the error in the table. cc me.
 
-<!-- Fix table formatting. -->
+subj: Mistake in Table 2 in Andreadis et al. (AEA Papers and Proceedings, 2025)
 
-<!-- Look at the data! How many unique counties? How many unique years? How many states? Do any counties only have data for some years? Do you have multiple counties for each state? -->
+We believe that there is a mistake in Table 2 in Andreadis et al. (AEA Papers and Proceedings, 2025). We emailed Prof Andreadis about this issue and he has not responded. The published table is:
 
-<!-- There are data problems in the map. Isolate them. Alaska. CT. -->
+screenshot
 
-<!-- Let's focus on percentage of AI jobs (levels not growth) in Connecticut counties. Where does the data for these counties live? Is it located in two different files, one of which feeds the tables and one which feeds the maps? Or is it in one file, from which the code for both the tables and the map lives. -->
+The correct numbers are:
+
+screenshot
+
+YThe only issue is with the values for Bachelor's share whatever . . .
+
+Please confirm.
+
+Thanks,
+
+ -->
+
+ <!-- Study the paper more closely, so you understand what it happening. Don't understand? Ask AI. Or ask me! -->
+
+<!-- Work on Map 2. Bet that the percentage change should be:
+
+(AI jobs in 2023 -  AI jobs in 2018) / AI jobs in 2018 -->
 
 
-
-<!-- Fix rounding and order of rows but before fixing the variable names. Get rid of ***.
-
-Here is Table 2 from our paper.
-
-<screenshot>
-
-Here is our replication of your Table 2.
-
-<screenshot>
-
-As you can see, every number matches exactly, except for the estimates and standard errors for Bachelor's Share. Any ideas what the problem might be? -->
-
-
-
-<!-- Same variable names in the tables, e.g., include "2017". Maybe changing document margins to 1 inch, or even 1/2 inch will help. Not critical. -->
-
+<!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
 
 *JEL: J24, O33, R11*
