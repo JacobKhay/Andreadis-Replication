@@ -672,39 +672,91 @@ cat(tab)
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Replication of Andreadis et al. (2025) - Spatial heterogeneity in AI job share (Panel A, 2014–2023 average) and percentage-point change (Panel B, 2018–2023)."
+#| fig-cap: "Replication of Andreadis et al. (2025) - Spatial heterogeneity in AI job share (Panel A, 2014–2023 average) and percentage-point change (Panel B, 2018–2023 with pooled years)."
 #| fig-cap-location: top
 #| fig-pos: "H"
 #| fig-width: 18
 #| fig-height: 9
 
-# Using original authors' methodology from maps_ai.R with their exact data
+library(tidyverse)
+library(sf)
+library(tigris)
+library(patchwork)
+
+# Read the updated Lightcast data
 data <- read_csv("updated_lightcast_county.csv") %>%
-  rename(COUNTY_FIPS = COUNTY_FIPS, Year = YEAR_POSTED, ai = `AI Postings`, nads = `Total Postings`)
+  rename(COUNTY_FIPS = COUNTY_FIPS, 
+         Year = YEAR_POSTED, 
+         ai = `AI Postings`, 
+         nads = `Total Postings`)
 
-# Panel A: Levels data (average across all years) - exactly as in maps_ai.R
-data_levels <- data %>%
-  select(COUNTY_FIPS:nads) %>%
-  mutate(aiInt = ai/nads) %>%
+# Connecticut has 8 counties - distribute the state-level data (FIPS 9999) across them
+ct_counties <- c("09001", "09003", "09005", "09007", "09009", "09011", "09013", "09015")
+
+# Separate Connecticut state-level data (FIPS 9999) from regular data
+ct_state_data <- data %>% filter(COUNTY_FIPS == 9999)
+
+regular_data <- data %>%
+  filter(COUNTY_FIPS != 9999) %>%
+  # Remove the Planning Region entries (9110-9190)
+  filter(!(COUNTY_FIPS >= 9110 & COUNTY_FIPS <= 9190))
+
+# Distribute Connecticut state-level data
+ct_distributed <- ct_state_data %>%
+  crossing(county_fips = ct_counties) %>%
+  mutate(
+    COUNTY_FIPS = as.numeric(county_fips),
+    ai = ai / 8,
+    nads = nads / 8
+  ) %>%
+  select(COUNTY_FIPS, Year, ai, nads)
+
+# Combine
+data_complete <- bind_rows(regular_data, ct_distributed)
+
+# ---- PANEL A ----
+data_levels <- data_complete %>%
+  mutate(aiInt = if_else(nads > 0, ai/nads, NA_real_)) %>%
   group_by(COUNTY_FIPS) %>%
-  summarise(aiInt = mean(aiInt))
+  summarise(aiInt = mean(aiInt, na.rm = TRUE), .groups = "drop")
 
-# Panel B: Change data - exactly as in maps_ai.R
-data_ch <- data %>%
-  filter(Year > 2017) %>%
-  select(COUNTY_FIPS:nads) %>%
-  mutate(aiInt = ai/nads) %>%
-  group_by(COUNTY_FIPS) %>%
-  summarise(aiIntch = last(aiInt) - first(aiInt))
+# ---- PANEL B ----
+data_for_change <- data_complete %>%
+  mutate(
+    year_group = case_when(
+      Year %in% c(2017, 2018) ~ "2017-2018",
+      Year %in% c(2022, 2023) ~ "2022-2023",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(year_group))
 
-# Prepare data for usmap with FIPS formatting
+data_pooled <- data_for_change %>%
+  group_by(COUNTY_FIPS, year_group) %>%
+  summarise(
+    ai_sum = sum(ai, na.rm = TRUE),
+    nads_sum = sum(nads, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(aiInt = if_else(nads_sum > 0, ai_sum / nads_sum, NA_real_))
+
+data_ch <- data_pooled %>%
+  pivot_wider(
+    id_cols = COUNTY_FIPS,
+    names_from = year_group,
+    values_from = aiInt
+  ) %>%
+  mutate(aiIntch = `2022-2023` - `2017-2018`) %>%
+  select(COUNTY_FIPS, aiIntch)
+
+# ---- FIPS FORMATTING ----
 merged_data_lev <- data_levels %>%
-  mutate(fips = COUNTY_FIPS %>% str_pad(5, "0", side = "left"))
+  mutate(fips = COUNTY_FIPS %>% as.character() %>% str_pad(5, "0", side = "left"))
 
 merged_data_ch <- data_ch %>%
-  mutate(fips = COUNTY_FIPS %>% str_pad(5, "0", side = "left"))
+  mutate(fips = COUNTY_FIPS %>% as.character() %>% str_pad(5, "0", side = "left"))
 
-# Create discrete categories exactly as in original authors' code
+# ---- PANEL A BINNING ----
 merged_data_lev <- merged_data_lev %>%
   mutate(ai_share = aiInt * 100) %>%
   mutate(caseai = case_when(
@@ -714,13 +766,12 @@ merged_data_lev <- merged_data_lev %>%
     ai_share > 0.23 & ai_share < 0.37 ~ 4,
     ai_share > 0.37 & ai_share < 0.7 ~ 5,
     ai_share > 0.7 ~ 6,
-    is.na(ai_share) ~ NA
+    TRUE ~ NA_real_
   ))
 
+# ---- PANEL B BINNING ----
 merged_data_ch <- merged_data_ch %>%
-  mutate(change_in_share = aiIntch * 100)
-
-merged_data_ch <- merged_data_ch %>%
+  mutate(change_in_share = aiIntch * 100) %>%
   mutate(caseaich = case_when(
     change_in_share < -0.12 ~ 1,
     change_in_share > -0.12 & change_in_share <= 0 ~ 2,
@@ -728,29 +779,40 @@ merged_data_ch <- merged_data_ch %>%
     change_in_share > 0.09 & change_in_share < 0.24 ~ 4,
     change_in_share > 0.24 & change_in_share < 0.57 ~ 5,
     change_in_share > 0.57 ~ 6,
-    is.na(change_in_share) ~ NA
+    TRUE ~ NA_real_
   ))
 
-# Get county boundaries using tigris (keep original approach for visualization)
+# ---- COUNTY SHAPEFILES ----
 options(tigris_use_cache = TRUE)
 counties <- suppressMessages(
   tigris::counties(cb = TRUE, year = 2020, class = "sf")
 ) %>%
   mutate(COUNTY_FIPS = GEOID) %>%
-  filter(!str_starts(COUNTY_FIPS, "72")) %>% # Remove Puerto Rico
+  filter(!str_starts(COUNTY_FIPS, "72")) %>%
   st_transform(crs = 4326)
 
-# Join with Panel A data
+# ---- PANEL A MAP JOIN ----
 map_data_a <- counties %>%
   left_join(merged_data_lev, by = c("COUNTY_FIPS" = "fips")) %>%
   tigris::shift_geometry()
 
-# Join with Panel B data
-map_data_b <- counties %>%
-  left_join(merged_data_ch, by = c("COUNTY_FIPS" = "fips")) %>%
-  tigris::shift_geometry()
+# ---- PANEL B MAP JOIN (with Alaska color fix) ----
+# Fix Alaska merge issue before shifting
+ak_data <- merged_data_ch %>%
+  filter(str_starts(fips, "02")) %>%
+  distinct(fips, .keep_all = TRUE)
 
-# Create proper bins and labels using original approach
+map_data_b <- counties %>%
+  left_join(merged_data_ch, by = c("COUNTY_FIPS" = "fips"))
+
+map_data_b[map_data_b$STATEFP == "02", names(ak_data)[-1]] <- 
+  ak_data[match(map_data_b$COUNTY_FIPS[map_data_b$STATEFP == "02"], ak_data$fips),
+          names(ak_data)[-1]]
+
+# Shift after joining (fixes Alaska colors)
+map_data_b <- tigris::shift_geometry(map_data_b)
+
+# ---- LABELS AND COLORS ----
 map_data_a <- map_data_a %>%
   mutate(
     avg_bin = case_when(
@@ -777,7 +839,6 @@ map_data_b <- map_data_b %>%
     )
   )
 
-# Original legend order and colors
 levels_avg_display <- c("0.71 – 10", "0.37 – 0.71", "0.23 – 0.37",
                         "0.14 – 0.23", "0.06 – 0.14", "0 – 0.06", "No data")
 levels_chg_display <- c("0.57 – 12.35", "0.24 – 0.57", "0.09 – 0.24",
@@ -789,7 +850,7 @@ colors_chg_display <- c("#800026", "#fc4e2a", "#fd8d3c", "#fed976", "#ffeda0", "
 map_data_a$avg_bin <- factor(map_data_a$avg_bin, levels = levels_avg_display)
 map_data_b$chg_bin <- factor(map_data_b$chg_bin, levels = levels_chg_display)
 
-# Base theme
+# ---- THEME ----
 map_theme <- theme_void() +
   theme(
     legend.position = "bottom",
@@ -808,60 +869,44 @@ map_theme <- theme_void() +
     panel.border = element_rect(color = "black", fill = NA, size = 0.5)
   )
 
-# Panel A plot
+# ---- PLOTS ----
 p1 <- ggplot(map_data_a) +
   geom_sf(aes(fill = avg_bin), color = "white", size = 0.1) +
-  scale_fill_manual(
-    values = setNames(colors_avg_display, levels_avg_display),
-    breaks = levels_avg_display,
-    drop = FALSE,
-    guide = guide_legend(
-      title = NULL,
-      nrow = 2,
-      byrow = TRUE,
-      label.position = "bottom",
-      keywidth = unit(1.8, "cm"),
-      keyheight = unit(0.6, "cm"),
-      label.hjust = 0.5,
-      override.aes = list(color = "black", size = 0.5)
-    )
-  ) +
+  scale_fill_manual(values = setNames(colors_avg_display, levels_avg_display),
+                    breaks = levels_avg_display, drop = FALSE,
+                    guide = guide_legend(title = NULL, nrow = 2, byrow = TRUE,
+                                         label.position = "bottom",
+                                         keywidth = unit(1.8, "cm"), keyheight = unit(0.6, "cm"),
+                                         label.hjust = 0.5,
+                                         override.aes = list(color = "black", size = 0.5))) +
   coord_sf(crs = st_crs(map_data_a), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
   labs(title = "Panel A. Percent share of AI jobs (2014–2023 average)") +
   map_theme +
   theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
-# Panel B plot
 p2 <- ggplot(map_data_b) +
   geom_sf(aes(fill = chg_bin), color = "white", size = 0.1) +
-  scale_fill_manual(
-    values = setNames(colors_chg_display, levels_chg_display),
-    breaks = levels_chg_display,
-    drop = FALSE,
-    guide = guide_legend(
-      title = NULL,
-      nrow = 2,
-      byrow = TRUE,
-      label.position = "bottom",
-      keywidth = unit(1.8, "cm"),
-      keyheight = unit(0.6, "cm"),
-      label.hjust = 0.5,
-      override.aes = list(color = "black", size = 0.5)
-    )
-  ) +
+  scale_fill_manual(values = setNames(colors_chg_display, levels_chg_display),
+                    breaks = levels_chg_display, drop = FALSE,
+                    guide = guide_legend(title = NULL, nrow = 2, byrow = TRUE,
+                                         label.position = "bottom",
+                                         keywidth = unit(1.8, "cm"), keyheight = unit(0.6, "cm"),
+                                         label.hjust = 0.5,
+                                         override.aes = list(color = "black", size = 0.5))) +
   coord_sf(crs = st_crs(map_data_b), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
   labs(title = "Panel B. Percentage-point change in AI share (2018–2023)") +
   map_theme +
   theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
-# Combine plots side by side
+# ---- FINAL COMBINED PLOT ----
 final_plot <- (p1 | p2) +
   plot_layout(widths = c(1, 1)) &
   theme(plot.background = element_rect(fill = "white", color = NA))
 
 final_plot
+
 ```
 
 The successful reproduction confirms the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
