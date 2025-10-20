@@ -75,12 +75,19 @@ options(tigris_use_cache = TRUE)
 
 (AI jobs in 2023 -  AI jobs in 2018) / AI jobs in 2018 -->
 
-
-
-
+<!-- DK: Notes must be more extensive, at least with regard to the issue with Bachelor's share. Self-contained. -->
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
+<!-- Use: citation("modelsummary") and similarly for the other R packages.  -->
+
+<!-- Weird space: Babina, Tania,Anastassia Fedyk,Alex He, andJames Hodson. 2024. “Artificial intelligence --- weird space after quote, only appear if rendered.?? -->
+
+<!-- 103745 is wrong. Check each reference by hand. -->
+
+<!-- Science384(6702) : 1306–1308 --- spaces around colon seems weird. -->
+
+<!-- Does every entry need a DOI or a URL? -->
 
 *JEL: J24, O33, R11*
 
@@ -91,7 +98,7 @@ options(tigris_use_cache = TRUE)
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce most of their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design.
+We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment, on one hand, and a collection of factors involving education, innovation, and industry across U.S. counties from 2014 to 2023. We successfully reproduce some of their results and extend the analysis by using log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design.
 
 Declaration: There are no financial conflicts of interest to share. 
 
