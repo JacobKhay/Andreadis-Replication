@@ -270,13 +270,14 @@ https://github.com/JacobKhay/Andreadis-Replication.
 \section*{Abstract}\label{abstract}
 \addcontentsline{toc}{section}{Abstract}
 
-We replicate Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) on
-the correlation between the level and growth of artificial intelligence
-employment and education, innovation, and industry factors across U.S.
-counties from 2014 to 2023. We successfully reproduce their main results
-and extend the analysis by employing log-population weights to assess
-robustness. The core associations persist, though almost all magnitudes
-shrink. We also highlight unsupported causal claims in Andreadis et al.
+We partially replicate Andreadis et al.
+(\citeproc{ref-andreadis2025}{2025}) on the correlation between the
+level and growth of artificial intelligence employment and education,
+innovation, and industry factors across U.S. counties from 2014 to 2023.
+We successfully reproduce most of their main results and extend the
+analysis by employing log-population weights to assess robustness. The
+core associations persist, though almost all magnitudes shrink. We also
+highlight unsupported causal claims in Andreadis et al.
 (\citeproc{ref-andreadis2025}{2025}), given its observational design.
 
 Declaration: There are no financial conflicts of interest to share.
@@ -416,12 +417,14 @@ Alaska and Hawaii positioning.
 \subsection{Reproduction of Original
 Results}\label{reproduction-of-original-results}
 
-We successfully reproduced the main findings from Tables 1 and 2 of
-Andreadis et al. (\citeproc{ref-andreadis2025}{2025}). The reproduction
-confirms the authors' key empirical findings regarding the correlates of
-AI employment across U.S. counties. All coefficients, standard errors,
-and significance levels match the original results within rounding
-error, demonstrating the reproducibility of their analysis.
+We largely reproduced the main findings from Tables 1 and 2 of Andreadis
+et al. (\citeproc{ref-andreadis2025}{2025}). The replication confirms
+most of the authors' key empirical findings regarding the correlates of
+AI employment across U.S. counties. Nearly all coefficients, standard
+errors, and significance levels match the original results within
+rounding error. However, one notable discrepancy emerged: the Bachelor's
+share coefficient appears inconsistent with the published table, though
+all other variables replicate precisely.
 
 \begin{table}[H]
 
@@ -476,9 +479,11 @@ R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989
 
 \end{table}%
 
-\textbf{Notes:} Notes: The tables report the demographic, innovation,
-and industry determinants of the share of AI jobs. Standard errors are
-clustered at the county level.
+\textbf{Notes:} The table reports the demographic, innovation, and
+industry determinants of the share of AI jobs. Standard errors are
+clustered at the county level. All coefficients successfully replicate
+the original results except for Bachelor's share, which shows a
+discrepancy with the published values.
 
 \begin{table}[H]
 
@@ -533,9 +538,12 @@ R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} &
 
 \end{table}%
 
-\textbf{Notes:} The tables report the demographic, innovation, and
-industry determinants of the change in AI shares in a county in 2017.
-Standard errors are clustered at the county level.
+\textbf{Notes:} The table reports the demographic, innovation, and
+industry determinants of the change in AI shares in a county between
+2017--2018 and 2022--2023. Standard errors are clustered at the county
+level. All coefficients successfully replicate the original results
+except for Bachelor's share, which shows a discrepancy with the
+published values.
 
 \begin{figure}[H]
 
@@ -551,8 +559,21 @@ percentage-point change (Panel B, 2018--2023 with pooled years).}
 
 \end{figure}%
 
-The successful reproduction confirms the technical reliability of the
-original analysis and establishes a foundation for the robustness
+\textbf{Notes on Map Replication:} We employed the identical methodology
+from Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) for
+constructing these spatial visualizations, using their data.csv file and
+mapping approach. However, our replication produced different results
+from the published maps. Most notably, Connecticut did not appear in our
+maps because it was not found in the original data.csv code provided by
+the authors. This suggests potential differences in data processing or
+aggregation methods that were not fully documented in the original
+study. Despite following their documented methodology precisely, the
+geographic patterns we observe differ from those in the published paper,
+highlighting the importance of comprehensive data documentation in
+replication studies.
+
+The partial reproduction confirms much of the technical reliability of
+the original analysis and establishes a foundation for the robustness
 extensions that follow.
 
 \section{Extension: Log-Population Weighting

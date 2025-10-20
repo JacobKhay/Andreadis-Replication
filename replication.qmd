@@ -108,7 +108,7 @@ Thanks,
 
 ## Abstract {.unnumbered}
 
-We replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design. 
+We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. We successfully reproduce most of their main results and extend the analysis by employing log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also highlight unsupported causal claims in @andreadis2025, given its observational design.
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -160,7 +160,7 @@ This replication study was conducted using R [@r1996], a free and open-source st
 
 ### Reproduction of Original Results
 
-We successfully reproduced the main findings from Tables 1 and 2 of @andreadis2025. The reproduction confirms the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. All coefficients, standard errors, and significance levels match the original results within rounding error, demonstrating the reproducibility of their analysis.
+We largely reproduced the main findings from Tables 1 and 2 of @andreadis2025. The replication confirms most of the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. Nearly all coefficients, standard errors, and significance levels match the original results within rounding error. However, one notable discrepancy emerged: the Bachelor's share coefficient appears inconsistent with the published table, though all other variables replicate precisely.
 
 ```{r}
 #| label: tbl-table1
@@ -347,8 +347,7 @@ tab <- gsub("lddddd", "ld{3.4}d{3.4}d{3.4}d{3.4}d{3.4}", tab, fixed = TRUE)
 cat(tab)
 ```
 
-**Notes:** Notes: The tables report the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are
-clustered at the county level.
+**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are clustered at the county level. All coefficients successfully replicate the original results except for Bachelor's share, which shows a discrepancy with the published values.
 
 ```{r}
 #| label: tbl-table2
@@ -665,7 +664,7 @@ tab <- gsub("lddddd", "ld{2.4}d{2.4}d{2.4}d{2.4}d{2.4}", tab, fixed = TRUE)
 cat(tab)
 ```
 
-**Notes:** The tables report the demographic, innovation, and industry determinants of the change in AI shares in a county in 2017. Standard errors are clustered at the county level.
+**Notes:** The table reports the demographic, innovation, and industry determinants of the change in AI shares in a county between 2017–2018 and 2022–2023. Standard errors are clustered at the county level. All coefficients successfully replicate the original results except for Bachelor's share, which shows a discrepancy with the published values.
 
 ```{r}
 #| label: fig-map
@@ -909,7 +908,9 @@ final_plot
 
 ```
 
-The successful reproduction confirms the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
+**Notes on Map Replication:** We employed the identical methodology from @andreadis2025 for constructing these spatial visualizations, using their data.csv file and mapping approach. However, our replication produced different results from the published maps. Most notably, Connecticut did not appear in our maps because it was not found in the original data.csv code provided by the authors. This suggests potential differences in data processing or aggregation methods that were not fully documented in the original study. Despite following their documented methodology precisely, the geographic patterns we observe differ from those in the published paper, highlighting the importance of comprehensive data documentation in replication studies.
+
+The partial reproduction confirms much of the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
 
 ## Extension: Log-Population Weighting Analysis
 

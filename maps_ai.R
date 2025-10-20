@@ -5,9 +5,12 @@ library(dplyr)
 library(ggplot2)
 library(viridis) # For color palettes
 library(usmap)
+library(readr)
+library(stringr)
+
 # 1. Prepare Data for Mapping
 
-data=read_csv("data.csv")
+data <- read_csv("data.csv")
 
 data_levels=data %>% select(COUNTY_FIPS:nads) %>% mutate(aiInt=ai/nads) %>% 
   group_by(COUNTY_FIPS) %>% summarise(aiInt=mean(aiInt))
