@@ -69,31 +69,14 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- Send one email to all authors, informing them about the error in the table. cc me.
-
-subj: Mistake in Table 2 in Andreadis et al. (AEA Papers and Proceedings, 2025)
-
-We believe that there is a mistake in Table 2 in Andreadis et al. (AEA Papers and Proceedings, 2025). We emailed Prof Andreadis about this issue and he has not responded. The published table is:
-
-screenshot
-
-The correct numbers are:
-
-screenshot
-
-YThe only issue is with the values for Bachelor's share whatever . . .
-
-Please confirm.
-
-Thanks,
-
- -->
-
  <!-- Study the paper more closely, so you understand what it happening. Don't understand? Ask AI. Or ask me! -->
 
 <!-- Work on Map 2. Bet that the percentage change should be:
 
 (AI jobs in 2023 -  AI jobs in 2018) / AI jobs in 2018 -->
+
+
+
 
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
