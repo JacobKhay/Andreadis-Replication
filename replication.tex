@@ -161,6 +161,9 @@
 \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
 \newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
 \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\usepackage{url}
+\urlstyle{same}
+\def\UrlBreaks{\do\/\do-\do.\do:}
 \usepackage{float}
 \usepackage{array}
 \usepackage{siunitx}
@@ -272,13 +275,14 @@ https://github.com/JacobKhay/Andreadis-Replication.
 
 We partially replicate Andreadis et al.
 (\citeproc{ref-andreadis2025}{2025}) on the correlation between the
-level and growth of artificial intelligence employment and education,
-innovation, and industry factors across U.S. counties from 2014 to 2023.
-We successfully reproduce most of their main results and extend the
-analysis by employing log-population weights to assess robustness. The
-core associations persist, though almost all magnitudes shrink. We also
-highlight unsupported causal claims in Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}), given its observational design.
+level and growth of artificial intelligence employment, on one hand, and
+a collection of factors involving education, innovation, and industry
+across U.S. counties from 2014 to 2023. We successfully reproduce some
+of their results and extend the analysis by using log-population weights
+to assess robustness. The core associations persist, though almost all
+magnitudes shrink. We also highlight unsupported causal claims in
+Andreadis et al. (\citeproc{ref-andreadis2025}{2025}), given its
+observational design.
 
 Declaration: There are no financial conflicts of interest to share.
 
@@ -403,14 +407,14 @@ labor market, and housing controls.
 This replication study was conducted using R (\citeproc{ref-r1996}{R
 Core Team, 1996}), a free and open-source statistical computing
 environment. Data manipulation and analysis utilized the tidyverse
-collection of packages (\citeproc{ref-tidyverse}{Wickham et al., 2023}).
+collection of packages (\citeproc{ref-tidyverse}{Wickham et al., 2019}).
 Regression models were estimated using the fixest package
-(\citeproc{ref-fixest}{Bergé, 2023}), which provides fast and efficient
+(\citeproc{ref-fixest}{Bergé, 2018}), which provides fast and efficient
 fixed-effects estimation capabilities. Summary tables were generated
 using modelsummary (\citeproc{ref-modelsummary}{Arel-Bundock, 2022}) and
-formatted with kableExtra (\citeproc{ref-kableExtra}{Zhu, 2021}).
+formatted with kableExtra (\citeproc{ref-kableExtra}{Zhu, 2024}).
 Spatial visualizations were created with the usmap package
-(\citeproc{ref-usmap}{Di Lorenzo, 2023}), which provides convenient
+(\citeproc{ref-usmap}{Di Lorenzo, 2025}), which provides convenient
 mapping functions for U.S. geographic data including proper handling of
 Alaska and Hawaii positioning.
 
@@ -470,8 +474,8 @@ Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
 Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
 &  &  & (0.0137) & (0.0137) & (0.0132) \\
 Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
-Observations & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,627} \\
-R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988} & {\hspace{0.5em}0.69826} & {\hspace{0.5em}0.71262} \\
+Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
+R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
 \bottomrule
 \end{tblr}
 
@@ -513,24 +517,24 @@ column{1}={}{halign=l,},
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
 Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
-& (0.0250) &  &  & (0.0292) & (0.0308) \\
+& (0.0250) &  &  & (0.0292) & (0.0263) \\
 Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
 & (0.0382) &  &  & (0.0391) & (0.0442) \\
 Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
-& (0.0215) &  &  & (0.0237) & (0.0273) \\
+& (0.0215) &  &  & (0.0237) & (0.0352) \\
 Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
-&  & (0.0151) &  & (0.0163) & (0.0164) \\
+&  & (0.0151) &  & (0.0163) & (0.0184) \\
 Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
-&  &  & (0.0183) & (0.0219) & (0.0238) \\
+&  &  & (0.0183) & (0.0219) & (0.0198) \\
 ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
-&  &  & (0.0153) & (0.0170) & (0.0170) \\
+&  &  & (0.0153) & (0.0170) & (0.0182) \\
 Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
-&  &  & (0.0166) & (0.0181) & (0.0195) \\
+&  &  & (0.0166) & (0.0181) & (0.0203) \\
 Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
-&  &  & (0.0222) & (0.0233) & (0.0249) \\
+&  &  & (0.0222) & (0.0233) & (0.0271) \\
 Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
-Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,472} \\
-R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0800} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
 \bottomrule
 \end{tblr}
 
@@ -539,11 +543,28 @@ R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} &
 \end{table}%
 
 \textbf{Notes:} The table reports the demographic, innovation, and
-industry determinants of the change in AI shares in a county between
-2017--2018 and 2022--2023. Standard errors are clustered at the county
-level. All coefficients successfully replicate the original results
-except for Bachelor's share, which shows a discrepancy with the
-published values.
+industry determinants of the share of AI jobs. Standard errors are
+clustered at the county level. The replication follows the exact data
+processing pipeline from the authors' provided code, including their
+specific variable transformations, z-score standardization, and sample
+restrictions (filtering emp != 0). All coefficients successfully
+replicate the original results except for Bachelor's share. The
+Bachelor's share discrepancy appears across all five model
+specifications, with our replicated coefficients systematically lower
+than the published values. This persistent discrepancy suggests either:
+(1) a difference in the underlying data file we received versus what was
+used in the published paper, (2) an undocumented data processing step in
+the original analysis, or (3) a potential error in the published table.
+We note that the Bachelor's share variable (share\_bac) undergoes
+z-score standardization in the original code (line {[}X{]}: share\_bac =
+scale(share\_bac)), and this standardization is applied to the filtered
+dataset after removing zero-employment counties. The exact same
+filtering and standardization process in our replication produces
+different coefficient estimates only for this variable, while all other
+variables (including those that undergo identical standardization
+procedures) replicate perfectly. The authors were contacted regarding
+this discrepancy but have not yet provided clarification on the source
+of the difference.
 
 \begin{figure}[H]
 
@@ -561,16 +582,39 @@ percentage-point change (Panel B, 2018--2023 with pooled years).}
 
 \textbf{Notes on Map Replication:} We employed the identical methodology
 from Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) for
-constructing these spatial visualizations, using their data.csv file and
-mapping approach. However, our replication produced different results
-from the published maps. Most notably, Connecticut did not appear in our
-maps because it was not found in the original data.csv code provided by
-the authors. This suggests potential differences in data processing or
-aggregation methods that were not fully documented in the original
-study. Despite following their documented methodology precisely, the
-geographic patterns we observe differ from those in the published paper,
-highlighting the importance of comprehensive data documentation in
-replication studies.
+constructing these spatial visualizations, using their provided data.csv
+file and following their documented mapping approach. However, our
+replication produced different results from the published maps in two
+key ways:
+
+Connecticut Data Issue: Connecticut did not appear in our replicated
+maps because its data was coded with FIPS code 9999 (state-level) rather
+than individual county FIPS codes in the authors' data.csv file.
+Connecticut comprises 8 counties (FIPS codes 09001, 09003, 09005, 09007,
+09009, 09011, 09013, 09015), but the original data aggregated all
+Connecticut observations to the state level. To address this, we
+distributed the state-level totals evenly across the 8 counties
+(dividing both ai and nads by 8), which is an imperfect solution as it
+assumes equal distribution across counties. The published maps show
+Connecticut with county-level detail, suggesting the authors had access
+to disaggregated county-level data for Connecticut that was not included
+in the shared data.csv file. Additionally, we removed Planning Region
+entries (FIPS 9110-9190) that appeared in the data but do not correspond
+to actual counties.
+
+Panel B Temporal Aggregation: Our replication uses the exact pooling
+method specified in the text: ``percentage-point change (Panel B,
+2018--2023 with pooled years).'' We sum AI postings and total postings
+separately for years 2017-2018 and 2022-2023, compute AI intensity for
+each pooled period, then calculate the change. However, the published
+Panel B shows different spatial patterns than our replication. This
+could reflect: (1) the authors using a different pooling method than
+documented, (2) additional data transformations not specified in their
+code, or (3) differences in the underlying Lightcast data between our
+received file and their analysis file. The fact that Panel A (which uses
+simple time-averaging across 2014-2023) also shows different patterns
+suggests the discrepancy likely stems from data differences rather than
+just methodological interpretation.
 
 The partial reproduction confirms much of the technical reliability of
 the original analysis and establishes a foundation for the robustness
@@ -840,124 +884,139 @@ conditions on AI employment.
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
 \bibitem[\citeproctext]{ref-acemoglu2024}
-\textbf{Acemoglu, Daron}. 2024. {``The simple macroeconomics of AI.''}
-Working Paper. 32487. National Bureau of Economic Research.
+\textbf{Acemoglu, Daron}. 2024. {``The simple macroeconomics of {AI}.''}
+Working Paper. 32487. National Bureau of Economic Research DOI:
+\href{https://doi.org/10.3386/w32487}{10.3386/w32487}.
 
 \bibitem[\citeproctext]{ref-acemoglu2022}
 \textbf{Acemoglu, Daron}, \textbf{David Autor}, \textbf{Jonathon
 Hazell}, and \textbf{Pascual Restrepo}. 2022. {``Artificial intelligence
 and jobs: Evidence from online vacancies.''} \emph{Journal of Labor
-Economics} 40(1) : S341--S382.
+Economics} 40(S1) : S293--S340. DOI:
+\href{https://doi.org/10.1086/718327}{10.1086/718327}.
 
 \bibitem[\citeproctext]{ref-acemoglu2019}
 \textbf{Acemoglu, Daron}, and \textbf{Pascual Restrepo}. 2019.
 {``Automation and new tasks: How technology displaces and reinstates
-labor.''} \emph{Journal of Economic Perspectives} 33(2) : 3--30.
+labor.''} \emph{Journal of Economic Perspectives} 33(2) : 3--30. DOI:
+\href{https://doi.org/10.1257/jep.33.2.3}{10.1257/jep.33.2.3}.
 
 \bibitem[\citeproctext]{ref-andreadis2025}
 \textbf{Andreadis, Lefteris}, \textbf{Eleni Kalotychou}, \textbf{Manolis
 Chatzikonstantinou}, \textbf{Christodoulos Louca}, and \textbf{Christos
 A. Makridis}. 2025. {``Local heterogeneity in artificial intelligence
-jobs over time and space.''} \emph{AEA Papers and Proceedings}.
+jobs over time and space.''} \emph{AEA Papers and Proceedings} 115 :
+29--34. DOI:
+\href{https://doi.org/10.1257/pandp.20251001}{10.1257/pandp.20251001}.
 
 \bibitem[\citeproctext]{ref-modelsummary}
-\textbf{Arel-Bundock, Vincent}. 2022.
-\emph{\href{https://CRAN.R-project.org/package=modelsummary}{{modelsummary}:
-Summary tables and plots for statistical models and data}}.
+\textbf{Arel-Bundock, Vincent}. 2022. {``{modelsummary}: Data and model
+summaries in {R}.''} \emph{Journal of Statistical Software} 103(1) :
+1--23. DOI:
+\href{https://doi.org/10.18637/jss.v103.i01}{10.18637/jss.v103.i01}.
 
 \bibitem[\citeproctext]{ref-autor2015}
 \textbf{Autor, David H.} 2015. {``Why are there still so many jobs? The
 history and future of workplace automation.''} \emph{Journal of Economic
-Perspectives} 29(3) : 3--30.
+Perspectives} 29(3) : 3--30. DOI:
+\href{https://doi.org/10.1257/jep.29.3.3}{10.1257/jep.29.3.3}.
 
 \bibitem[\citeproctext]{ref-babina2024}
 \textbf{Babina, Tania}, \textbf{Anastassia Fedyk}, \textbf{Alex He}, and
 \textbf{James Hodson}. 2024. {``Artificial intelligence, firm growth,
 and product innovation.''} \emph{Journal of Financial Economics} 151 :
-103745.
+103745. DOI:
+\href{https://doi.org/10.1016/j.jfineco.2023.103745}{10.1016/j.jfineco.2023.103745}.
 
 \bibitem[\citeproctext]{ref-beckett2023}
-\textbf{Beckett, Emily}. 2023. {``\href{https://lightcast.io/}{Demand
-for AI skills continues climbing}.''} Lightcast Blog.
+\textbf{Beckett, Emily}. 2023. {``Demand for {AI} skills continues
+climbing.''} Lightcast Blog \url{https://lightcast.io/}.
 
 \bibitem[\citeproctext]{ref-fixest}
-\textbf{Bergé, Laurent}. 2023.
-\emph{\href{https://CRAN.R-project.org/package=fixest}{{fixest}: Fast
-fixed-effects estimations}}.
+\textbf{Bergé, Laurent}. 2018. {``Efficient estimation of maximum
+likelihood models with multiple fixed-effects: The {R} package
+{FENmlm}.''} \emph{CREA Discussion Papers} (13).
 
 \bibitem[\citeproctext]{ref-bogin2019}
 \textbf{Bogin, Alexander}, \textbf{William Doerner}, and \textbf{William
 Larson}. 2019. {``Local house price dynamics: New indices and stylized
-facts.''} \emph{Real Estate Economics} 47(2) : 365--398.
+facts.''} \emph{Real Estate Economics} 47(2) : 365--398. DOI:
+\href{https://doi.org/10.1111/1540-6229.12233}{10.1111/1540-6229.12233}.
 
 \bibitem[\citeproctext]{ref-brynjolfsson2021}
 \textbf{Brynjolfsson, Erik}, \textbf{Daniel Rock}, and \textbf{Chad
-Syverson}. 2021. {``The productivity j-curve: How intangibles complement
-general-purpose technologies.''} \emph{American Economic Journal:
-Macroeconomics} 13(1) : 333--372.
+Syverson}. 2021. {``The productivity {J}-curve: How intangibles
+complement general-purpose technologies.''} \emph{American Economic
+Journal: Macroeconomics} 13(1) : 333--372. DOI:
+\href{https://doi.org/10.1257/mac.20180386}{10.1257/mac.20180386}.
 
 \bibitem[\citeproctext]{ref-usmap}
-\textbf{Di Lorenzo, Paolo}. 2023.
-\emph{\href{https://CRAN.R-project.org/package=usmap}{{usmap}: US maps
-including alaska and hawaii}}.
+\textbf{Di Lorenzo, Paolo}. 2025. \emph{Usmap: US maps including alaska
+and hawaii} DOI:
+\href{https://doi.org/10.32614/CRAN.package.usmap}{10.32614/CRAN.package.usmap}.
 
 \bibitem[\citeproctext]{ref-eloundou2024}
 \textbf{Eloundou, Tyna}, \textbf{Sam Manning}, \textbf{Pamela Mishkin},
-and \textbf{Daniel Rock}. 2024. {``GPTs are GPTs: Labor market impact
-potential of LLMs.''} \emph{Science} 384(6702) : 1306--1308.
+and \textbf{Daniel Rock}. 2024. {``{GPTs} are {GPTs}: Labor market
+impact potential of {LLMs}.''} \emph{Science} 384(6702) : 1306--1308.
+DOI:
+\href{https://doi.org/10.1126/science.adj0998}{10.1126/science.adj0998}.
 
 \bibitem[\citeproctext]{ref-giczy2022}
 \textbf{Giczy, A. Victoria}, \textbf{Nicole A. Pairolero}, and
 \textbf{Alan A. Toole}. 2022. {``Identifying artificial intelligence
-(AI) invention: A novel AI patent dataset.''} \emph{The Journal of
-Technology Transfer} 47(2) : 476--505.
+({AI}) invention: A novel {AI} patent dataset.''} \emph{The Journal of
+Technology Transfer} 47(2) : 476--505. DOI:
+\href{https://doi.org/10.1007/s10961-021-09900-2}{10.1007/s10961-021-09900-2}.
 
 \bibitem[\citeproctext]{ref-holland1986}
-\textbf{Holland, Paul W.} 1986.
-{``\href{https://doi.org/10.1080/01621459.1986.10478354}{Statistics and
-causal inference}.''} \emph{Journal of the American Statistical
-Association} 81(396) : 945--960.
+\textbf{Holland, Paul W.} 1986. {``Statistics and causal inference.''}
+\emph{Journal of the American Statistical Association} 81(396) :
+945--960. DOI:
+\href{https://doi.org/10.1080/01621459.1986.10478354}{10.1080/01621459.1986.10478354}.
 
 \bibitem[\citeproctext]{ref-kline2014}
 \textbf{Kline, Patrick}, and \textbf{Enrico Moretti}. 2014. {``People,
 places, and public policy: Some simple welfare economics of local
 economic development programs.''} \emph{Annual Review of Economics} 6 :
-629--662.
+629--662. DOI:
+\href{https://doi.org/10.1146/annurev-economics-080213-041024}{10.1146/annurev-economics-080213-041024}.
 
 \bibitem[\citeproctext]{ref-r1996}
-\textbf{R Core Team}. 1996. \emph{\href{https://www.R-project.org/}{R: A
-language and environment for statistical computing}} Vienna, Austria: R
-Foundation for Statistical Computing.
+\textbf{R Core Team}. 1996. \emph{R: A language and environment for
+statistical computing} Vienna, Austria: R Foundation for Statistical
+Computing. \url{https://www.R-project.org/}.
 
 \bibitem[\citeproctext]{ref-bls_laus}
-\textbf{U.S. Bureau of Labor Statistics}. 2024.
-{``\href{https://www.bls.gov/lau/}{Local area unemployment statistics
-(LAUS)}.''}
+\textbf{U.S. Bureau of Labor Statistics}. 2024. {``Local area
+unemployment statistics ({LAUS}).''} \url{https://www.bls.gov/lau/}.
 
 \bibitem[\citeproctext]{ref-census_acs}
-\textbf{U.S. Census Bureau}. 2024a.
-{``\href{https://www.census.gov/data/datasets/time-series/econ/acs/acs-datasets.html}{American
-community survey (ACS) 5-year data}.''}
+\textbf{U.S. Census Bureau}. 2024a. {``American community survey ({ACS})
+5-year data.''}
+\url{https://www.census.gov/data/datasets/time-series/econ/acs/acs-datasets.html}.
 
 \bibitem[\citeproctext]{ref-census_cbp}
-\textbf{U.S. Census Bureau}. 2024b.
-{``\href{https://www.census.gov/programs-surveys/cbp/data/datasets.html}{County
-business patterns (CBP)}.''}
+\textbf{U.S. Census Bureau}. 2024b. {``County business patterns
+({CBP}).''}
+\url{https://www.census.gov/programs-surveys/cbp/data/datasets.html}.
 
 \bibitem[\citeproctext]{ref-census_qwi}
-\textbf{U.S. Census Bureau}. 2024c.
-{``\href{https://lehd.ces.census.gov/data/}{Quarterly workforce
-indicators (QWI)}.''}
+\textbf{U.S. Census Bureau}. 2024c. {``Quarterly workforce indicators
+({QWI}).''} \url{https://lehd.ces.census.gov/data/}.
 
 \bibitem[\citeproctext]{ref-tidyverse}
-\textbf{Wickham, Hadley} et al. 2023.
-\emph{\href{https://CRAN.R-project.org/package=tidyverse}{{tidyverse}:
-Easily install and load the 'tidyverse'}}.
+\textbf{Wickham, Hadley}, \textbf{Mara Averick}, \textbf{Jennifer
+Bryan}, \textbf{Winston Chang}, \textbf{Lucy D'Agostino McGowan},
+\textbf{Romain François}, \textbf{Garrett Grolemund}, et al. 2019.
+{``Welcome to the {tidyverse}.''} \emph{Journal of Open Source Software}
+4(43) : 1686. DOI:
+\href{https://doi.org/10.21105/joss.01686}{10.21105/joss.01686}.
 
 \bibitem[\citeproctext]{ref-kableExtra}
-\textbf{Zhu, Hao}. 2021.
-\emph{\href{https://CRAN.R-project.org/package=kableExtra}{{kableExtra}:
-Construct complex table with 'kable' and pipe syntax}}.
+\textbf{Zhu, Hao}. 2024. \emph{kableExtra: Construct complex table with
+'kable' and pipe syntax} DOI:
+\href{https://doi.org/10.32614/CRAN.package.kableExtra}{10.32614/CRAN.package.kableExtra}.
 
 \end{CSLReferences}
 

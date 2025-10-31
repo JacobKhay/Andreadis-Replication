@@ -17,6 +17,9 @@ format:
       - margin=1in
     include-in-header:
       - text: |
+          \usepackage{url}
+          \urlstyle{same}
+          \def\UrlBreaks{\do\/\do-\do.\do:}
           \usepackage{float}
           \usepackage{array}
           \usepackage{siunitx}
@@ -79,15 +82,15 @@ options(tigris_use_cache = TRUE)
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
-<!-- Use: citation("modelsummary") and similarly for the other R packages.  -->
+<!-- Use: citation("modelsummary") and similarly for the other R packages.  yes. done.-->
 
 <!-- Weird space: Babina, Tania,Anastassia Fedyk,Alex He, andJames Hodson. 2024. “Artificial intelligence --- weird space after quote, only appear if rendered.?? -->
 
-<!-- 103745 is wrong. Check each reference by hand. -->
+<!-- 103745 is wrong. Check each reference by hand. I checked it, it shows working paper 103745-->
 
-<!-- Science384(6702) : 1306–1308 --- spaces around colon seems weird. -->
+<!-- Science384(6702) : 1306–1308 --- spaces around colon seems weird. couldn't figure this one out -->
 
-<!-- Does every entry need a DOI or a URL? -->
+<!-- Does every entry need a DOI or a URL? Yes. done. -->
 
 *JEL: J24, O33, R11*
 
@@ -654,7 +657,7 @@ tab <- gsub("lddddd", "ld{2.4}d{2.4}d{2.4}d{2.4}d{2.4}", tab, fixed = TRUE)
 cat(tab)
 ```
 
-**Notes:** The table reports the demographic, innovation, and industry determinants of the change in AI shares in a county between 2017–2018 and 2022–2023. Standard errors are clustered at the county level. All coefficients successfully replicate the original results except for Bachelor's share, which shows a discrepancy with the published values.
+**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code, including their specific variable transformations, z-score standardization, and sample restrictions (filtering emp != 0). All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper, (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. We note that the Bachelor's share variable (share_bac) undergoes z-score standardization in the original code (line [X]: share_bac = scale(share_bac)), and this standardization is applied to the filtered dataset after removing zero-employment counties. The exact same filtering and standardization process in our replication produces different coefficient estimates only for this variable, while all other variables (including those that undergo identical standardization procedures) replicate perfectly. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference.
 
 ```{r}
 #| label: fig-map
@@ -898,7 +901,11 @@ final_plot
 
 ```
 
-**Notes on Map Replication:** We employed the identical methodology from @andreadis2025 for constructing these spatial visualizations, using their data.csv file and mapping approach. However, our replication produced different results from the published maps. Most notably, Connecticut did not appear in our maps because it was not found in the original data.csv code provided by the authors. This suggests potential differences in data processing or aggregation methods that were not fully documented in the original study. Despite following their documented methodology precisely, the geographic patterns we observe differ from those in the published paper, highlighting the importance of comprehensive data documentation in replication studies.
+**Notes on Map Replication:** We employed the identical methodology from @andreadis2025 for constructing these spatial visualizations, using their provided data.csv file and following their documented mapping approach. However, our replication produced different results from the published maps in two key ways:
+
+Connecticut Data Issue: Connecticut did not appear in our replicated maps because its data was coded with FIPS code 9999 (state-level) rather than individual county FIPS codes in the authors' data.csv file. Connecticut comprises 8 counties (FIPS codes 09001, 09003, 09005, 09007, 09009, 09011, 09013, 09015), but the original data aggregated all Connecticut observations to the state level. To address this, we distributed the state-level totals evenly across the 8 counties (dividing both ai and nads by 8), which is an imperfect solution as it assumes equal distribution across counties. The published maps show Connecticut with county-level detail, suggesting the authors had access to disaggregated county-level data for Connecticut that was not included in the shared data.csv file. Additionally, we removed Planning Region entries (FIPS 9110-9190) that appeared in the data but do not correspond to actual counties.
+
+Panel B Temporal Aggregation: Our replication uses the exact pooling method specified in the text: "percentage-point change (Panel B, 2018–2023 with pooled years)." We sum AI postings and total postings separately for years 2017-2018 and 2022-2023, compute AI intensity for each pooled period, then calculate the change. However, the published Panel B shows different spatial patterns than our replication. This could reflect: (1) the authors using a different pooling method than documented, (2) additional data transformations not specified in their code, or (3) differences in the underlying Lightcast data between our received file and their analysis file. The fact that Panel A (which uses simple time-averaging across 2014-2023) also shows different patterns suggests the discrepancy likely stems from data differences rather than just methodological interpretation.
 
 The partial reproduction confirms much of the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
 

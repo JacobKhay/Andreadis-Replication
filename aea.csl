@@ -131,6 +131,16 @@
       </else>
     </choose>
   </macro>
+  <macro name="doi-url">
+    <choose>
+      <if variable="DOI">
+        <text variable="DOI" prefix=" DOI: "/>
+      </if>
+      <else-if variable="URL">
+        <text variable="URL" prefix=" "/>
+      </else-if>
+    </choose>
+  </macro>
   <citation et-al-min="4" et-al-use-first="1" disambiguate-add-year-suffix="true" disambiguate-add-names="true" disambiguate-add-givenname="true" collapse="year" givenname-disambiguation-rule="primary-name">
     <sort>
       <key macro="author"/>
@@ -165,6 +175,7 @@
             <text macro="editor"/>
           </group>
           <text prefix=" " macro="publisher" suffix="."/>
+          <text macro="doi-url" suffix="."/>
         </if>
         <else-if type="report thesis" match="any">
           <text macro="title" prefix=" " suffix="."/>
@@ -173,6 +184,7 @@
             <text variable="number"/>
             <text macro="publisher"/>
           </group>
+          <text macro="doi-url" suffix="."/>
         </else-if>
         <else-if type="chapter paper-conference" match="any">
           <text macro="title" prefix=" " suffix="."/>
@@ -184,6 +196,7 @@
             <text variable="page" prefix="pp. " suffix="."/>
             <text macro="publisher" suffix="."/>
           </group>
+          <text macro="doi-url" suffix="."/>
         </else-if>
         <else-if type="article-journal article-magazine article-newspaper" match="any">
           <text macro="title" prefix=" " suffix="."/>
@@ -193,8 +206,9 @@
               <text variable="volume"/>
               <text variable="issue" prefix="(" suffix=")"/>
             </group>
-            <text variable="page" prefix=": "/>
+            <text variable="page" prefix=": " suffix="."/>
           </group>
+          <text macro="doi-url" suffix="."/>
         </else-if>
         <else-if type="webpage post-weblog" match="any">
           <text macro="title" prefix=" " suffix="."/>
@@ -202,18 +216,23 @@
             <text variable="container-title"/>
             <text macro="access"/>
           </group>
+          <text macro="doi-url" suffix="."/>
         </else-if>
         <else>
-          <text macro="title" prefix=" " suffix="."/>
-          <group prefix=" " delimiter=" ">
-            <text variable="container-title" font-style="italic"/>
-            <group>
-              <text variable="volume"/>
-              <text variable="issue" prefix="(" suffix=")"/>
+          <text macro="title" prefix=" " suffix=". "/>
+          <group delimiter=". ">
+            <group delimiter=" ">
+              <text variable="container-title" font-style="italic"/>
+              <group>
+                <text variable="volume"/>
+                <text variable="issue" prefix="(" suffix=")"/>
+              </group>
+              <text variable="page" prefix=": "/>
             </group>
-            <text variable="page" prefix=": "/>
+            <text variable="note"/>
+            <text macro="publisher"/>
+            <text macro="doi-url"/>
           </group>
-          <text prefix=" " macro="publisher"/>
         </else>
       </choose>
     </layout>
