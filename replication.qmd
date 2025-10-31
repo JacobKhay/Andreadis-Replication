@@ -72,6 +72,10 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
+<!-- SEND EMAIL! Reply all, including me, to the last email about the table. "Just following up on this issue.
+
+Also, we are unable to replicate the maps. For example, your published maps include data for Connecticut, but your data file, downloaded from http:..., does not include data for Connecticut. " -->
+
  <!-- Study the paper more closely, so you understand what it happening. Don't understand? Ask AI. Or ask me! -->
 
 <!-- Work on Map 2. Bet that the percentage change should be:
@@ -82,15 +86,14 @@ options(tigris_use_cache = TRUE)
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
-<!-- Use: citation("modelsummary") and similarly for the other R packages.  yes. done.-->
+<!-- Try cite fixest, map stuff, kableExtra, especially if there is an article to which we can easily point -->
 
-<!-- Weird space: Babina, Tania,Anastassia Fedyk,Alex He, andJames Hodson. 2024. “Artificial intelligence --- weird space after quote, only appear if rendered.?? -->
+<!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308 -->
 
-<!-- 103745 is wrong. Check each reference by hand. I checked it, it shows working paper 103745-->
+<!-- Cite published version of Babina, Tania. Don't include 103745 -->
 
-<!-- Science384(6702) : 1306–1308 --- spaces around colon seems weird. couldn't figure this one out -->
+modelSummary
 
-<!-- Does every entry need a DOI or a URL? Yes. done. -->
 
 *JEL: J24, O33, R11*
 
