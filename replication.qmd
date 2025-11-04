@@ -72,9 +72,6 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- SEND EMAIL! Reply all, including me, to the last email about the table. "Just following up on this issue.
-
-Also, we are unable to replicate the maps. For example, your published maps include data for Connecticut, but your data file, downloaded from http:..., does not include data for Connecticut. " -->
 
  <!-- Study the paper more closely, so you understand what it happening. Don't understand? Ask AI. Or ask me! -->
 
@@ -86,13 +83,16 @@ Also, we are unable to replicate the maps. For example, your published maps incl
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
-<!-- Try cite fixest, map stuff, kableExtra, especially if there is an article to which we can easily point -->
+<!-- Remove kableExtra and usmap reference. -->
 
 <!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308 -->
 
 <!-- Cite published version of Babina, Tania. Don't include 103745 -->
 
-modelSummary
+<!-- Delete garbage that you are not using, like .Rproj, apa.csl and so on. Seems like there may be other random junk.  Maybe data files go in a data/ directory. (Code will need to change, obviously.) -->
+
+<!-- Add to README some background. Where did you orginally replicate this from? When did you fork it? Where did you download stuff from? What cleaning did you do? About paragraph.  -->
+
 
 
 *JEL: J24, O33, R11*
@@ -1641,4 +1641,4 @@ And in the *Conclusion*:
 
 Each of these statements frames correlational results as causal mechanisms. Terms such as "drivers," "emerges as a key driver," "underscoring the importance," and "findings point to the role of policy" imply that altering these variables would directly change AI adoption outcomes. Yet the empirical strategy—fixed-effects regressions on observational county characteristics—does not support such causal inference [@holland1986]. The results can only be interpreted as conditional associations, not as estimates of the effects of education, innovation, or labor market conditions on AI employment.  
 
-## References {.unnumbered}
+## Bibliography {.unnumbered}
