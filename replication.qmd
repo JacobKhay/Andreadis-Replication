@@ -83,15 +83,15 @@ options(tigris_use_cache = TRUE)
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
-<!-- Remove kableExtra and usmap reference. -->
+<!-- Remove kableExtra and usmap reference. Done.-->
 
-<!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308 -->
+<!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308 worked on this, please double check if done precisely-->
 
-<!-- Cite published version of Babina, Tania. Don't include 103745 -->
+<!-- Cite published version of Babina, Tania. Don't include 103745. It is the published version, that number represents the sequential article identifier -->
 
-<!-- Delete garbage that you are not using, like .Rproj, apa.csl and so on. Seems like there may be other random junk.  Maybe data files go in a data/ directory. (Code will need to change, obviously.) -->
+<!-- Delete garbage that you are not using, like .Rproj, apa.csl and so on. Seems like there may be other random junk.  Maybe data files go in a data/ directory. (Code will need to change, obviously.) Done -->
 
-<!-- Add to README some background. Where did you orginally replicate this from? When did you fork it? Where did you download stuff from? What cleaning did you do? About paragraph.  -->
+<!-- Add to README some background. Where did you orginally replicate this from? When did you fork it? Where did you download stuff from? What cleaning did you do? About paragraph. Done  -->
 
 
 
@@ -660,7 +660,7 @@ tab <- gsub("lddddd", "ld{2.4}d{2.4}d{2.4}d{2.4}d{2.4}", tab, fixed = TRUE)
 cat(tab)
 ```
 
-**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code, including their specific variable transformations, z-score standardization, and sample restrictions (filtering emp != 0). All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper, (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. We note that the Bachelor's share variable (share_bac) undergoes z-score standardization in the original code (line [X]: share_bac = scale(share_bac)), and this standardization is applied to the filtered dataset after removing zero-employment counties. The exact same filtering and standardization process in our replication produces different coefficient estimates only for this variable, while all other variables (including those that undergo identical standardization procedures) replicate perfectly. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference.
+**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper, (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference.
 
 ```{r}
 #| label: fig-map
@@ -904,11 +904,9 @@ final_plot
 
 ```
 
-**Notes on Map Replication:** We employed the identical methodology from @andreadis2025 for constructing these spatial visualizations, using their provided data.csv file and following their documented mapping approach. However, our replication produced different results from the published maps in two key ways:
+**Notes on Map Replication:** We employed the identical methodology from @andreadis2025 for constructing these spatial visualizations, using their provided data.csv file and following their documented mapping approach. However, our replication produced different results from the published maps:
 
 Connecticut Data Issue: Connecticut did not appear in our replicated maps because its data was coded with FIPS code 9999 (state-level) rather than individual county FIPS codes in the authors' data.csv file. Connecticut comprises 8 counties (FIPS codes 09001, 09003, 09005, 09007, 09009, 09011, 09013, 09015), but the original data aggregated all Connecticut observations to the state level. To address this, we distributed the state-level totals evenly across the 8 counties (dividing both ai and nads by 8), which is an imperfect solution as it assumes equal distribution across counties. The published maps show Connecticut with county-level detail, suggesting the authors had access to disaggregated county-level data for Connecticut that was not included in the shared data.csv file. Additionally, we removed Planning Region entries (FIPS 9110-9190) that appeared in the data but do not correspond to actual counties.
-
-Panel B Temporal Aggregation: Our replication uses the exact pooling method specified in the text: "percentage-point change (Panel B, 2018–2023 with pooled years)." We sum AI postings and total postings separately for years 2017-2018 and 2022-2023, compute AI intensity for each pooled period, then calculate the change. However, the published Panel B shows different spatial patterns than our replication. This could reflect: (1) the authors using a different pooling method than documented, (2) additional data transformations not specified in their code, or (3) differences in the underlying Lightcast data between our received file and their analysis file. The fact that Panel A (which uses simple time-averaging across 2014-2023) also shows different patterns suggests the discrepancy likely stems from data differences rather than just methodological interpretation.
 
 The partial reproduction confirms much of the technical reliability of the original analysis and establishes a foundation for the robustness extensions that follow.
 
@@ -1609,6 +1607,27 @@ The comparison between equal-weighted and log-population-weighted regressions re
 
 *County Size Effects*: The divergence between weighting schemes is most pronounced for demographic variables, with population and income effects showing 45-50% magnitude reductions under log-population weights, indicating that large counties drive many of the socioeconomic relationships found in the original analysis.  
 
+## Critical Assessment of Causal Language
+
+The original study by @andreadis2025 employs language suggesting causal relationships despite using observational county-level data with fixed-effects regressions. The empirical strategy does not support causal inference [@holland1986], yet the paper uses terminology that implies causation rather than correlation.
+
+**Causal Nouns Used:**
+- "drivers" (appears multiple times)
+- "determinants" (in table titles and text)
+- "effects"
+- "impact"
+- "benefits"
+- "challenges"
+
+**Causal Verbs Used:**
+- "drive" / "driven"
+- "emerges as"
+- "fostering"
+- "predict" (in causal context)
+- "influence"
+- "integrating"
+
+These terms frame correlational results as causal mechanisms. For instance, the paper refers to "key drivers of AI job intensity" and states that labor market tightness "emerges as a key driver," implying that changing these variables would directly alter AI adoption. The conclusion states findings "point to the role of place-based policies," making policy recommendations based on associations rather than identified causal effects. The fixed-effects specification controls for time-invariant county characteristics and common time trends, but cannot address reverse causality, omitted time-varying confounds, or selection processes [@holland1986].
 
 ## Conclusion
 
@@ -1622,23 +1641,7 @@ This replication and extension of @andreadis2025 demonstrates both the reproduci
 
 *Policy implications*: Taken together, these findings indicate that the empirical regularities documented by @andreadis2025 should be interpreted with caution. Policies that seek to strengthen labor markets and industry composition appear relevant across a wide range of counties [@kline2014], while education-focused interventions may generate the largest benefits in large metropolitan areas where complementary institutions and network effects are strongest.  
 
-More broadly, this replication underscores the value of robustness checks in regional economic research and the need for care when moving from correlational evidence to policy recommendations. Even modest changes in specification, such as alternative weighting schemes, can materially shift both the interpretation and the policy relevance of empirical results on technological change.  
+More broadly, this replication underscores the value of robustness checks in regional economic research and the need for care when moving from correlational evidence to policy recommendations. Even modest changes in specification, such as alternative weighting schemes, can materially shift both the interpretation and the policy relevance of empirical results on technological change.
 
-## Critical Assessment of Causal Claims
-
-### Identification of Problematic Causal Language
-
-The original study by @andreadis2025 often employs language that suggests causal relationships, even though the empirical analysis is based on observational county-level data with multiple potentially endogenous predictors. Several passages illustrate this concern.  
-
-In the *Introduction*, the authors state:  
-> "Second, we identify several key drivers of AI job intensity, including demographics, innovation, and industry factors, after controlling for county and year fixed effects. Specifically, higher shares of STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption, underscoring the importance of education, innovation, and dynamic labor markets."  
-
-In *Section III*, they conclude:  
-> "Labor market tightness emerges as a key driver, with a positive and highly significant coefficient… highlighting the importance of technical education and local innovation capacity in fostering AI job growth."  
-
-And in the *Conclusion*:  
-> "Counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter labor markets have seen greater AI job growth, whereas manufacturing-heavy regions and areas with high labor turnover have faced challenges in integrating AI. These findings point to the role of place-based policies to attract and retain top-tier talent for economic development."  
-
-Each of these statements frames correlational results as causal mechanisms. Terms such as "drivers," "emerges as a key driver," "underscoring the importance," and "findings point to the role of policy" imply that altering these variables would directly change AI adoption outcomes. Yet the empirical strategy—fixed-effects regressions on observational county characteristics—does not support such causal inference [@holland1986]. The results can only be interpreted as conditional associations, not as estimates of the effects of education, innovation, or labor market conditions on AI employment.  
 
 ## Bibliography {.unnumbered}

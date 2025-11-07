@@ -261,8 +261,6 @@ Kane\footnote{New College of Florida,
 \maketitle
 
 
-modelSummary
-
 \emph{JEL: J24, O33, R11}
 
 \emph{Keywords:} Artificial Intelligence, Regional Economics, Labor
@@ -416,7 +414,7 @@ fixed-effects estimation capabilities. Summary tables were generated
 using modelsummary (\citeproc{ref-modelsummary}{Arel-Bundock, 2022}) and
 formatted with kableExtra (\citeproc{ref-kableExtra}{Zhu, 2024}).
 Spatial visualizations were created with the usmap package
-(\citeproc{ref-usmap}{Di Lorenzo, 2025}), which provides convenient
+(\citeproc{ref-usmap}{Di Lorenzo, 2024}), which provides convenient
 mapping functions for U.S. geographic data including proper handling of
 Alaska and Hawaii positioning.
 
@@ -547,26 +545,16 @@ R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} &
 \textbf{Notes:} The table reports the demographic, innovation, and
 industry determinants of the share of AI jobs. Standard errors are
 clustered at the county level. The replication follows the exact data
-processing pipeline from the authors' provided code, including their
-specific variable transformations, z-score standardization, and sample
-restrictions (filtering emp != 0). All coefficients successfully
-replicate the original results except for Bachelor's share. The
-Bachelor's share discrepancy appears across all five model
+processing pipeline from the authors' provided code. All coefficients
+successfully replicate the original results except for Bachelor's share.
+The Bachelor's share discrepancy appears across all five model
 specifications, with our replicated coefficients systematically lower
 than the published values. This persistent discrepancy suggests either:
 (1) a difference in the underlying data file we received versus what was
 used in the published paper, (2) an undocumented data processing step in
 the original analysis, or (3) a potential error in the published table.
-We note that the Bachelor's share variable (share\_bac) undergoes
-z-score standardization in the original code (line {[}X{]}: share\_bac =
-scale(share\_bac)), and this standardization is applied to the filtered
-dataset after removing zero-employment counties. The exact same
-filtering and standardization process in our replication produces
-different coefficient estimates only for this variable, while all other
-variables (including those that undergo identical standardization
-procedures) replicate perfectly. The authors were contacted regarding
-this discrepancy but have not yet provided clarification on the source
-of the difference.
+The authors were contacted regarding this discrepancy but have not yet
+provided clarification on the source of the difference.
 
 \begin{figure}[H]
 
@@ -586,8 +574,7 @@ percentage-point change (Panel B, 2018--2023 with pooled years).}
 from Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) for
 constructing these spatial visualizations, using their provided data.csv
 file and following their documented mapping approach. However, our
-replication produced different results from the published maps in two
-key ways:
+replication produced different results from the published maps:
 
 Connecticut Data Issue: Connecticut did not appear in our replicated
 maps because its data was coded with FIPS code 9999 (state-level) rather
@@ -603,20 +590,6 @@ to disaggregated county-level data for Connecticut that was not included
 in the shared data.csv file. Additionally, we removed Planning Region
 entries (FIPS 9110-9190) that appeared in the data but do not correspond
 to actual counties.
-
-Panel B Temporal Aggregation: Our replication uses the exact pooling
-method specified in the text: ``percentage-point change (Panel B,
-2018--2023 with pooled years).'' We sum AI postings and total postings
-separately for years 2017-2018 and 2022-2023, compute AI intensity for
-each pooled period, then calculate the change. However, the published
-Panel B shows different spatial patterns than our replication. This
-could reflect: (1) the authors using a different pooling method than
-documented, (2) additional data transformations not specified in their
-code, or (3) differences in the underlying Lightcast data between our
-received file and their analysis file. The fact that Panel A (which uses
-simple time-averaging across 2014-2023) also shows different patterns
-suggests the discrepancy likely stems from data differences rather than
-just methodological interpretation.
 
 The partial reproduction confirms much of the technical reliability of
 the original analysis and establishes a foundation for the robustness
@@ -781,6 +754,35 @@ effects showing 45-50\% magnitude reductions under log-population
 weights, indicating that large counties drive many of the socioeconomic
 relationships found in the original analysis.
 
+\section{Critical Assessment of Causal
+Language}\label{critical-assessment-of-causal-language}
+
+The original study by Andreadis et al.
+(\citeproc{ref-andreadis2025}{2025}) employs language suggesting causal
+relationships despite using observational county-level data with
+fixed-effects regressions. The empirical strategy does not support
+causal inference (\citeproc{ref-holland1986}{Holland, 1986}), yet the
+paper uses terminology that implies causation rather than correlation.
+
+\textbf{Causal Nouns Used:} - ``drivers'' (appears multiple times) -
+``determinants'' (in table titles and text) - ``effects'' - ``impact'' -
+``benefits'' - ``challenges''
+
+\textbf{Causal Verbs Used:} - ``drive'' / ``driven'' - ``emerges as'' -
+``fostering'' - ``predict'' (in causal context) - ``influence'' -
+``integrating''
+
+These terms frame correlational results as causal mechanisms. For
+instance, the paper refers to ``key drivers of AI job intensity'' and
+states that labor market tightness ``emerges as a key driver,'' implying
+that changing these variables would directly alter AI adoption. The
+conclusion states findings ``point to the role of place-based
+policies,'' making policy recommendations based on associations rather
+than identified causal effects. The fixed-effects specification controls
+for time-invariant county characteristics and common time trends, but
+cannot address reverse causality, omitted time-varying confounds, or
+selection processes (\citeproc{ref-holland1986}{Holland, 1986}).
+
 \section{Conclusion}\label{conclusion}
 
 This replication and extension of Andreadis et al.
@@ -835,191 +837,141 @@ changes in specification, such as alternative weighting schemes, can
 materially shift both the interpretation and the policy relevance of
 empirical results on technological change.
 
-\section{Critical Assessment of Causal
-Claims}\label{critical-assessment-of-causal-claims}
-
-\subsection{Identification of Problematic Causal
-Language}\label{identification-of-problematic-causal-language}
-
-The original study by Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) often employs language that
-suggests causal relationships, even though the empirical analysis is
-based on observational county-level data with multiple potentially
-endogenous predictors. Several passages illustrate this concern.
-
-In the \emph{Introduction}, the authors state:\\
-\textgreater{} ``Second, we identify several key drivers of AI job
-intensity, including demographics, innovation, and industry factors,
-after controlling for county and year fixed effects. Specifically,
-higher shares of STEM degrees, labor market tightness, and patent
-activity significantly predict greater AI adoption, underscoring the
-importance of education, innovation, and dynamic labor markets.''
-
-In \emph{Section III}, they conclude:\\
-\textgreater{} ``Labor market tightness emerges as a key driver, with a
-positive and highly significant coefficient\ldots{} highlighting the
-importance of technical education and local innovation capacity in
-fostering AI job growth.''
-
-And in the \emph{Conclusion}:\\
-\textgreater{} ``Counties with stronger innovation ecosystems, higher
-STEM degree attainment, and tighter labor markets have seen greater AI
-job growth, whereas manufacturing-heavy regions and areas with high
-labor turnover have faced challenges in integrating AI. These findings
-point to the role of place-based policies to attract and retain top-tier
-talent for economic development.''
-
-Each of these statements frames correlational results as causal
-mechanisms. Terms such as ``drivers,'' ``emerges as a key driver,''
-``underscoring the importance,'' and ``findings point to the role of
-policy'' imply that altering these variables would directly change AI
-adoption outcomes. Yet the empirical strategy---fixed-effects
-regressions on observational county characteristics---does not support
-such causal inference (\citeproc{ref-holland1986}{Holland, 1986}). The
-results can only be interpreted as conditional associations, not as
-estimates of the effects of education, innovation, or labor market
-conditions on AI employment.
-
-\section*{References}\label{references}
-\addcontentsline{toc}{section}{References}
+\section*{Bibliography}\label{bibliography}
+\addcontentsline{toc}{section}{Bibliography}
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
 \bibitem[\citeproctext]{ref-acemoglu2024}
-\textbf{Acemoglu, Daron}. 2024. {``The simple macroeconomics of {AI}.''}
-Working Paper. 32487. National Bureau of Economic Research DOI:
+\textbf{Acemoglu,~D.~}.\,2024.\, {``The simple macroeconomics of
+{AI}.''} Working Paper. 32487. National Bureau of Economic Research DOI:
 \href{https://doi.org/10.3386/w32487}{10.3386/w32487}.
 
 \bibitem[\citeproctext]{ref-acemoglu2022}
-\textbf{Acemoglu, Daron}, \textbf{David Autor}, \textbf{Jonathon
-Hazell}, and \textbf{Pascual Restrepo}. 2022. {``Artificial intelligence
-and jobs: Evidence from online vacancies.''} \emph{Journal of Labor
-Economics} 40(S1) : S293--S340. DOI:
+\textbf{Acemoglu,~D.~},~\textbf{D.~Autor},~\textbf{J.~Hazell},~and
+\textbf{P.~Restrepo}.\,2022.\, {``Artificial intelligence and jobs:
+Evidence from online vacancies.''} \emph{Journal of Labor Economics}
+40(S1):S293--S340. DOI:
 \href{https://doi.org/10.1086/718327}{10.1086/718327}.
 
 \bibitem[\citeproctext]{ref-acemoglu2019}
-\textbf{Acemoglu, Daron}, and \textbf{Pascual Restrepo}. 2019.
-{``Automation and new tasks: How technology displaces and reinstates
-labor.''} \emph{Journal of Economic Perspectives} 33(2) : 3--30. DOI:
+\textbf{Acemoglu,~D.~},~and \textbf{P.~Restrepo}.\,2019.\, {``Automation
+and new tasks: How technology displaces and reinstates labor.''}
+\emph{Journal of Economic Perspectives} 33(2):3--30. DOI:
 \href{https://doi.org/10.1257/jep.33.2.3}{10.1257/jep.33.2.3}.
 
 \bibitem[\citeproctext]{ref-andreadis2025}
-\textbf{Andreadis, Lefteris}, \textbf{Eleni Kalotychou}, \textbf{Manolis
-Chatzikonstantinou}, \textbf{Christodoulos Louca}, and \textbf{Christos
-A. Makridis}. 2025. {``Local heterogeneity in artificial intelligence
-jobs over time and space.''} \emph{AEA Papers and Proceedings} 115 :
-29--34. DOI:
+\textbf{Andreadis,~L.~},~\textbf{E.~Kalotychou},~\textbf{M.~Chatzikonstantinou},~\textbf{C.~Louca},~and
+\textbf{C.~A.~Makridis}.\,2025.\, {``Local heterogeneity in artificial
+intelligence jobs over time and space.''} \emph{AEA Papers and
+Proceedings} 115:29--34. DOI:
 \href{https://doi.org/10.1257/pandp.20251001}{10.1257/pandp.20251001}.
 
 \bibitem[\citeproctext]{ref-modelsummary}
-\textbf{Arel-Bundock, Vincent}. 2022. {``{modelsummary}: Data and model
-summaries in {R}.''} \emph{Journal of Statistical Software} 103(1) :
-1--23. DOI:
+\textbf{Arel-Bundock,~V.~}.\,2022.\, {``{modelsummary}: Data and model
+summaries in {R}.''} \emph{Journal of Statistical Software}
+103(1):1--23. DOI:
 \href{https://doi.org/10.18637/jss.v103.i01}{10.18637/jss.v103.i01}.
 
 \bibitem[\citeproctext]{ref-autor2015}
-\textbf{Autor, David H.} 2015. {``Why are there still so many jobs? The
-history and future of workplace automation.''} \emph{Journal of Economic
-Perspectives} 29(3) : 3--30. DOI:
+\textbf{Autor,~D.~H.~}.\,2015.\, {``Why are there still so many jobs?
+The history and future of workplace automation.''} \emph{Journal of
+Economic Perspectives} 29(3):3--30. DOI:
 \href{https://doi.org/10.1257/jep.29.3.3}{10.1257/jep.29.3.3}.
 
 \bibitem[\citeproctext]{ref-babina2024}
-\textbf{Babina, Tania}, \textbf{Anastassia Fedyk}, \textbf{Alex He}, and
-\textbf{James Hodson}. 2024. {``Artificial intelligence, firm growth,
-and product innovation.''} \emph{Journal of Financial Economics} 151 :
-103745. DOI:
+\textbf{Babina,~T.~},~\textbf{A.~Fedyk},~\textbf{A.~He},~and
+\textbf{J.~Hodson}.\,2024.\, {``Artificial intelligence, firm growth,
+and product innovation.''} \emph{Journal of Financial Economics}
+151(C):103745. DOI:
 \href{https://doi.org/10.1016/j.jfineco.2023.103745}{10.1016/j.jfineco.2023.103745}.
 
 \bibitem[\citeproctext]{ref-beckett2023}
-\textbf{Beckett, Emily}. 2023. {``Demand for {AI} skills continues
+\textbf{Beckett,~E.~}.\,2023.\, {``Demand for {AI} skills continues
 climbing.''} Lightcast Blog. \url{https://lightcast.io/}.
 
 \bibitem[\citeproctext]{ref-fixest}
-\textbf{Bergé, Laurent}. 2018. {``Efficient estimation of maximum
+\textbf{Bergé,~L.~}.\,2018.\, {``Efficient estimation of maximum
 likelihood models with multiple fixed-effects: The {R} package
 {FENmlm}.''} \emph{CREA Discussion Papers} (13).
 
 \bibitem[\citeproctext]{ref-bogin2019}
-\textbf{Bogin, Alexander}, \textbf{William Doerner}, and \textbf{William
-Larson}. 2019. {``Local house price dynamics: New indices and stylized
-facts.''} \emph{Real Estate Economics} 47(2) : 365--398. DOI:
+\textbf{Bogin,~A.~},~\textbf{W.~Doerner},~and
+\textbf{W.~Larson}.\,2019.\, {``Local house price dynamics: New indices
+and stylized facts.''} \emph{Real Estate Economics} 47(2):365--398. DOI:
 \href{https://doi.org/10.1111/1540-6229.12233}{10.1111/1540-6229.12233}.
 
 \bibitem[\citeproctext]{ref-brynjolfsson2021}
-\textbf{Brynjolfsson, Erik}, \textbf{Daniel Rock}, and \textbf{Chad
-Syverson}. 2021. {``The productivity {J}-curve: How intangibles
-complement general-purpose technologies.''} \emph{American Economic
-Journal: Macroeconomics} 13(1) : 333--372. DOI:
+\textbf{Brynjolfsson,~E.~},~\textbf{D.~Rock},~and
+\textbf{C.~Syverson}.\,2021.\, {``The productivity {J}-curve: How
+intangibles complement general-purpose technologies.''} \emph{American
+Economic Journal: Macroeconomics} 13(1):333--372. DOI:
 \href{https://doi.org/10.1257/mac.20180386}{10.1257/mac.20180386}.
 
 \bibitem[\citeproctext]{ref-usmap}
-\textbf{Di Lorenzo, Paolo}. 2025. \emph{Usmap: US maps including alaska
-and hawaii} DOI:
-\href{https://doi.org/10.32614/CRAN.package.usmap}{10.32614/CRAN.package.usmap}.
+\textbf{Di Lorenzo,~P.~}.\,2024.\, \emph{Usmap: US maps including alaska
+and hawaii} \url{https://CRAN.R-project.org/package=usmap}.
 
 \bibitem[\citeproctext]{ref-eloundou2024}
-\textbf{Eloundou, Tyna}, \textbf{Sam Manning}, \textbf{Pamela Mishkin},
-and \textbf{Daniel Rock}. 2024. {``{GPTs} are {GPTs}: Labor market
-impact potential of {LLMs}.''} \emph{Science} 384(6702) : 1306--1308.
-DOI:
+\textbf{Eloundou,~T.~},~\textbf{S.~Manning},~\textbf{P.~Mishkin},~and
+\textbf{D.~Rock}.\,2024.\, {``{GPTs} are {GPTs}: Labor market impact
+potential of {LLMs}.''} \emph{Science} 384(6702):1306--1308. DOI:
 \href{https://doi.org/10.1126/science.adj0998}{10.1126/science.adj0998}.
 
 \bibitem[\citeproctext]{ref-giczy2022}
-\textbf{Giczy, A. Victoria}, \textbf{Nicole A. Pairolero}, and
-\textbf{Alan A. Toole}. 2022. {``Identifying artificial intelligence
+\textbf{Giczy,~A.~V.~},~\textbf{N.~A.~Pairolero},~and
+\textbf{A.~A.~Toole}.\,2022.\, {``Identifying artificial intelligence
 ({AI}) invention: A novel {AI} patent dataset.''} \emph{The Journal of
-Technology Transfer} 47(2) : 476--505. DOI:
+Technology Transfer} 47(2):476--505. DOI:
 \href{https://doi.org/10.1007/s10961-021-09900-2}{10.1007/s10961-021-09900-2}.
 
 \bibitem[\citeproctext]{ref-holland1986}
-\textbf{Holland, Paul W.} 1986. {``Statistics and causal inference.''}
-\emph{Journal of the American Statistical Association} 81(396) :
-945--960. DOI:
+\textbf{Holland,~P.~W.~}.\,1986.\, {``Statistics and causal
+inference.''} \emph{Journal of the American Statistical Association}
+81(396):945--960. DOI:
 \href{https://doi.org/10.1080/01621459.1986.10478354}{10.1080/01621459.1986.10478354}.
 
 \bibitem[\citeproctext]{ref-kline2014}
-\textbf{Kline, Patrick}, and \textbf{Enrico Moretti}. 2014. {``People,
+\textbf{Kline,~P.~},~and \textbf{E.~Moretti}.\,2014.\, {``People,
 places, and public policy: Some simple welfare economics of local
-economic development programs.''} \emph{Annual Review of Economics} 6 :
-629--662. DOI:
+economic development programs.''} \emph{Annual Review of Economics}
+6:629--662. DOI:
 \href{https://doi.org/10.1146/annurev-economics-080213-041024}{10.1146/annurev-economics-080213-041024}.
 
 \bibitem[\citeproctext]{ref-r1996}
-\textbf{R Core Team}. 1996. \emph{R: A language and environment for
+\textbf{R Core Team}.\,1996.\, \emph{R: A language and environment for
 statistical computing} Vienna, Austria: R Foundation for Statistical
 Computing. \url{https://www.R-project.org/}.
 
 \bibitem[\citeproctext]{ref-bls_laus}
-\textbf{U.S. Bureau of Labor Statistics}. 2024. {``Local area
+\textbf{U.S. Bureau of Labor Statistics}.\,2024.\, {``Local area
 unemployment statistics ({LAUS}).''} \url{https://www.bls.gov/lau/}.
 
 \bibitem[\citeproctext]{ref-census_acs}
-\textbf{U.S. Census Bureau}. 2024a. {``American community survey ({ACS})
-5-year data.''} Accessed July 1, 2024.
+\textbf{U.S. Census Bureau}.\,2024a.\, {``American community survey
+({ACS}) 5-year data.''} Accessed July 1, 2024.
 \url{https://www.census.gov/data/datasets/time-series/econ/acs/acs-datasets.html}.
 
 \bibitem[\citeproctext]{ref-census_cbp}
-\textbf{U.S. Census Bureau}. 2024b. {``County business patterns
+\textbf{U.S. Census Bureau}.\,2024b.\, {``County business patterns
 ({CBP}).''} Accessed July 1, 2024.
 \url{https://www.census.gov/programs-surveys/cbp/data/datasets.html}.
 
 \bibitem[\citeproctext]{ref-census_qwi}
-\textbf{U.S. Census Bureau}. 2024c. {``Quarterly workforce indicators
+\textbf{U.S. Census Bureau}.\,2024c.\, {``Quarterly workforce indicators
 ({QWI}).''} LEHD Program; Accessed July 1, 2024.
 \url{https://lehd.ces.census.gov/data/}.
 
 \bibitem[\citeproctext]{ref-tidyverse}
-\textbf{Wickham, Hadley}, \textbf{Mara Averick}, \textbf{Jennifer
-Bryan}, \textbf{Winston Chang}, \textbf{Lucy D'Agostino McGowan},
-\textbf{Romain François}, \textbf{Garrett Grolemund}, et al. 2019.
-{``Welcome to the {Tidyverse}.''} \emph{Journal of Open Source Software}
-4(43) : 1686. DOI:
+\textbf{Wickham,~H.~},~\textbf{M.~Averick},~\textbf{J.~Bryan},~\textbf{W.~Chang},~\textbf{L.~D.~McGowan},~\textbf{R.~François},~\textbf{G.~Grolemund},~et
+al.\,2019.\, {``Welcome to the {Tidyverse}.''} \emph{Journal of Open
+Source Software} 4(43):1686. DOI:
 \href{https://doi.org/10.21105/joss.01686}{10.21105/joss.01686}.
 
 \bibitem[\citeproctext]{ref-kableExtra}
-\textbf{Zhu, Hao}. 2024. \emph{kableExtra: Construct complex table with
-'kable' and pipe syntax} DOI:
-\href{https://doi.org/10.32614/CRAN.package.kableExtra}{10.32614/CRAN.package.kableExtra}.
+\textbf{Zhu,~H.~}.\,2024.\, \emph{kableExtra: Construct complex table
+with 'kable' and pipe syntax}
+\url{https://CRAN.R-project.org/package=kableExtra}.
 
 \end{CSLReferences}
 

@@ -16,7 +16,7 @@
   </info>
   <macro name="author">
     <names variable="author">
-      <name font-weight="bold" initialize="false" initialize-with=". " name-as-sort-order="first" delimiter=", " delimiter-precedes-last="always" and="text"/>
+      <name font-weight="bold" form="long" initialize-with=".&#160;" name-as-sort-order="first" sort-separator=",&#160;" delimiter=",&#160;" delimiter-precedes-last="always" and="text"/>
       <label form="short" prefix=" "/>
       <substitute>
         <names variable="editor"/>
@@ -124,7 +124,7 @@
   <macro name="pages">
     <choose>
       <if type="article-journal article-magazine article-newspaper" match="any">
-        <text variable="page" prefix=": "/>
+        <text variable="page" prefix=":"/>
       </if>
       <else>
         <text variable="page" prefix=", "/>
@@ -163,10 +163,12 @@
       <key macro="year-date"/>
     </sort>
     <layout suffix=".">
-      <text macro="author" suffix=". "/>
-      <date variable="issued" suffix=". ">
+      <text macro="author"/>
+      <text value=".&#8239;"/>
+      <date variable="issued" suffix=".">
         <date-part name="year"/>
       </date>
+      <text value="&#8239;"/>
       <choose>
         <if type="bill book graphic legal_case legislation motion_picture song" match="any">
           <group prefix=" " delimiter=" ">
@@ -200,13 +202,11 @@
         </else-if>
         <else-if type="article-journal article-magazine article-newspaper" match="any">
           <text macro="title" prefix=" " suffix="."/>
-          <group prefix=" " delimiter=" ">
-            <text variable="container-title" font-style="italic"/>
-            <group>
-              <text variable="volume"/>
-              <text variable="issue" prefix="(" suffix=")"/>
-            </group>
-            <text variable="page" prefix=": " suffix="."/>
+          <group prefix=" " suffix=".">
+            <text variable="container-title" font-style="italic" suffix=" "/>
+            <text variable="volume"/>
+            <text variable="issue" prefix="(" suffix=")"/>
+            <text variable="page" prefix=":"/>
           </group>
           <text macro="doi-url" suffix="."/>
         </else-if>
@@ -221,13 +221,11 @@
         <else>
           <text macro="title" prefix=" " suffix=". "/>
           <group delimiter=". ">
-            <group delimiter=" ">
-              <text variable="container-title" font-style="italic"/>
-              <group>
-                <text variable="volume"/>
-                <text variable="issue" prefix="(" suffix=")"/>
-              </group>
-              <text variable="page" prefix=": "/>
+            <group>
+              <text variable="container-title" font-style="italic" suffix=" "/>
+              <text variable="volume"/>
+              <text variable="issue" prefix="(" suffix=")"/>
+              <text variable="page" prefix=":"/>
             </group>
             <text variable="note"/>
             <text macro="publisher"/>
