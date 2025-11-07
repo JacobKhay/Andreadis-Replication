@@ -79,19 +79,19 @@ options(tigris_use_cache = TRUE)
 
 (AI jobs in 2023 -  AI jobs in 2018) / AI jobs in 2018 -->
 
-<!-- DK: Notes must be more extensive, at least with regard to the issue with Bachelor's share. Self-contained. -->
+<!-- Notes must be more extensive, at least with regard to the issue with Bachelor's share. Self-contained. -->
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
-<!-- Remove kableExtra and usmap reference. Done.-->
+<!-- Should be possible to understand the paper by only reading the tables and figures (including their captions). Should also be possible to understand the paper without reading the table or figures. -->
 
-<!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308 worked on this, please double check if done precisely-->
+<!-- So, all captions are long, about a paragraph, and include discussions of the data, especially definitions of dependent variable, years, number of counties and so on. -->
 
-<!-- Cite published version of Babina, Tania. Don't include 103745. It is the published version, that number represents the sequential article identifier -->
 
-<!-- Delete garbage that you are not using, like .Rproj, apa.csl and so on. Seems like there may be other random junk.  Maybe data files go in a data/ directory. (Code will need to change, obviously.) Done -->
+<!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308. You have now made it (6702):1306–1308, which is better, but not correct. Should be (6702): 1306–1308-->
 
-<!-- Add to README some background. Where did you orginally replicate this from? When did you fork it? Where did you download stuff from? What cleaning did you do? About paragraph. Done  -->
+
+<!-- Should captions for all figures/tables be handled different, using fig.cap or some other trick? Investigate.  -->
 
 
 
@@ -152,7 +152,7 @@ where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county
 
 ## Methods
 
-This replication study was conducted using R [@r1996], a free and open-source statistical computing environment. Data manipulation and analysis utilized the tidyverse collection of packages [@tidyverse]. Regression models were estimated using the fixest package [@fixest], which provides fast and efficient fixed-effects estimation capabilities. Summary tables were generated using modelsummary [@modelsummary] and formatted with kableExtra [@kableExtra]. Spatial visualizations were created with the usmap package [@usmap], which provides convenient mapping functions for U.S. geographic data including proper handling of Alaska and Hawaii positioning.
+This replication study was conducted using R [@r1996], a free and open-source statistical computing environment. Data manipulation and analysis utilized the tidyverse collection of packages [@tidyverse]. Regression models were estimated using the fixest package [@fixest], which provides fast and efficient fixed-effects estimation capabilities. Summary tables were generated using modelsummary [@modelsummary].
 
 ### Reproduction of Original Results
 
