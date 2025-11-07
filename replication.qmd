@@ -343,7 +343,7 @@ tab <- gsub("lddddd", "ld{3.4}d{3.4}d{3.4}d{3.4}d{3.4}", tab, fixed = TRUE)
 cat(tab)
 ```
 
-**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are clustered at the county level. All coefficients successfully replicate the original results except for Bachelor's share, which shows a discrepancy with the published values.
+**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are clustered at the county level. All coefficients successfully replicate the original results.
 
 ```{r}
 #| label: tbl-table2
@@ -660,7 +660,7 @@ tab <- gsub("lddddd", "ld{2.4}d{2.4}d{2.4}d{2.4}d{2.4}", tab, fixed = TRUE)
 cat(tab)
 ```
 
-**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper, (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference.
+**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs in 2017. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper (such as a copy-paste error), (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference.
 
 ```{r}
 #| label: fig-map
