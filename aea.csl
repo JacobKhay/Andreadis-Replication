@@ -16,7 +16,7 @@
   </info>
   <macro name="author">
     <names variable="author">
-      <name font-weight="bold" form="long" initialize-with=".&#160;" name-as-sort-order="first" sort-separator=",&#160;" delimiter=",&#160;" delimiter-precedes-last="always" and="text"/>
+      <name font-weight="bold" form="long" initialize-with=". " name-as-sort-order="first" sort-separator=", " delimiter=", " delimiter-precedes-last="always" and=" and "/>
       <label form="short" prefix=" "/>
       <substitute>
         <names variable="editor"/>
@@ -163,12 +163,10 @@
       <key macro="year-date"/>
     </sort>
     <layout suffix=".">
-      <text macro="author"/>
-      <text value=".&#8239;"/>
-      <date variable="issued" suffix=".">
+      <text macro="author" suffix=". "/>
+      <date variable="issued" suffix=". ">
         <date-part name="year"/>
       </date>
-      <text value="&#8239;"/>
       <choose>
         <if type="bill book graphic legal_case legislation motion_picture song" match="any">
           <group prefix=" " delimiter=" ">
