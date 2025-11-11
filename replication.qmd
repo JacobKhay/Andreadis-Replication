@@ -85,13 +85,13 @@ options(tigris_use_cache = TRUE)
 
 <!-- Should be possible to understand the paper by only reading the tables and figures (including their captions). Should also be possible to understand the paper without reading the table or figures. -->
 
-<!-- So, all captions are long, about a paragraph, and include discussions of the data, especially definitions of dependent variable, years, number of counties and so on. -->
+<!-- So, all captions are long, about a paragraph, and include discussions of the data, especially definitions of dependent variable, years, number of counties and so on.  Yes, done.-->
 
 
 <!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308. You have now made it (6702):1306–1308, which is better, but not correct. Should be (6702): 1306–1308. Done. -->
 
 
-<!-- Should captions for all figures/tables be handled different, using fig.cap or some other trick? Investigate.  -->
+<!-- Should captions for all figures/tables be handled different, using fig.cap or some other trick? Investigate. Done -->
 
 
 
