@@ -85,15 +85,10 @@ options(tigris_use_cache = TRUE)
 
 <!-- Should be possible to understand the paper by only reading the tables and figures (including their captions). Should also be possible to understand the paper without reading the table or figures. -->
 
-<!-- So, all captions are long, about a paragraph, and include discussions of the data, especially definitions of dependent variable, years, number of counties and so on.  Yes, done.-->
 
+<!-- Where are the titles for the tables and the figures? -->
 
-<!-- Colons must be flush to journal numbers, or however they normally present things. Should not have a lot of spaces around a colon in the References. Example: Science384(6702) : 1306–1308. You have now made it (6702):1306–1308, which is better, but not correct. Should be (6702): 1306–1308. Done. -->
-
-
-<!-- Should captions for all figures/tables be handled different, using fig.cap or some other trick? Investigate. Done -->
-
-
+<!-- Same order (orange/blue or vice versa) in all charts. -->
 
 *JEL: J24, O33, R11*
 
@@ -152,7 +147,7 @@ where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county
 
 ## Methods
 
-This replication study was conducted using R [@r1996], a free and open-source statistical computing environment. Data manipulation and analysis utilized the tidyverse collection of packages [@tidyverse]. Regression models were estimated using the fixest package [@fixest], which provides fast and efficient fixed-effects estimation capabilities. Summary tables were generated using modelsummary [@modelsummary].
+We used R [@r1996], a free and open-source statistical computing environment, and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we used the fixest [@fixest] and modelsummary [@modelsummary] packages.
 
 ### Reproduction of Original Results
 
