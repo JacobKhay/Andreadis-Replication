@@ -204,7 +204,7 @@
             <text variable="container-title" font-style="italic" suffix=" "/>
             <text variable="volume"/>
             <text variable="issue" prefix="(" suffix=")"/>
-            <text variable="page" prefix=":"/>
+            <text variable="page" prefix=": "/>
           </group>
           <text macro="doi-url" suffix="."/>
         </else-if>

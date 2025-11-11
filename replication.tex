@@ -411,12 +411,7 @@ collection of packages (\citeproc{ref-tidyverse}{Wickham et al., 2019}).
 Regression models were estimated using the fixest package
 (\citeproc{ref-fixest}{Bergé, 2018}), which provides fast and efficient
 fixed-effects estimation capabilities. Summary tables were generated
-using modelsummary (\citeproc{ref-modelsummary}{Arel-Bundock, 2022}) and
-formatted with kableExtra (\citeproc{ref-kableExtra}{Zhu, 2024}).
-Spatial visualizations were created with the usmap package
-(\citeproc{ref-usmap}{Di Lorenzo, 2024}), which provides convenient
-mapping functions for U.S. geographic data including proper handling of
-Alaska and Hawaii positioning.
+using modelsummary (\citeproc{ref-modelsummary}{Arel-Bundock, 2022}).
 
 \subsection{Reproduction of Original
 Results}\label{reproduction-of-original-results}
@@ -431,10 +426,6 @@ share coefficient appears inconsistent with the published table, though
 all other variables replicate precisely.
 
 \begin{table}[H]
-
-\caption{\label{tbl-table1}Replication of Table 1 from Andreadis et
-al.~(2025) - The Correlates of the Share of Artificial Intelligence
-Jobs}
 
 \centering{
 
@@ -474,25 +465,21 @@ Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
 Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
 &  &  & (0.0137) & (0.0137) & (0.0132) \\
 Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
-Observations & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,627} \\
-R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988} & {\hspace{0.5em}0.69826} & {\hspace{0.5em}0.71262} \\
+Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
+R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
 \bottomrule
 \end{tblr}
 
 }
 
+\caption{\label{tbl-table1}\textbf{Notes:} The table reports the
+demographic, innovation, and industry determinants of the share of AI
+jobs. Standard errors are clustered at the county level. All
+coefficients successfully replicate the original results.}
+
 \end{table}%
 
-\textbf{Notes:} The table reports the demographic, innovation, and
-industry determinants of the share of AI jobs. Standard errors are
-clustered at the county level. All coefficients successfully replicate
-the original results.
-
 \begin{table}[H]
-
-\caption{\label{tbl-table2}Replication of Table 2 from Andreadis et
-al.~(2025) - The Correlates of the Percentage Point Change in the Share
-of AI Jobs}
 
 \centering{
 
@@ -516,57 +503,57 @@ column{1}={}{halign=l,},
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
 Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
-& (0.0250) &  &  & (0.0292) & (0.0308) \\
+& (0.0250) &  &  & (0.0292) & (0.0263) \\
 Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
 & (0.0382) &  &  & (0.0391) & (0.0442) \\
 Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
-& (0.0215) &  &  & (0.0237) & (0.0273) \\
+& (0.0215) &  &  & (0.0237) & (0.0352) \\
 Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
-&  & (0.0151) &  & (0.0163) & (0.0164) \\
+&  & (0.0151) &  & (0.0163) & (0.0184) \\
 Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
-&  &  & (0.0183) & (0.0219) & (0.0238) \\
+&  &  & (0.0183) & (0.0219) & (0.0198) \\
 ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
-&  &  & (0.0153) & (0.0170) & (0.0170) \\
+&  &  & (0.0153) & (0.0170) & (0.0182) \\
 Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
-&  &  & (0.0166) & (0.0181) & (0.0195) \\
+&  &  & (0.0166) & (0.0181) & (0.0203) \\
 Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
-&  &  & (0.0222) & (0.0233) & (0.0249) \\
+&  &  & (0.0222) & (0.0233) & (0.0271) \\
 Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
-Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,472} \\
-R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0800} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
 \bottomrule
 \end{tblr}
 
 }
 
+\caption{\label{tbl-table2}\textbf{Notes:} The table reports the
+demographic, innovation, and industry determinants of the share of AI
+jobs in 2017. Standard errors are clustered at the county level. The
+replication follows the exact data processing pipeline from the authors'
+provided code. All coefficients successfully replicate the original
+results except for Bachelor's share. The Bachelor's share discrepancy
+appears across all five model specifications, with our replicated
+coefficients systematically lower than the published values. This
+persistent discrepancy suggests either: (1) a difference in the
+underlying data file we received versus what was used in the published
+paper (such as a copy-paste error), (2) an undocumented data processing
+step in the original analysis, or (3) a potential error in the published
+table. The authors were contacted regarding this discrepancy but have
+not yet provided clarification on the source of the difference.}
+
 \end{table}%
 
-\textbf{Notes:} The table reports the demographic, innovation, and
-industry determinants of the share of AI jobs in 2017. Standard errors
-are clustered at the county level. The replication follows the exact
-data processing pipeline from the authors' provided code. All
-coefficients successfully replicate the original results except for
-Bachelor's share. The Bachelor's share discrepancy appears across all
-five model specifications, with our replicated coefficients
-systematically lower than the published values. This persistent
-discrepancy suggests either: (1) a difference in the underlying data
-file we received versus what was used in the published paper (such as a
-copy-paste error), (2) an undocumented data processing step in the
-original analysis, or (3) a potential error in the published table. The
-authors were contacted regarding this discrepancy but have not yet
-provided clarification on the source of the difference.
-
 \begin{figure}[H]
-
-\caption{\label{fig-map}Replication of Andreadis et al.~(2025) - Spatial
-heterogeneity in AI job share (Panel A, 2014--2023 average) and
-percentage-point change (Panel B, 2018--2023 with pooled years).}
 
 \centering{
 
 \pandocbounded{\includegraphics[keepaspectratio]{replication_files/figure-pdf/fig-map-1.pdf}}
 
 }
+
+\caption{\label{fig-map}Replication of Andreadis et al.~(2025) - Spatial
+heterogeneity in AI job share (Panel A, 2014--2023 average) and
+percentage-point change (Panel B, 2018--2023 with pooled years).}
 
 \end{figure}%
 
@@ -575,25 +562,19 @@ from Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) for
 constructing these spatial visualizations, using their provided data.csv
 file and following their documented mapping approach. However, our
 replication produced different results from the published maps:
-
-Connecticut Data Issue: Connecticut did not appear in our replicated
-maps because its data was coded with FIPS code 9999 (state-level) rather
-than individual county FIPS codes in the authors' data.csv file.
-Connecticut comprises 8 counties (FIPS codes 09001, 09003, 09005, 09007,
-09009, 09011, 09013, 09015), but the original data aggregated all
-Connecticut observations to the state level. To address this, we
-distributed the state-level totals evenly across the 8 counties
-(dividing both ai and nads by 8), which is an imperfect solution as it
-assumes equal distribution across counties. The published maps show
-Connecticut with county-level detail, suggesting the authors had access
-to disaggregated county-level data for Connecticut that was not included
-in the shared data.csv file. Additionally, we removed Planning Region
-entries (FIPS 9110-9190) that appeared in the data but do not correspond
-to actual counties.
-
-The partial reproduction confirms much of the technical reliability of
-the original analysis and establishes a foundation for the robustness
-extensions that follow.
+Connecticut did not appear in our replicated maps because its data was
+coded with FIPS code 9999 (state-level) rather than individual county
+FIPS codes in the authors' data.csv file. Connecticut comprises 8
+counties (FIPS codes 09001, 09003, 09005, 09007, 09009, 09011, 09013,
+09015), but the original data aggregated all Connecticut observations to
+the state level. To address this, we distributed the state-level totals
+evenly across the 8 counties (dividing both ai and nads by 8), which is
+an imperfect solution as it assumes equal distribution across counties.
+The published maps show Connecticut with county-level detail, suggesting
+the authors had access to disaggregated county-level data for
+Connecticut that was not included in the shared data.csv file.
+Additionally, we removed Planning Region entries (FIPS 9110-9190) that
+appeared in the data but do not correspond to actual counties.
 
 \section{Extension: Log-Population Weighting
 Analysis}\label{extension-log-population-weighting-analysis}
@@ -850,39 +831,39 @@ Working Paper. 32487. National Bureau of Economic Research DOI:
 \bibitem[\citeproctext]{ref-acemoglu2022}
 \textbf{Acemoglu, D.}, \textbf{D. Autor}, \textbf{J. Hazell}, \textbf{P.
 Restrepo}. 2022. {``Artificial intelligence and jobs: Evidence from
-online vacancies.''} \emph{Journal of Labor Economics}
-40(S1):S293--S340. DOI:
-\href{https://doi.org/10.1086/718327}{10.1086/718327}.
+online vacancies.''} \emph{Journal of Labor Economics} 40(S1):
+S293--S340. DOI: \href{https://doi.org/10.1086/718327}{10.1086/718327}.
 
 \bibitem[\citeproctext]{ref-acemoglu2019}
 \textbf{Acemoglu, D.}, \textbf{P. Restrepo}. 2019. {``Automation and new
 tasks: How technology displaces and reinstates labor.''} \emph{Journal
-of Economic Perspectives} 33(2):3--30. DOI:
+of Economic Perspectives} 33(2): 3--30. DOI:
 \href{https://doi.org/10.1257/jep.33.2.3}{10.1257/jep.33.2.3}.
 
 \bibitem[\citeproctext]{ref-andreadis2025}
 \textbf{Andreadis, L.}, \textbf{E. Kalotychou}, \textbf{M.
 Chatzikonstantinou}, \textbf{C. Louca}, \textbf{C. A. Makridis}. 2025.
 {``Local heterogeneity in artificial intelligence jobs over time and
-space.''} \emph{AEA Papers and Proceedings} 115:29--34. DOI:
+space.''} \emph{AEA Papers and Proceedings} 115: 29--34. DOI:
 \href{https://doi.org/10.1257/pandp.20251001}{10.1257/pandp.20251001}.
 
 \bibitem[\citeproctext]{ref-modelsummary}
 \textbf{Arel-Bundock, V.} 2022. {``{modelsummary}: Data and model
-summaries in {R}.''} \emph{Journal of Statistical Software}
-103(1):1--23. DOI:
+summaries in {R}.''} \emph{Journal of Statistical Software} 103(1):
+1--23. DOI:
 \href{https://doi.org/10.18637/jss.v103.i01}{10.18637/jss.v103.i01}.
 
 \bibitem[\citeproctext]{ref-autor2015}
 \textbf{Autor, D. H.} 2015. {``Why are there still so many jobs? The
 history and future of workplace automation.''} \emph{Journal of Economic
-Perspectives} 29(3):3--30. DOI:
+Perspectives} 29(3): 3--30. DOI:
 \href{https://doi.org/10.1257/jep.29.3.3}{10.1257/jep.29.3.3}.
 
 \bibitem[\citeproctext]{ref-babina2024}
 \textbf{Babina, T.}, \textbf{A. Fedyk}, \textbf{A. He}, \textbf{J.
 Hodson}. 2024. {``Artificial intelligence, firm growth, and product
-innovation.''} \emph{Journal of Financial Economics} 151(C):103745. DOI:
+innovation.''} \emph{Journal of Financial Economics} 151(C): 103745.
+DOI:
 \href{https://doi.org/10.1016/j.jfineco.2023.103745}{10.1016/j.jfineco.2023.103745}.
 
 \bibitem[\citeproctext]{ref-beckett2023}
@@ -897,14 +878,14 @@ models with multiple fixed-effects: The {R} package {FENmlm}.''}
 \bibitem[\citeproctext]{ref-bogin2019}
 \textbf{Bogin, A.}, \textbf{W. Doerner}, \textbf{W. Larson}. 2019.
 {``Local house price dynamics: New indices and stylized facts.''}
-\emph{Real Estate Economics} 47(2):365--398. DOI:
+\emph{Real Estate Economics} 47(2): 365--398. DOI:
 \href{https://doi.org/10.1111/1540-6229.12233}{10.1111/1540-6229.12233}.
 
 \bibitem[\citeproctext]{ref-brynjolfsson2021}
 \textbf{Brynjolfsson, E.}, \textbf{D. Rock}, \textbf{C. Syverson}. 2021.
 {``The productivity {J}-curve: How intangibles complement
 general-purpose technologies.''} \emph{American Economic Journal:
-Macroeconomics} 13(1):333--372. DOI:
+Macroeconomics} 13(1): 333--372. DOI:
 \href{https://doi.org/10.1257/mac.20180386}{10.1257/mac.20180386}.
 
 \bibitem[\citeproctext]{ref-usmap}
@@ -914,26 +895,26 @@ hawaii} \url{https://CRAN.R-project.org/package=usmap}.
 \bibitem[\citeproctext]{ref-eloundou2024}
 \textbf{Eloundou, T.}, \textbf{S. Manning}, \textbf{P. Mishkin},
 \textbf{D. Rock}. 2024. {``{GPTs} are {GPTs}: Labor market impact
-potential of {LLMs}.''} \emph{Science} 384(6702):1306--1308. DOI:
+potential of {LLMs}.''} \emph{Science} 384(6702): 1306--1308. DOI:
 \href{https://doi.org/10.1126/science.adj0998}{10.1126/science.adj0998}.
 
 \bibitem[\citeproctext]{ref-giczy2022}
 \textbf{Giczy, A. V.}, \textbf{N. A. Pairolero}, \textbf{A. A. Toole}.
 2022. {``Identifying artificial intelligence ({AI}) invention: A novel
-{AI} patent dataset.''} \emph{The Journal of Technology Transfer}
-47(2):476--505. DOI:
+{AI} patent dataset.''} \emph{The Journal of Technology Transfer} 47(2):
+476--505. DOI:
 \href{https://doi.org/10.1007/s10961-021-09900-2}{10.1007/s10961-021-09900-2}.
 
 \bibitem[\citeproctext]{ref-holland1986}
 \textbf{Holland, P. W.} 1986. {``Statistics and causal inference.''}
-\emph{Journal of the American Statistical Association} 81(396):945--960.
-DOI:
+\emph{Journal of the American Statistical Association} 81(396):
+945--960. DOI:
 \href{https://doi.org/10.1080/01621459.1986.10478354}{10.1080/01621459.1986.10478354}.
 
 \bibitem[\citeproctext]{ref-kline2014}
 \textbf{Kline, P.}, \textbf{E. Moretti}. 2014. {``People, places, and
 public policy: Some simple welfare economics of local economic
-development programs.''} \emph{Annual Review of Economics} 6:629--662.
+development programs.''} \emph{Annual Review of Economics} 6: 629--662.
 DOI:
 \href{https://doi.org/10.1146/annurev-economics-080213-041024}{10.1146/annurev-economics-080213-041024}.
 
@@ -965,7 +946,7 @@ unemployment statistics ({LAUS}).''} \url{https://www.bls.gov/lau/}.
 \textbf{Wickham, H.}, \textbf{M. Averick}, \textbf{J. Bryan}, \textbf{W.
 Chang}, \textbf{L. D. McGowan}, \textbf{R. François}, \textbf{G.
 Grolemund}, et al. 2019. {``Welcome to the {Tidyverse}.''} \emph{Journal
-of Open Source Software} 4(43):1686. DOI:
+of Open Source Software} 4(43): 1686. DOI:
 \href{https://doi.org/10.21105/joss.01686}{10.21105/joss.01686}.
 
 \bibitem[\citeproctext]{ref-kableExtra}
