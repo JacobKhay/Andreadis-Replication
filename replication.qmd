@@ -79,14 +79,14 @@ options(tigris_use_cache = TRUE)
 
 (AI jobs in 2023 -  AI jobs in 2018) / AI jobs in 2018 -->
 
-<!-- Notes must be more extensive, at least with regard to the issue with Bachelor's share. Self-contained. -->
+<!-- Notes must be more extensive, at least with regard to the issue with Bachelor's share. Self-contained. Done-->
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
-<!-- Should be possible to understand the paper by only reading the tables and figures (including their captions). Should also be possible to understand the paper without reading the table or figures. -->
+<!-- Should be possible to understand the paper by only reading the tables and figures (including their captions). Should also be possible to understand the paper without reading the table or figures. Done-->
 
 
-<!-- Where are the titles for the tables and the figures? -->
+<!-- Where are the titles for the tables and the figures? Fixed-->
 
 <!-- Same order (orange/blue or vice versa) in all charts. -->
 
@@ -158,9 +158,8 @@ We largely reproduced the main findings from Tables 1 and 2 of @andreadis2025. T
 #| echo: false
 #| warning: false
 #| message: false
-#| results: asis
 #| tbl-cap: "Replication of Table 1 from Andreadis et al. (2025) - The Correlates of the Share of Artificial Intelligence Jobs"
-#| tbl-cap-location: bottom
+#| tbl-cap-location: top
 #| tbl-pos: "H"
 
 # Load and prepare data EXACTLY as in original
@@ -313,8 +312,8 @@ labels <- c(
   "TurnOvrS" = "Turnover rate"
 )
 
-# Create the table with modelsummary using plain "d" for decimal alignment
-tab <- modelsummary(
+# Create the table with modelsummary
+modelsummary(
   list(
     "(1)" = est_demog_no,
     "(2)" = est_innovation_no,
@@ -329,15 +328,8 @@ tab <- modelsummary(
   escape = FALSE,
   statistic = "({std.error})",
   fmt = fmt_decimal(4),
-  align = "lddddd",
-  output = "latex"
+  notes = "This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year. The sample includes approximately 3,100 U.S. counties observed annually over this ten-year period, yielding roughly 31,000 county-year observations. AI job postings are identified from Lightcast (formerly Burning Glass Technologies) online job posting data using occupation codes and skill requirements associated with artificial intelligence, machine learning, data science, and related technical competencies. All coefficients successfully replicate the original results."
 )
-
-# Manually replace column alignment to use dcolumn format
-tab <- gsub("lddddd", "ld{3.4}d{3.4}d{3.4}d{3.4}d{3.4}", tab, fixed = TRUE)
-
-cat(tab)
-cat("\n\n**Notes:** This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year. The sample includes approximately 3,100 U.S. counties observed annually over this ten-year period, yielding roughly 31,000 county-year observations. AI job postings are identified from Lightcast (formerly Burning Glass Technologies) online job posting data using occupation codes and skill requirements associated with artificial intelligence, machine learning, data science, and related technical competencies. All coefficients successfully replicate the original results.")
 ```
 
 ```{r}
@@ -345,9 +337,8 @@ cat("\n\n**Notes:** This table examines the demographic, innovation, and industr
 #| echo: false
 #| warning: false
 #| message: false
-#| results: asis
 #| tbl-cap: "Replication of Table 2 from Andreadis et al. (2025) - The Correlates of the Percentage Point Change in the Share of AI Jobs"
-#| tbl-cap-location: bottom
+#| tbl-cap-location: top
 #| tbl-pos: "H"
 
 # Follow EXACT original code structure
@@ -630,8 +621,8 @@ labels <- c(
   "TurnOvrS14" = "Turnover Rate"
 )
 
-# Create the table with modelsummary using plain "d" for decimal alignment
-tab <- modelsummary(
+# Create the table with modelsummary
+modelsummary(
   list(
     "(1)" = est_demog_no,
     "(2)" = est_innovation_no,
@@ -646,15 +637,8 @@ tab <- modelsummary(
   escape = FALSE,
   statistic = "({std.error})",
   fmt = 4,
-  align = "lddddd",
-  output = "latex"
+  notes = "The table reports the demographic, innovation, and industry determinants of the share of AI jobs in 2017. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper (such as a copy-paste error), (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference."
 )
-
-# Manually replace column alignment to use dcolumn format
-tab <- gsub("lddddd", "ld{2.4}d{2.4}d{2.4}d{2.4}d{2.4}", tab, fixed = TRUE)
-
-cat(tab)
-cat("\n\n**Notes:** The table reports the demographic, innovation, and industry determinants of the share of AI jobs in 2017. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper (such as a copy-paste error), (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference.")
 ```
 
 ```{r}
@@ -663,7 +647,7 @@ cat("\n\n**Notes:** The table reports the demographic, innovation, and industry 
 #| message: false
 #| warning: false
 #| fig-cap: "Replication of Andreadis et al. (2025) - Spatial heterogeneity in AI job share (Panel A, 2014–2023 average) and percentage-point change (Panel B, 2018–2023 with pooled years)."
-#| fig-cap-location: bottom
+#| fig-cap-location: top
 #| fig-pos: "H"
 #| fig-width: 18
 #| fig-height: 9
@@ -898,7 +882,7 @@ final_plot <- (p1 | p2) +
 final_plot
 ```
 
-**Notes:** We employed the identical methodology from @andreadis2025 for constructing these spatial visualizations, using their provided data.csv file and following their documented mapping approach. However, our replication produced different results from the published maps: Connecticut did not appear in our replicated maps because its data was coded with FIPS code 9999 (state-level) rather than individual county FIPS codes in the authors' data.csv file. Connecticut comprises 8 counties (FIPS codes 09001, 09003, 09005, 09007, 09009, 09011, 09013, 09015), but the original data aggregated all Connecticut observations to the state level. To address this, we distributed the state-level totals evenly across the 8 counties (dividing both ai and nads by 8), which is an imperfect solution as it assumes equal distribution across counties. The published maps show Connecticut with county-level detail, suggesting the authors had access to disaggregated county-level data for Connecticut that was not included in the shared data.csv file. Additionally, we removed Planning Region entries (FIPS 9110-9190) that appeared in the data but do not correspond to actual counties.
+We employed the identical methodology from @andreadis2025 for constructing these spatial visualizations, using their provided data.csv file and following their documented mapping approach. However, our replication produced different results from the published maps: Connecticut did not appear in our replicated maps because its data was coded with FIPS code 9999 (state-level) rather than individual county FIPS codes in the authors' data.csv file. Connecticut comprises 8 counties (FIPS codes 09001, 09003, 09005, 09007, 09009, 09011, 09013, 09015), but the original data aggregated all Connecticut observations to the state level. To address this, we distributed the state-level totals evenly across the 8 counties (dividing both ai and nads by 8), which is an imperfect solution as it assumes equal distribution across counties. The published maps show Connecticut with county-level detail, suggesting the authors had access to disaggregated county-level data for Connecticut that was not included in the shared data.csv file. Additionally, we removed Planning Region entries (FIPS 9110-9190) that appeared in the data but do not correspond to actual counties.
 
 ## Extension: Log-Population Weighting Analysis
 
