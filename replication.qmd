@@ -85,11 +85,11 @@ options(tigris_use_cache = TRUE)
 
 <!-- The written portion of the paper must report all the most important aspects of the table, without assuming that the reader has looked at the table or the notes to the table. -->
 
-<!-- Line up columns in table. Numbers with minus signs are off by one. -->
+<!-- Line up columns in table. Numbers with minus signs are off by one. Fixed-->
 
-<!-- All write up in terms of comparing two groups, e.g., counties with average home price compared with counties with home price growth one standard deviation higher. The second group of counties has AI job percentage with is  1.5% (?) lower. -->
+<!-- All write up in terms of comparing two groups, e.g., counties with average home price compared with counties with home price growth one standard deviation higher. The second group of counties has AI job percentage with is  1.5% (?) lower. Put in section 3-->
 
-<!-- Does the coefficient of Bachelors Share in the first regression mean 19% higher or 0.19% higher, when comparing counties that differ by one standard deviation in Bachelor's Share. -->
+<!-- Does the coefficient of Bachelors Share in the first regression mean 19% higher or 0.19% higher, when comparing counties that differ by one standard deviation in Bachelor's Share. 0.19% higher, wrote that in the notes and in section 3.-->
 
 
 *JEL: J24, O33, R11*
@@ -142,10 +142,10 @@ $$
 All explanatory variables are lagged by one year to address potential endogeneity concerns. The baseline specification relates the dependent variable to these covariates using the following model:
 
 $$
-AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} \tag{2}
+AIShare_{ct} = \alpha + \beta_1 Education_{c,t-1} + \beta_2 Innovation_{c,t-1} + \beta_3 Industry_{c,t-1} + \gamma X_{c,t-1} + \epsilon_{ct} \tag{2}
 $$
 
-where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county $c$ at year $t$, and $X_{ct}$ includes demographic, labor market, and housing controls.
+where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county $c$ at year $t$, and $X_{c,t-1}$ includes lagged demographic, labor market, and housing controls.
 
 ## Methods
 
@@ -154,6 +154,12 @@ We used R [@r1996], a free and open-source statistical computing environment, an
 ### Reproduction of Original Results
 
 We largely reproduced the main findings from Tables 1 and 2 of AKCLM. The replication confirms most of the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. Nearly all coefficients, standard errors, and significance levels match the original results within rounding error. However, one notable discrepancy emerged: the Bachelor's share coefficient appears inconsistent with the published table, though all other variables replicate precisely.
+
+The regression results in Tables 1 and 2 reveal important patterns in both the levels and growth of AI employment across U.S. counties. All coefficients represent percentage point changes in AI job share for a one standard deviation increase in the explanatory variable, since all independent variables are standardized as z-scores.
+
+**Table 1: Levels of AI Job Share** — Between 2014 and 2022, AI-related job postings surged from 0.5 percent to 2.05 percent of all job postings nationally. Counties with higher bachelor's degree attainment show substantially higher AI job intensity: a one standard deviation increase in bachelor's share is associated with a 0.181 percentage point increase in AI job share (column 4), which represents approximately 40 percent of the sample mean AI intensity. Labor market tightness emerges as the strongest predictor, with a one standard deviation increase associated with a 0.277 percentage point increase in AI share, equivalent to roughly 60 percent of the mean AI intensity across counties. Innovation capacity also matters significantly: counties with one standard deviation higher patents per employee exhibit 0.029 percentage points higher AI job shares, while a one standard deviation increase in STEM degree share corresponds to 0.048 percentage points higher AI intensity. Manufacturing-intensive counties face challenges in AI adoption, with a one standard deviation increase in manufacturing intensity associated with a 0.033 percentage point decrease in AI share. Conversely, ICT sector intensity shows a positive association of 0.026 percentage points per standard deviation. The R-squared values range from 0.680 to 0.716, indicating that these demographic, innovation, and industry factors collectively explain approximately 68-72 percent of the variation in county-level AI job intensity after accounting for fixed effects.
+
+**Table 2: Growth in AI Job Share** — During 2018-2023, the median county experienced a modest 0.088 percentage point increase in AI job share, though with substantial heterogeneity: the tenth percentile saw a decline of 0.29 percentage points while the ninetieth percentile experienced growth of 0.93 percentage points. The fastest-growing counties include Maries, Missouri (12.35 percentage point increase), Hughes, South Dakota (10.43 points), and Osage, Michigan (9.82 points), reflecting a shift toward suburban and remote-friendly regions following the COVID-19 pandemic. STEM degree share emerges as the strongest predictor of AI job growth: a one standard deviation increase in 2017 STEM share is associated with a 0.054 percentage point increase in AI job share by 2022-2023 (column 4), which represents approximately 61 percent of the median growth rate. Labor market tightness also plays a critical role, with a one standard deviation increase in 2017 tightness corresponding to a 0.073 percentage point increase in AI share, equivalent to 83 percent of the median growth. Counties with higher turnover rates in 2017 experienced slower AI job growth, with a one standard deviation increase in turnover associated with a 0.042 percentage point smaller increase in AI share. Manufacturing intensity shows a negative but statistically insignificant relationship in the full specification (column 4), while ICT sector intensity exhibits a positive but marginally significant effect. The R-squared values are substantially lower than in Table 1 (ranging from 0.016 to 0.082), indicating that initial county characteristics explain a smaller share of variation in AI job growth compared to AI job levels, suggesting that growth dynamics are influenced by additional factors not captured in the baseline year.
 
 ```{r}
 #| label: tbl-table1
@@ -314,7 +320,7 @@ labels <- c(
   "TurnOvrS" = "Turnover rate"
 )
 
-# Create the table with modelsummary
+# Create the table with modelsummary - use d for decimal alignment
 modelsummary(
   list(
     "(1)" = est_demog_no,
@@ -330,7 +336,8 @@ modelsummary(
   escape = FALSE,
   statistic = "({std.error})",
   fmt = fmt_decimal(4),
-  notes = "This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year. The sample includes approximately 3,100 U.S. counties observed annually over this ten-year period, yielding roughly 31,000 county-year observations. AI job postings are identified from Lightcast (formerly Burning Glass Technologies) online job posting data using occupation codes and skill requirements associated with artificial intelligence, machine learning, data science, and related technical competencies. We successfully replicated all coefficients and standard errors from the original results."
+  align = "lddddd",
+  notes = "This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year, multiplied by 100 to express in percentage terms. All explanatory variables are standardized as z-scores to ensure comparability across predictors. The sample comprises 24,645 county-year observations covering approximately 3,100 U.S. counties annually over the ten-year period. All coefficients represent percentage point changes in AI job share for a one standard deviation increase in the explanatory variable. Models are estimated using ordinary least squares with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year. AI job postings are identified from Lightcast data using skills and keywords associated with artificial intelligence. We successfully replicated all coefficients and standard errors from the original results."
 )
 ```
 
@@ -623,7 +630,7 @@ labels <- c(
   "TurnOvrS14" = "Turnover Rate"
 )
 
-# Create the table with modelsummary
+# Create the table with modelsummary - use d for decimal alignment
 modelsummary(
   list(
     "(1)" = est_demog_no,
@@ -639,7 +646,8 @@ modelsummary(
   escape = FALSE,
   statistic = "({std.error})",
   fmt = 4,
-  notes = "The table reports the demographic, innovation, and industry determinants of the share of AI jobs in 2017. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. The authors were contacted regarding this discrepancy but did not reply."
+  align = "lddddd",
+  notes = "This table examines the demographic, innovation, and industry determinants of the percentage point change in AI job share between two pooled periods: 2017-2018 and 2022-2023. The dependent variable measures the change in AI intensity (multiplied by 100 to express in percentage points), capturing dynamic shifts rather than static levels. All explanatory variables are measured in 2017 (before the growth period) and standardized as z-scores. The sample includes 2,473 counties with sufficient data across both periods. All coefficients represent percentage point changes in the growth of AI job share for a one standard deviation increase in the 2017 explanatory variable. Models are estimated using ordinary least squares with no fixed effects (columns 1-4) or state fixed effects (column 5). Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. We were unable to fully replicate the Bachelor's share coefficients across all five model specifications. The Bachelor's share discrepancy appears systematically across models, with our replicated coefficients differing from the published values. All other coefficients successfully replicate the original results. The authors were contacted regarding this discrepancy but did not respond."
 )
 ```
 

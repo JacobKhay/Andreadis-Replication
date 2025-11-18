@@ -274,15 +274,15 @@ https://github.com/JacobKhay/Andreadis-Replication.
 \addcontentsline{toc}{section}{Abstract}
 
 We partially replicate Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) on the correlation between the
-level and growth of artificial intelligence employment, on one hand, and
-a collection of factors involving education, innovation, and industry
-across U.S. counties from 2014 to 2023. We successfully reproduce some
-of their results and extend the analysis by using log-population weights
-to assess robustness. The core associations persist, though almost all
-magnitudes shrink. We also highlight unsupported causal claims in
-Andreadis et al. (\citeproc{ref-andreadis2025}{2025}), given its
-observational design.
+(\citeproc{ref-andreadis2025}{2025}), henceforth, AKCLM, on the
+correlation between the level and growth of artificial intelligence
+employment, on one hand, and a collection of factors involving
+education, innovation, and industry across U.S. counties from 2014 to
+2023. We successfully reproduce some of their results and extend the
+analysis by using log-population weights to assess robustness. The core
+associations persist, though almost all magnitudes shrink. We also
+critique unsupported, given its observational design, causal claims made
+by AKCLM.
 
 Declaration: There are no financial conflicts of interest to share.
 
@@ -320,13 +320,13 @@ industry factors by the composition of employment across sectors.
 Together, these variables represent structural characteristics that
 might condition whether a region becomes a hub for AI-related work.
 
-Andreadis et al. (\citeproc{ref-andreadis2025}{2025}) find that AI
-employment is strongly correlated with higher educational attainment,
-more innovation activity, and certain industry profiles. These
-associations are robust across specifications, suggesting that counties
-with strong human capital, innovative capacity, and aligned industries
-are more likely to attract AI jobs. The results highlight structural
-divides in access to AI employment opportunities across the country.
+AKCLM find that AI employment is strongly correlated with higher
+educational attainment, more innovation activity, and certain industry
+profiles. These associations are robust across specifications,
+suggesting that counties with strong human capital, innovative capacity,
+and aligned industries are more likely to attract AI jobs. The results
+highlight structural divides in access to AI employment opportunities
+across the country.
 
 We reproduce these results and then extend the analysis by applying
 log-population weights. This alternative weighting scheme reduces the
@@ -334,14 +334,14 @@ influence of the largest counties while still reflecting the relative
 size of local labor markets. Under this adjustment, the core
 relationships persist but the estimated magnitudes generally shrink.
 
-Finally, we note that some of the causal interpretations in Andreadis et
-al. (\citeproc{ref-andreadis2025}{2025}) are not supported by the
-observational nature of the data (\citeproc{ref-holland1986}{Holland,
-1986}). While the correlations are informative and highlight important
-regional patterns, they do not establish that education, innovation, or
-industry factors directly cause higher AI employment. Our replication
-underscores the value of the evidence while also emphasizing the limits
-of what can be inferred from the design.
+Finally, we note that AKCLM's causal interpretations are not supported
+by the observational nature of the their data
+(\citeproc{ref-holland1986}{Holland, 1986}). While the correlations are
+informative and highlight important regional patterns, they do not
+establish that education, innovation, or industry factors directly cause
+higher AI employment. Our replication underscores the value of the
+evidence while also emphasizing the limits of what can be inferred from
+the design.
 
 \section{Data}\label{data}
 
@@ -395,12 +395,12 @@ endogeneity concerns. The baseline specification relates the dependent
 variable to these covariates using the following model:
 
 \[
-AIShare_{ct} = \alpha + \beta_1 Education_{ct} + \beta_2 Innovation_{ct} + \beta_3 Industry_{ct} + \gamma X_{ct} + \epsilon_{ct} \tag{2}
+AIShare_{ct} = \alpha + \beta_1 Education_{c,t-1} + \beta_2 Innovation_{c,t-1} + \beta_3 Industry_{c,t-1} + \gamma X_{c,t-1} + \epsilon_{ct} \tag{2}
 \]
 
 where \(AIShare_{ct}\) denotes the proportion of AI-related job postings
-in county \(c\) at year \(t\), and \(X_{ct}\) includes demographic,
-labor market, and housing controls.
+in county \(c\) at year \(t\), and \(X_{c,t-1}\) includes lagged
+demographic, labor market, and housing controls.
 
 \section{Methods}\label{methods}
 
@@ -414,14 +414,71 @@ To estimate and display regression models, we used the fixest
 \subsection{Reproduction of Original
 Results}\label{reproduction-of-original-results}
 
-We largely reproduced the main findings from Tables 1 and 2 of Andreadis
-et al. (\citeproc{ref-andreadis2025}{2025}). The replication confirms
-most of the authors' key empirical findings regarding the correlates of
-AI employment across U.S. counties. Nearly all coefficients, standard
-errors, and significance levels match the original results within
-rounding error. However, one notable discrepancy emerged: the Bachelor's
-share coefficient appears inconsistent with the published table, though
-all other variables replicate precisely.
+We largely reproduced the main findings from Tables 1 and 2 of AKCLM.
+The replication confirms most of the authors' key empirical findings
+regarding the correlates of AI employment across U.S. counties. Nearly
+all coefficients, standard errors, and significance levels match the
+original results within rounding error. However, one notable discrepancy
+emerged: the Bachelor's share coefficient appears inconsistent with the
+published table, though all other variables replicate precisely.
+
+The regression results in Tables 1 and 2 reveal important patterns in
+both the levels and growth of AI employment across U.S. counties. All
+coefficients represent percentage point changes in AI job share for a
+one standard deviation increase in the explanatory variable, since all
+independent variables are standardized as z-scores.
+
+\textbf{Table 1: Levels of AI Job Share} --- Between 2014 and 2022,
+AI-related job postings surged from 0.5 percent to 2.05 percent of all
+job postings nationally. Counties with higher bachelor's degree
+attainment show substantially higher AI job intensity: a one standard
+deviation increase in bachelor's share is associated with a 0.181
+percentage point increase in AI job share (column 4), which represents
+approximately 40 percent of the sample mean AI intensity. Labor market
+tightness emerges as the strongest predictor, with a one standard
+deviation increase associated with a 0.277 percentage point increase in
+AI share, equivalent to roughly 60 percent of the mean AI intensity
+across counties. Innovation capacity also matters significantly:
+counties with one standard deviation higher patents per employee exhibit
+0.029 percentage points higher AI job shares, while a one standard
+deviation increase in STEM degree share corresponds to 0.048 percentage
+points higher AI intensity. Manufacturing-intensive counties face
+challenges in AI adoption, with a one standard deviation increase in
+manufacturing intensity associated with a 0.033 percentage point
+decrease in AI share. Conversely, ICT sector intensity shows a positive
+association of 0.026 percentage points per standard deviation. The
+R-squared values range from 0.680 to 0.716, indicating that these
+demographic, innovation, and industry factors collectively explain
+approximately 68-72 percent of the variation in county-level AI job
+intensity after accounting for fixed effects.
+
+\textbf{Table 2: Growth in AI Job Share} --- During 2018-2023, the
+median county experienced a modest 0.088 percentage point increase in AI
+job share, though with substantial heterogeneity: the tenth percentile
+saw a decline of 0.29 percentage points while the ninetieth percentile
+experienced growth of 0.93 percentage points. The fastest-growing
+counties include Maries, Missouri (12.35 percentage point increase),
+Hughes, South Dakota (10.43 points), and Osage, Michigan (9.82 points),
+reflecting a shift toward suburban and remote-friendly regions following
+the COVID-19 pandemic. STEM degree share emerges as the strongest
+predictor of AI job growth: a one standard deviation increase in 2017
+STEM share is associated with a 0.054 percentage point increase in AI
+job share by 2022-2023 (column 4), which represents approximately 61
+percent of the median growth rate. Labor market tightness also plays a
+critical role, with a one standard deviation increase in 2017 tightness
+corresponding to a 0.073 percentage point increase in AI share,
+equivalent to 83 percent of the median growth. Counties with higher
+turnover rates in 2017 experienced slower AI job growth, with a one
+standard deviation increase in turnover associated with a 0.042
+percentage point smaller increase in AI share. Manufacturing intensity
+shows a negative but statistically insignificant relationship in the
+full specification (column 4), while ICT sector intensity exhibits a
+positive but marginally significant effect. The R-squared values are
+substantially lower than in Table 1 (ranging from 0.016 to 0.082),
+indicating that initial county characteristics explain a smaller share
+of variation in AI job growth compared to AI job levels, suggesting that
+growth dynamics are influenced by additional factors not captured in the
+baseline year.
 
 \begin{table}[H]
 
@@ -434,34 +491,43 @@ Jobs}
 \centering
 \begin{talltblr}[         %% tabularray outer open
 entry=none,label=none,
-note{}={This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year. The sample includes approximately 3,100 U.S. counties observed annually over this ten-year period, yielding roughly 31,000 county-year observations. AI job postings are identified from Lightcast (formerly Burning Glass Technologies) online job posting data using occupation codes and skill requirements associated with artificial intelligence, machine learning, data science, and related technical competencies. All coefficients successfully replicate the original results.},
+note{}={This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year, multiplied by 100 to express in percentage terms. All explanatory variables are standardized as z-scores to ensure comparability across predictors. The sample comprises 24,645 county-year observations covering approximately 3,100 U.S. counties annually over the ten-year period. All coefficients represent percentage point changes in AI job share for a one standard deviation increase in the explanatory variable. Models are estimated using ordinary least squares with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year. AI job postings are identified from Lightcast data using skills and keywords associated with artificial intelligence. We successfully replicated all coefficients and standard errors from the original results.},
 ]                     %% tabularray outer close
 {                     %% tabularray inner open
 colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
-column{2-6}={}{halign=c,},
+column{2}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{2}={guard,halign=c,},
+column{3}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{3}={guard,halign=c,},
+column{4}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{4}={guard,halign=c,},
+column{5}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{5}={guard,halign=c,},
+column{6}={si={table-format=-1.6,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{6}={guard,halign=c,},
 column{1}={}{halign=l,},
 }                     %% tabularray inner close
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
-Bachelor's share & \num{0.1906} &  &  & \num{0.1817} & \num{0.1035} \\
-& (\num{0.0513}) &  &  & (\num{0.0505}) & (\num{0.0459}) \\
-House price growth & \num{-0.0144} &  &  & \num{-0.0142} & \num{-0.0156} \\
-& (\num{0.0080}) &  &  & (\num{0.0079}) & (\num{0.0074}) \\
-Labor tightness & \num{0.2780} &  &  & \num{0.2765} & \num{0.3156} \\
-& (\num{0.0583}) &  &  & (\num{0.0585}) & (\num{0.0643}) \\
-Patents per employee &  & \num{0.0232} &  & \num{0.0295} & \num{0.0312} \\
-&  & (\num{0.0091}) &  & (\num{0.0113}) & (\num{0.0138}) \\
-STEM degrees share &  & \num{0.0686} &  & \num{0.0475} & \num{0.0375} \\
-&  & (\num{0.0238}) &  & (\num{0.0205}) & (\num{0.0184}) \\
-ICT sector intensity &  &  & \num{0.0121} & \num{0.0258} & \num{0.0280} \\
-&  &  & (\num{0.0144}) & (\num{0.0135}) & (\num{0.0136}) \\
-Manufacturing &  &  & \num{-0.0630} & \num{-0.0333} & \num{-0.0247} \\
-&  &  & (\num{0.0113}) & (\num{0.0108}) & (\num{0.0111}) \\
-Turnover rate &  &  & \num{0.0345} & \num{0.0188} & \num{0.0154} \\
-&  &  & (\num{0.0137}) & (\num{0.0137}) & (\num{0.0132}) \\
+Bachelor's share & 0.1906 &  &  & 0.1817 & 0.1035 \\
+& (0.0513) &  &  & (0.0505) & (0.0459) \\
+House price growth & -0.0144 &  &  & -0.0142 & -0.0156 \\
+& (0.0080) &  &  & (0.0079) & (0.0074) \\
+Labor tightness & 0.2780 &  &  & 0.2765 & 0.3156 \\
+& (0.0583) &  &  & (0.0585) & (0.0643) \\
+Patents per employee &  & 0.0232 &  & 0.0295 & 0.0312 \\
+&  & (0.0091) &  & (0.0113) & (0.0138) \\
+STEM degrees share &  & 0.0686 &  & 0.0475 & 0.0375 \\
+&  & (0.0238) &  & (0.0205) & (0.0184) \\
+ICT sector intensity &  &  & 0.0121 & 0.0258 & 0.0280 \\
+&  &  & (0.0144) & (0.0135) & (0.0136) \\
+Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
+&  &  & (0.0113) & (0.0108) & (0.0111) \\
+Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
+&  &  & (0.0137) & (0.0137) & (0.0132) \\
 Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
-Observations & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,627} \\
-R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988} & {\hspace{0.5em}0.69826} & {\hspace{0.5em}0.71262} \\
+Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
+R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
 \bottomrule
 \end{talltblr}
 
@@ -480,34 +546,43 @@ of AI Jobs}
 \centering
 \begin{talltblr}[         %% tabularray outer open
 entry=none,label=none,
-note{}={The table reports the demographic, innovation, and industry determinants of the share of AI jobs in 2017. Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. All coefficients successfully replicate the original results except for Bachelor's share. The Bachelor's share discrepancy appears across all five model specifications, with our replicated coefficients systematically lower than the published values. This persistent discrepancy suggests either: (1) a difference in the underlying data file we received versus what was used in the published paper (such as a copy-paste error), (2) an undocumented data processing step in the original analysis, or (3) a potential error in the published table. The authors were contacted regarding this discrepancy but have not yet provided clarification on the source of the difference.},
+note{}={This table examines the demographic, innovation, and industry determinants of the percentage point change in AI job share between two pooled periods: 2017-2018 and 2022-2023. The dependent variable measures the change in AI intensity (multiplied by 100 to express in percentage points), capturing dynamic shifts rather than static levels. All explanatory variables are measured in 2017 (before the growth period) and standardized as z-scores. The sample includes 2,473 counties with sufficient data across both periods. All coefficients represent percentage point changes in the growth of AI job share for a one standard deviation increase in the 2017 explanatory variable. Models are estimated using ordinary least squares with no fixed effects (columns 1-4) or state fixed effects (column 5). Standard errors are clustered at the county level. The replication follows the exact data processing pipeline from the authors' provided code. We were unable to fully replicate the Bachelor's share coefficients across all five model specifications. The Bachelor's share discrepancy appears systematically across models, with our replicated coefficients differing from the published values. All other coefficients successfully replicate the original results. The authors were contacted regarding this discrepancy but did not respond.},
 ]                     %% tabularray outer close
 {                     %% tabularray inner open
 colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
-column{2-6}={}{halign=c,},
+column{2}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{2}={guard,halign=c,},
+column{3}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{3}={guard,halign=c,},
+column{4}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{4}={guard,halign=c,},
+column{5}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{5}={guard,halign=c,},
+column{6}={si={table-format=-1.5,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\*+()}},},
+cell{1}{6}={guard,halign=c,},
 column{1}={}{halign=l,},
 }                     %% tabularray inner close
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
-Bachelors Share & \num{0.0196} &  &  & \num{-0.0322} & \num{-0.0401} \\
-& (\num{0.0250}) &  &  & (\num{0.0292}) & (\num{0.0308}) \\
-Income, Log & \num{0.0784} &  &  & \num{0.0695} & \num{0.0614} \\
-& (\num{0.0382}) &  &  & (\num{0.0391}) & (\num{0.0442}) \\
-Tightness & \num{0.0744} &  &  & \num{0.0732} & \num{0.0726} \\
-& (\num{0.0215}) &  &  & (\num{0.0237}) & (\num{0.0273}) \\
-Stem Degrees' share &  & \num{0.0742} &  & \num{0.0539} & \num{0.0455} \\
-&  & (\num{0.0151}) &  & (\num{0.0163}) & (\num{0.0164}) \\
-Large Firms &  &  & \num{0.0411} & \num{-0.0158} & \num{-0.0165} \\
-&  &  & (\num{0.0183}) & (\num{0.0219}) & (\num{0.0238}) \\
-ICT sector Intensity &  &  & \num{0.0401} & \num{0.0137} & \num{0.0219} \\
-&  &  & (\num{0.0153}) & (\num{0.0170}) & (\num{0.0170}) \\
-Manufacturing &  &  & \num{-0.0447} & \num{-0.0128} & \num{0.0001} \\
-&  &  & (\num{0.0166}) & (\num{0.0181}) & (\num{0.0195}) \\
-Turnover Rate &  &  & \num{-0.0556} & \num{-0.0419} & \num{-0.0389} \\
-&  &  & (\num{0.0222}) & (\num{0.0233}) & (\num{0.0249}) \\
+Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
+& (0.0250) &  &  & (0.0292) & (0.0263) \\
+Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
+& (0.0382) &  &  & (0.0391) & (0.0442) \\
+Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
+& (0.0215) &  &  & (0.0237) & (0.0352) \\
+Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
+&  & (0.0151) &  & (0.0163) & (0.0184) \\
+Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
+&  &  & (0.0183) & (0.0219) & (0.0198) \\
+ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
+&  &  & (0.0153) & (0.0170) & (0.0182) \\
+Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
+&  &  & (0.0166) & (0.0181) & (0.0203) \\
+Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
+&  &  & (0.0222) & (0.0233) & (0.0271) \\
 Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
-Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,472} \\
-R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0800} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
 \bottomrule
 \end{talltblr}
 
@@ -529,12 +604,11 @@ percentage-point change (Panel B, 2018--2023 with pooled years).}
 
 \end{figure}%
 
-We employed the identical methodology from Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) for constructing these spatial
-visualizations, using their provided data.csv file and following their
-documented mapping approach. However, our replication produced different
-results from the published maps: Connecticut did not appear in our
-replicated maps because its data was coded with FIPS code 9999
+We employed the identical methodology as AKCLM for constructing these
+spatial visualizations, using their provided data.csv file and following
+their documented mapping approach. However, our replication produced
+different results from the published maps: Connecticut did not appear in
+our replicated maps because its data was coded with FIPS code 9999
 (state-level) rather than individual county FIPS codes in the authors'
 data.csv file. Connecticut comprises 8 counties (FIPS codes 09001,
 09003, 09005, 09007, 09009, 09011, 09013, 09015), but the original data
@@ -710,12 +784,11 @@ relationships found in the original analysis.
 \section{Critical Assessment of Causal
 Language}\label{critical-assessment-of-causal-language}
 
-The original study by Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) employs language suggesting causal
-relationships despite using observational county-level data with
-fixed-effects regressions. The empirical strategy does not support
-causal inference (\citeproc{ref-holland1986}{Holland, 1986}), yet the
-paper uses terminology that implies causation rather than correlation.
+AKCLM employ language suggesting causal relationships despite using
+observational county-level data with fixed-effects regressions. The
+empirical strategy does not support causal inference
+(\citeproc{ref-holland1986}{Holland, 1986}), yet the paper uses
+terminology that implies causation rather than correlation.
 
 \textbf{Causal Nouns Used:} - ``drivers'' (appears multiple times) -
 ``determinants'' (in table titles and text) - ``effects'' - ``impact'' -
@@ -738,8 +811,7 @@ selection processes (\citeproc{ref-holland1986}{Holland, 1986}).
 
 \section{Conclusion}\label{conclusion}
 
-This replication and extension of Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) demonstrates both the
+This replication and extension of AKCLM demonstrates both the
 reproducibility and the limitations of their findings. The successful
 reproduction confirms that local labor market conditions, human capital,
 and innovation capacity are correlated with AI employment across U.S.
@@ -774,10 +846,9 @@ economic factors may be more fundamental to the geography of
 technological adoption than demographic characteristics.
 
 \emph{Policy implications}: Taken together, these findings indicate that
-the empirical regularities documented by Andreadis et al.
-(\citeproc{ref-andreadis2025}{2025}) should be interpreted with caution.
-Policies that seek to strengthen labor markets and industry composition
-appear relevant across a wide range of counties
+the empirical regularities documented by AKCLM should be interpreted
+with caution. Policies that seek to strengthen labor markets and
+industry composition appear relevant across a wide range of counties
 (\citeproc{ref-kline2014}{Kline and Moretti, 2014}), while
 education-focused interventions may generate the largest benefits in
 large metropolitan areas where complementary institutions and network
