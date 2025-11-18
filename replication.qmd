@@ -72,7 +72,6 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- Use "henceforth, AKCLM"? instead of Andreadis et al. (2025)  everywhere -->
 
  <!-- Study the paper more closely, so you understand what it happening. Don't understand? Ask AI. Or ask me! -->
 
@@ -85,9 +84,7 @@ options(tigris_use_cache = TRUE)
 
 <!-- The written portion of the paper must report all the most important aspects of the table, without assuming that the reader has looked at the table or the notes to the table. -->
 
-<!-- Line up columns in table. Numbers with minus signs are off by one. Fixed-->
-
-<!-- All write up in terms of comparing two groups, e.g., counties with average home price compared with counties with home price growth one standard deviation higher. The second group of counties has AI job percentage with is  1.5% (?) lower. Put in section 3-->
+<!-- All write up in terms of comparing two groups, e.g., counties with average home price compared with counties with home price growth one standard deviation higher. The second group of counties has AI job percentage with is  1.5% (?) lower. Put in section 3. -->
 
 <!-- Does the coefficient of Bachelors Share in the first regression mean 19% higher or 0.19% higher, when comparing counties that differ by one standard deviation in Bachelor's Share. 0.19% higher, wrote that in the notes and in section 3.-->
 
