@@ -88,6 +88,16 @@ options(tigris_use_cache = TRUE)
 
 <!-- Does the coefficient of Bachelors Share in the first regression mean 19% higher or 0.19% higher, when comparing counties that differ by one standard deviation in Bachelor's Share. 0.19% higher, wrote that in the notes and in section 3.-->
 
+<!-- Make the formatting of the data section look more like the formatting of other articles published in our target journal. -->
+
+<!-- What should the sections be called? Follow the author instructions as well as the examples from published papers in this journal. -->
+
+<!-- The Figure needs a caption, a caption which is obviously a caption, and not part of the main text. -->
+
+
+<!-- We follow AKCLM in considering column 4 as the baseline model. The results are fairly similar so similar points could be made about the coefficients in other models. -->
+
+
 
 *JEL: J24, O33, R11*
 
@@ -98,7 +108,7 @@ options(tigris_use_cache = TRUE)
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025, henceforth, AKCLM, on the correlation between the level and growth of artificial intelligence employment, on one hand, and a collection of factors involving education, innovation, and industry across U.S. counties from 2014 to 2023. We successfully reproduce some of their results and extend the analysis by using log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also critique unsupported, given its observational design, causal claims made by AKCLM.
+We partially replicate @andreadis2025, henceforth, AKCLM, on the correlation between the level and growth of artificial intelligence employment, on one hand, and a collection of factors involving education, innovation, and industry across U.S. counties from 2014 to 2023. We successfully reproduce some of their results and extend the analysis by using log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also critique unsupported, given their observational design, causal claims made by AKCLM.
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -136,21 +146,15 @@ $$
 
 **Housing Market**: We include house price growth from Federal Housing Finance Agency [@bogin2019].  
 
-All explanatory variables are lagged by one year to address potential endogeneity concerns. The baseline specification relates the dependent variable to these covariates using the following model:
-
-$$
-AIShare_{ct} = \alpha + \beta_1 Education_{c,t-1} + \beta_2 Innovation_{c,t-1} + \beta_3 Industry_{c,t-1} + \gamma X_{c,t-1} + \epsilon_{ct} \tag{2}
-$$
-
-where $AIShare_{ct}$ denotes the proportion of AI-related job postings in county $c$ at year $t$, and $X_{c,t-1}$ includes lagged demographic, labor market, and housing controls.
+All explanatory variables are lagged by one year. 
 
 ## Methods
 
 We used R [@r1996], a free and open-source statistical computing environment, and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we used the fixest [@fixest] and modelsummary [@modelsummary] packages.
 
-### Reproduction of Original Results
-
 We largely reproduced the main findings from Tables 1 and 2 of AKCLM. The replication confirms most of the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. Nearly all coefficients and standard errors match the original results within rounding error. However, one notable discrepancy emerged: the Bachelor's share coefficient appears inconsistent with the published table 2, though all other variables replicate precisely.
+
+<!-- DK: Table 1 here. -->
 
 Table 1 examines cross-sectional determinants of AI job intensity levels from 2014 to 2023, while Table 2 analyzes predictors of AI job growth between 2017-2018 and 2022-2023. All coefficients represent standardized effects, allowing direct comparison of magnitude across predictors. Column 4 integrates all controls with county and year fixed effects and serves as the baseline model. We focus on these specifications for all comparisons.
 
