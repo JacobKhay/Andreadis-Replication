@@ -88,14 +88,10 @@ options(tigris_use_cache = TRUE)
 
 <!-- Does the coefficient of Bachelors Share in the first regression mean 19% higher or 0.19% higher, when comparing counties that differ by one standard deviation in Bachelor's Share. 0.19% higher, wrote that in the notes and in section 3.-->
 
-<!-- Make the formatting of the data section look more like the formatting of other articles published in our target journal. Fixed (italicized instead of bold) -->
-
-<!-- What should the sections be called? Follow the author instructions as well as the examples from published papers in this journal. Fixed -->
-
-<!-- The Figure needs a caption, a caption which is obviously a caption, and not part of the main text. took a while working with fig-cap to no success, does a page break with a chunk of text suffice?-->
+<!-- Add text for Figure from paper and for our figures. -->
 
 
-<!-- We follow AKCLM in considering column 4 as the baseline model. The results are fairly similar so similar points could be made about the coefficients in other models. Done-->
+
 
 
 
@@ -895,6 +891,8 @@ final_plot <- (p1 | p2) +
 
 final_plot
 ```
+
+<!-- DK: We really ought to have this paragraph as a proper caption for the figure, using `fig.cap` or some other approach. Tackle this later, if necessary. -->
 
 These maps display the spatial distribution of AI job share across US counties. AI job share represents the proportion of job postings mentioning AI-related terms out of total job postings in each county, expressed as a percentage. Panel A shows the average AI job share from 2014 to 2023, revealing geographic concentration patterns with coastal metropolitan areas and technology hubs exhibiting higher adoption rates (0.14–0.38 percent) compared to rural and inland regions (0–0.14 percent). Panel B displays the percentage-point change in AI share between two pooled periods (2018 and 2023), capturing the growth dynamics where most counties show increases ranging from 0 to 12.35 percentage points. The contrast between panels reveals that counties with initially high AI adoption continued to strengthen their position, while most counties experienced modest growth. We were unable to fully replicate the published maps using the authors' provided data.csv file, as Connecticut appears with N/A values because the data coded Connecticut with FIPS 9999 (state-level) rather than individual county codes.
 
