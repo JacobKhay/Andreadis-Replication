@@ -88,14 +88,14 @@ options(tigris_use_cache = TRUE)
 
 <!-- Does the coefficient of Bachelors Share in the first regression mean 19% higher or 0.19% higher, when comparing counties that differ by one standard deviation in Bachelor's Share. 0.19% higher, wrote that in the notes and in section 3.-->
 
-<!-- Make the formatting of the data section look more like the formatting of other articles published in our target journal. -->
+<!-- Make the formatting of the data section look more like the formatting of other articles published in our target journal. Fixed (italicized instead of bold) -->
 
-<!-- What should the sections be called? Follow the author instructions as well as the examples from published papers in this journal. -->
+<!-- What should the sections be called? Follow the author instructions as well as the examples from published papers in this journal. Fixed -->
 
-<!-- The Figure needs a caption, a caption which is obviously a caption, and not part of the main text. -->
+<!-- The Figure needs a caption, a caption which is obviously a caption, and not part of the main text. took a while working with fig-cap to no success, does a page break with a chunk of text suffice?-->
 
 
-<!-- We follow AKCLM in considering column 4 as the baseline model. The results are fairly similar so similar points could be made about the coefficients in other models. -->
+<!-- We follow AKCLM in considering column 4 as the baseline model. The results are fairly similar so similar points could be made about the coefficients in other models. Done-->
 
 
 
@@ -132,45 +132,27 @@ Finally, we note that AKCLM's causal interpretations are not supported by the ob
 
 The study utilizes multiple data sources to construct a comprehensive county-level dataset spanning 2014–2023:
 
-**AI Employment Data**: Job posting data from Lightcast [@beckett2023], which aggregates information from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use [@acemoglu2022]. The dependent variable $AI_{it}$ is defined as:
+*AI Employment Data*: Job posting data from Lightcast [@beckett2023], which aggregates information from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use [@acemoglu2022]. The dependent variable $AI_{it}$ is defined as:
 
 $$
 AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{1}
 $$
 
-**Demographic Variables**: From the American Community Survey [@census_acs], we include bachelor's share (percentage of workforce with bachelor's degree or higher), black population share (percentage of county population identifying as Black), poverty share (percentage of population below federal poverty line), log population (natural logarithm of county population), and log median income (natural logarithm of median household income).
+*Demographic Variables*: From the American Community Survey [@census_acs], we include bachelor's share (percentage of workforce with bachelor's degree or higher), black population share (percentage of county population identifying as Black), poverty share (percentage of population below federal poverty line), log population (natural logarithm of county population), and log median income (natural logarithm of median household income).
 
-**Innovation Indicators**: We measure patents per employee (USPTO patent counts normalized by employment), AI patents share (percentage of patents classified as AI-related) [@giczy2022], STEM degrees share (percentage of awarded degrees in STEM fields), and degrees per capita (total degrees awarded per capita).
+*Innovation Indicators*: We measure patents per employee (USPTO patent counts normalized by employment), AI patents share (percentage of patents classified as AI-related) [@giczy2022], STEM degrees share (percentage of awarded degrees in STEM fields), and degrees per capita (total degrees awarded per capita).
 
-**Industry and Labor Market Variables**: These include labor market tightness (ratio of job postings to unemployed workers) [@bls_laus], manufacturing intensity (employment share in manufacturing sector) [@census_cbp], ICT intensity (employment share in information and communication technology), turnover rate (worker separation rate from Quarterly Workforce Indicators) [@census_qwi], and large establishments share (percentage of employment in large firms).
+*Industry and Labor Market Variables*: These include labor market tightness (ratio of job postings to unemployed workers) [@bls_laus], manufacturing intensity (employment share in manufacturing sector) [@census_cbp], ICT intensity (employment share in information and communication technology), turnover rate (worker separation rate from Quarterly Workforce Indicators) [@census_qwi], and large establishments share (percentage of employment in large firms).
 
-**Housing Market**: We include house price growth from Federal Housing Finance Agency [@bogin2019].  
+*Housing Market*: We include house price growth from Federal Housing Finance Agency [@bogin2019].  
 
 All explanatory variables are lagged by one year. 
 
-## Methods
+## Reproduction of Original Results
 
 We used R [@r1996], a free and open-source statistical computing environment, and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we used the fixest [@fixest] and modelsummary [@modelsummary] packages.
 
 We largely reproduced the main findings from Tables 1 and 2 of AKCLM. The replication confirms most of the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. Nearly all coefficients and standard errors match the original results within rounding error. However, one notable discrepancy emerged: the Bachelor's share coefficient appears inconsistent with the published table 2, though all other variables replicate precisely.
-
-<!-- DK: Table 1 here. -->
-
-Table 1 examines cross-sectional determinants of AI job intensity levels from 2014 to 2023, while Table 2 analyzes predictors of AI job growth between 2017-2018 and 2022-2023. All coefficients represent standardized effects, allowing direct comparison of magnitude across predictors. Column 4 integrates all controls with county and year fixed effects and serves as the baseline model. We focus on these specifications for all comparisons.
-
-Comparing labor market tightness (0.28, SE = 0.059) with bachelor's share (0.18, SE = 0.051) in Table 1, counties with one standard deviation higher labor market tightness exhibit 0.095 percentage points more AI jobs than similarly educated counties. Tightness shows 52% larger effect size than bachelor's share. Both coefficients are statistically significant, with t-values of 4.73 and 3.59 respectively. T-values measure how many standard errors the coefficient is away from zero; values above 1.96 indicate statistical significance at the 5% level, while values above 2.58 indicate significance at the 1% level. Both predictors easily exceed these thresholds, confirming the relationships are unlikely due to chance. However, the effect sizes differ substantially: tightness accounts for 61% of mean AI intensity (0.45%) while bachelor's share accounts for 40%, indicating tightness has greater practical importance despite both being statistically reliable.
-
-Within the innovation category of Table 1, comparing STEM degrees share (0.048, SE = 0.021) with patents per employee (0.029, SE = 0.011) reveals that STEM credentials show 62% larger effect size than patenting intensity. However, statistical significance diverges from effect size. Patents per employee has a higher t-value (2.60) than STEM share (2.32), meaning the patent coefficient is measured more precisely relative to its standard error. Both exceed the 1.96 threshold for 5% significance, but patents exceed the 2.58 threshold for 1% significance while STEM does not. Despite this stronger statistical evidence for patents, STEM shows larger practical importance: counties differing by one standard deviation in STEM credentials show 11% of mean AI intensity, while patent differences account for only 7%. Here, statistical precision favors patents but effect size favors STEM credentials.
-
-Across industry factors in Table 1, ICT sector intensity (0.026, SE = 0.014) and manufacturing intensity (-0.033, SE = 0.011) exhibit similar effect sizes but opposite signs. Counties with one standard deviation higher ICT concentration have 0.059 percentage points more AI jobs than manufacturing-oriented counties with equivalent concentration. Manufacturing shows a 30% larger effect size than ICT (0.033 vs 0.026). Statistical significance also differs markedly. Manufacturing intensity has a t-value of 3.08, exceeding the 2.58 threshold for 1% significance, while ICT intensity has a t-value of 1.90, falling below the 1.96 threshold for 5% significance. This means we can be highly confident manufacturing negatively predicts AI jobs, but the positive ICT relationship could plausibly be due to chance. Here, manufacturing shows both larger effect size and higher statistical reliability.
-
-Comparing education measures within Table 1, bachelor's share (0.18, SE = 0.051) shows an effect size 3.8 times larger than STEM share (0.048, SE = 0.021). Counties with one standard deviation higher bachelor's attainment have 0.13 percentage points more AI jobs than counties with equivalent STEM credential intensity. Both achieve statistical significance with t-values exceeding 1.96, but bachelor's share (t = 3.59) shows substantially larger effect size, accounting for 40% of mean AI intensity versus 11% for STEM credentials (t = 2.32). The higher t-value for bachelor's share reflects both larger effect size and smaller standard error, indicating this relationship is both practically important and precisely measured.
-
-Table 2 reveals weaker relationships for growth dynamics. Comparing STEM degrees share (0.054, SE = 0.016) with labor tightness (0.073, SE = 0.024), counties with one standard deviation higher 2017 tightness experienced 0.019 percentage points more growth than counties with equivalent STEM credentials. The effect size difference is modest: tightness is only 36% larger than STEM. Both achieve statistical significance with high t-values (3.31 for STEM, 3.09 for tightness), both exceeding the 2.58 threshold for 1% significance. Relative to median growth of 0.088 percentage points, tightness accounts for 83% while STEM accounts for 61%. Unlike Table 1 where tightness showed 52% larger effects, the growth analysis reveals more balanced effect sizes despite maintained statistical precision.
-
-Within Table 2 labor market variables, comparing turnover rate (-0.042, SE = 0.023) with large establishments share (-0.016, SE = 0.022), counties with one standard deviation higher labor turnover grew 0.026 percentage points slower than counties with more large establishments. Turnover shows 2.7 times the effect size of large establishments. Statistical significance also differs: turnover has a t-value of 1.80, approaching the 1.96 threshold for 5% significance, while large establishments has a t-value of 0.72, well below conventional thresholds. The effect sizes are 48% and 18% of median growth respectively. Here both statistical precision and effect size favor turnover, though neither relationship is measured with high confidence.
-
-Comparing industry composition within Table 2, manufacturing intensity (-0.013, SE = 0.018) and ICT sector intensity (0.014, SE = 0.017) show nearly identical effect sizes but opposite signs. Counties with one standard deviation higher ICT concentration grew 0.027 percentage points more than manufacturing-oriented counties. Both show small effect sizes at 15-16% of median growth. Neither achieves statistical significance, with t-values of 0.71 for manufacturing and 0.81 for ICT, both far below the 1.96 threshold. This contrasts sharply with Table 1 where manufacturing showed strong statistical significance (t = 3.08) and meaningful effect size (0.033, or 7% of mean). The growth analysis reveals these structural factors predict levels but not changes, as both effect sizes and statistical precision collapse in dynamic specifications.
 
 ```{r}
 #| label: tbl-table1
@@ -351,6 +333,22 @@ modelsummary(
   notes = "This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year, multiplied by 100 to express in percentage terms. All explanatory variables are standardized as z-scores to ensure comparability across predictors. The sample comprises 24,645 county-year observations covering approximately 3,100 U.S. counties annually over the ten-year period. All coefficients represent percentage point changes in AI job share for a one standard deviation increase in the explanatory variable. Models are estimated using ordinary least squares with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year. AI job postings are identified from Lightcast data using skills and keywords associated with artificial intelligence. We successfully replicated all coefficients and standard errors from the original results."
 )
 ```
+
+\newpage
+
+### Interpretation of Table 1 Results
+
+Table 1 examines cross-sectional determinants of AI job intensity levels from 2014 to 2023. All coefficients represent standardized effects, allowing direct comparison of magnitude across predictors. Column 4 integrates all controls with county and year fixed effects and serves as the baseline model. We focus on these specifications for all comparisons.
+
+Comparing labor market tightness (0.28, p < 0.001) with bachelor's share (0.18, p < 0.001) in Table 1, counties with one standard deviation higher labor market tightness exhibit 0.095 percentage points more AI jobs than similarly educated counties. Tightness shows 52% larger effect size than bachelor's share. Both coefficients are highly statistically significant with p-values well below 0.001, confirming these relationships are extremely unlikely due to chance. However, the effect sizes differ substantially: tightness accounts for 61% of mean AI intensity (0.45%) while bachelor's share accounts for 40%, indicating tightness has greater practical importance despite both being statistically reliable.
+
+Within the innovation category of Table 1, comparing STEM degrees share (0.048, p < 0.05) with patents per employee (0.029, p < 0.01) reveals that STEM credentials show 62% larger effect size than patenting intensity. However, statistical significance diverges from effect size. Patents per employee shows stronger statistical evidence with p < 0.01, while STEM share has p < 0.05, meaning the patent coefficient is measured more precisely. Despite this stronger statistical evidence for patents, STEM shows larger practical importance: counties differing by one standard deviation in STEM credentials show 11% of mean AI intensity, while patent differences account for only 7%. Here, statistical precision favors patents but effect size favors STEM credentials.
+
+Across industry factors in Table 1, ICT sector intensity (0.026, p = 0.058) and manufacturing intensity (-0.033, p < 0.01) exhibit similar effect sizes but opposite signs. Counties with one standard deviation higher ICT concentration have 0.059 percentage points more AI jobs than manufacturing-oriented counties with equivalent concentration. Manufacturing shows a 30% larger effect size than ICT (0.033 vs 0.026). Statistical significance also differs markedly. Manufacturing intensity is highly significant (p < 0.01), while ICT intensity narrowly misses the conventional 5% threshold (p = 0.058). This means we can be highly confident manufacturing negatively predicts AI jobs, but the positive ICT relationship could plausibly be due to chance. Here, manufacturing shows both larger effect size and higher statistical reliability.
+
+Comparing education measures within Table 1, bachelor's share (0.18, p < 0.001) shows an effect size 3.8 times larger than STEM share (0.048, p < 0.05). Counties with one standard deviation higher bachelor's attainment have 0.13 percentage points more AI jobs than counties with equivalent STEM credential intensity. Both achieve statistical significance, but bachelor's share shows substantially larger effect size, accounting for 40% of mean AI intensity versus 11% for STEM credentials. The stronger statistical evidence for bachelor's share (p < 0.001 vs p < 0.05) combined with larger effect size indicates this relationship is both practically important and precisely measured.
+
+\newpage
 
 ```{r}
 #| label: tbl-table2
@@ -662,6 +660,20 @@ modelsummary(
 )
 ```
 
+\newpage
+
+### Interpretation of Table 2 Results
+
+Table 2 analyzes predictors of AI job growth between 2017-2018 and 2022-2023. All coefficients represent standardized effects, with explanatory variables measured in 2017. Column 4 includes all controls and serves as the baseline model for our comparisons.
+
+Comparing STEM degrees share (0.054, p < 0.001) with labor tightness (0.073, p < 0.01), counties with one standard deviation higher 2017 tightness experienced 0.019 percentage points more growth than counties with equivalent STEM credentials. The effect size difference is modest: tightness is only 36% larger than STEM. Both achieve high statistical significance with p-values below 0.01. Relative to median growth of 0.088 percentage points, tightness accounts for 83% while STEM accounts for 61%. Unlike Table 1 where tightness showed 52% larger effects, the growth analysis reveals more balanced effect sizes despite maintained statistical precision.
+
+Within Table 2 labor market variables, comparing turnover rate (-0.042, p = 0.072) with large establishments share (-0.016, p = 0.47), counties with one standard deviation higher labor turnover grew 0.026 percentage points slower than counties with more large establishments. Turnover shows 2.7 times the effect size of large establishments. Statistical significance also differs: turnover approaches conventional significance (p = 0.072), while large establishments shows no statistical evidence (p = 0.47). The effect sizes are 48% and 18% of median growth respectively. Here both statistical precision and effect size favor turnover, though neither relationship is measured with high confidence.
+
+Comparing industry composition within Table 2, manufacturing intensity (-0.013, p = 0.48) and ICT sector intensity (0.014, p = 0.42) show nearly identical effect sizes but opposite signs. Counties with one standard deviation higher ICT concentration grew 0.027 percentage points more than manufacturing-oriented counties. Both show small effect sizes at 15-16% of median growth. Neither achieves statistical significance, with p-values well above conventional thresholds. This contrasts sharply with Table 1 where manufacturing showed strong statistical significance (p < 0.01) and meaningful effect size (0.033, or 7% of mean). The growth analysis reveals these structural factors predict levels but not changes, as both effect sizes and statistical precision collapse in dynamic specifications.
+
+\newpage
+
 ```{r}
 #| label: fig-map
 #| echo: false
@@ -685,29 +697,10 @@ data <- read_csv("updated_lightcast_county.csv") %>%
          ai = `AI Postings`, 
          nads = `Total Postings`)
 
-# Connecticut has 8 counties - distribute the state-level data (FIPS 9999) across them
-ct_counties <- c("09001", "09003", "09005", "09007", "09009", "09011", "09013", "09015")
-
-# Separate Connecticut state-level data (FIPS 9999) from regular data
-ct_state_data <- data %>% filter(COUNTY_FIPS == 9999)
-
-regular_data <- data %>%
+# Remove Connecticut state-level data (FIPS 9999) and Planning Region entries
+data_complete <- data %>%
   filter(COUNTY_FIPS != 9999) %>%
-  # Remove the Planning Region entries (9110-9190)
   filter(!(COUNTY_FIPS >= 9110 & COUNTY_FIPS <= 9190))
-
-# Distribute Connecticut state-level data
-ct_distributed <- ct_state_data %>%
-  crossing(county_fips = ct_counties) %>%
-  mutate(
-    COUNTY_FIPS = as.numeric(county_fips),
-    ai = ai / 8,
-    nads = nads / 8
-  ) %>%
-  select(COUNTY_FIPS, Year, ai, nads)
-
-# Combine
-data_complete <- bind_rows(regular_data, ct_distributed)
 
 # ---- PANEL A ----
 data_levels <- data_complete %>%
@@ -903,7 +896,9 @@ final_plot <- (p1 | p2) +
 final_plot
 ```
 
-We employed the identical methodology as AKCLM for constructing these spatial visualizations, using their provided data.csv file and following their documented mapping approach. However, our replication produced different results from the published maps: Connecticut did not appear in our replicated maps because its data was coded with FIPS code 9999 (state-level) rather than individual county FIPS codes in the authors' data.csv file. Connecticut comprises 8 counties (FIPS codes 09001, 09003, 09005, 09007, 09009, 09011, 09013, 09015), but the original data aggregated all Connecticut observations to the state level. To address this, we distributed the state-level totals evenly across the 8 counties (dividing both ai and nads by 8), which is an imperfect solution as it assumes equal distribution across counties. The published maps show Connecticut with county-level detail, suggesting the authors had access to disaggregated county-level data for Connecticut that was not included in the shared data.csv file. Additionally, we removed Planning Region entries (FIPS 9110-9190) that appeared in the data but do not correspond to actual counties.
+These maps display the spatial distribution of AI job share across US counties. AI job share represents the proportion of job postings mentioning AI-related terms out of total job postings in each county, expressed as a percentage. Panel A shows the average AI job share from 2014 to 2023, revealing geographic concentration patterns with coastal metropolitan areas and technology hubs exhibiting higher adoption rates (0.14–0.38 percent) compared to rural and inland regions (0–0.14 percent). Panel B displays the percentage-point change in AI share between two pooled periods (2018 and 2023), capturing the growth dynamics where most counties show increases ranging from 0 to 12.35 percentage points. The contrast between panels reveals that counties with initially high AI adoption continued to strengthen their position, while most counties experienced modest growth. We were unable to fully replicate the published maps using the authors' provided data.csv file, as Connecticut appears with N/A values because the data coded Connecticut with FIPS 9999 (state-level) rather than individual county codes.
+
+\newpage
 
 ## Extension: Log-Population Weighting Analysis
 
