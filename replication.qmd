@@ -148,7 +148,7 @@ All explanatory variables are lagged by one year.
 
 We used R [@r1996], a free and open-source statistical computing environment, and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we used the fixest [@fixest] and modelsummary [@modelsummary] packages.
 
-We largely reproduced the main findings from Tables 1 and 2 of AKCLM. The replication confirms most of the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. Nearly all coefficients and standard errors match the original results within rounding error. However, one notable discrepancy emerged: the Bachelor's share coefficient appears inconsistent with the published table 2, though all other variables replicate precisely.
+We largely reproduced the main findings from Tables 1 and 2 of AKCLM. The replication confirms most of the authors' key empirical findings regarding the correlates of AI employment across U.S. counties. Nearly all coefficients and standard errors match the original results within rounding error. However, one notable discrepancy emerged: the Bachelor's share coefficient appears inconsistent with the published Table 2, though all other variables replicate precisely. The spatial maps also reveal inconsistencies with the published figure: Connecticut does not appear in the authors' data.csv file (coded as FIPS 9999 for state-level rather than individual county codes), resulting in N/A values in our replication. Additional visual discrepancies exist between our replicated maps and the published maps, which could reflect a copy-paste error when the authors merged data files or use of a different data source not included in the shared replication materials.
 
 ```{r}
 #| label: tbl-table1
@@ -675,8 +675,8 @@ Comparing industry composition within Table 2, manufacturing intensity (-0.013, 
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Replication of Andreadis et al. (2025) - Spatial heterogeneity in AI job share (Panel A, 2014–2023 average) and percentage-point change (Panel B, 2018–2023 with pooled years)."
-#| fig-cap-location: top
+#| fig-cap: "This figure shows the spatial heterogeneity in AI job share across US counties. Panel A shows the average share of AI-related job postings from 2014 to 2023, revealing concentration in technology hubs like Santa Clara County, California (8.19 percent), Fairfax County, Virginia (6.97 percent), and San Francisco County, California (6.34 percent). Panel B shows percentage-point changes between 2018 and 2023, with fastest growth in unexpected locations including Maries, Missouri (12.35 percentage points), Hughes, South Dakota (10.43 percentage points), and Osage, Michigan (9.82 percentage points). Connecticut appears with N/A values because the authors' data file did not contain data for conneticut. Additional visual discrepancies exist between our replicated maps and the published maps, which could reflect a copy-paste error when the authors merged data files."
+#| fig-cap-location: bottom
 #| fig-pos: "H"
 #| fig-width: 18
 #| fig-height: 9
@@ -889,12 +889,27 @@ final_plot <- (p1 | p2) +
   plot_layout(widths = c(1, 1)) &
   theme(plot.background = element_rect(fill = "white", color = NA))
 
+# Add overall title
+final_plot <- final_plot +
+  plot_annotation(
+    title = "Figure 1: Replication of Andreadis et al. (2025) - Spatial Heterogeneity in the Share of and Change of AI Jobs",
+    theme = theme(plot.title = element_text(size = 26, hjust = 0.5, margin = margin(b = 15)))
+  )
+
 final_plot
 ```
 
-<!-- DK: We really ought to have this paragraph as a proper caption for the figure, using `fig.cap` or some other approach. Tackle this later, if necessary. -->
+\newpage
 
-These maps display the spatial distribution of AI job share across US counties. AI job share represents the proportion of job postings mentioning AI-related terms out of total job postings in each county, expressed as a percentage. Panel A shows the average AI job share from 2014 to 2023, revealing geographic concentration patterns with coastal metropolitan areas and technology hubs exhibiting higher adoption rates (0.14–0.38 percent) compared to rural and inland regions (0–0.14 percent). Panel B displays the percentage-point change in AI share between two pooled periods (2018 and 2023), capturing the growth dynamics where most counties show increases ranging from 0 to 12.35 percentage points. The contrast between panels reveals that counties with initially high AI adoption continued to strengthen their position, while most counties experienced modest growth. We were unable to fully replicate the published maps using the authors' provided data.csv file, as Connecticut appears with N/A values because the data coded Connecticut with FIPS 9999 (state-level) rather than individual county codes.
+### Interpretation of Figure 1 Results
+
+Figure 1 displays the spatial distribution and evolution of AI job adoption across US counties from 2014 to 2023. Panel A shows average AI job shares, while Panel B captures growth dynamics between 2018 and 2023.
+
+Comparing the geographic concentration patterns between coastal tech hubs and inland regions in Panel A, Santa Clara County, California (8.19 percent) shows 35.6 times higher AI job share than the national median (0.23 percent). Similarly, Fairfax County, Virginia (6.97 percent) and San Francisco County, California (6.34 percent) exhibit AI shares 30.3 and 27.6 times the median respectively. These coastal metropolitan areas demonstrate extreme concentration, while most rural and inland counties show minimal AI activity (0–0.14 percent range). The geographic disparity reveals that AI job markets cluster in established technology ecosystems, with the top counties accounting for disproportionate shares of national AI employment demand. This concentration pattern suggests that human capital, innovation infrastructure, and industry composition create self-reinforcing advantages for tech hubs.
+
+Within Panel B growth patterns, comparing unexpected high-growth counties with traditional tech centers reveals surprising shifts. Maries, Missouri experienced 12.35 percentage points growth, Hughes, South Dakota grew 10.43 percentage points, and Osage, Michigan increased 9.82 percentage points between 2018 and 2023. These growth rates far exceed those in established tech hubs, suggesting geographic diffusion driven by remote work adoption following pandemic lockdowns. Counties with initially high AI shares continued strengthening their absolute positions, but the highest growth rates appeared in suburban and lower-cost regions. This divergence between levels (Panel A) and changes (Panel B) indicates that while concentration persists, the marginal growth shifted toward areas with lower housing costs and remote-friendly environments. The median growth of 0.088 percentage points masks substantial heterogeneity, with the ninetieth percentile showing 0.93 percentage points growth compared to tenth percentile decline of 0.29 percentage points.
+
+Comparing Panel A concentration patterns with Panel B growth dynamics reveals that initial advantages compound over time. Counties in the highest AI share category (0.71–10 percent in Panel A) show moderate absolute growth in Panel B, while their percentage increases remain substantial. Conversely, counties with zero AI activity in Panel A largely remain unchanged in Panel B, showing minimal growth (0–0.09 percentage points range). This persistence suggests path dependency in AI adoption, where counties lacking initial conditions for AI jobs struggle to enter the market even during rapid national expansion. The contrast highlights regional disparities that Tables 1 and 2 explain through education, innovation, and labor market tightness differentials.
 
 \newpage
 
