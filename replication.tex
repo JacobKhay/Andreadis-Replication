@@ -402,20 +402,14 @@ To estimate and display regression models, we used the fixest
 (\citeproc{ref-fixest}{Bergé, 2018}) and modelsummary
 (\citeproc{ref-modelsummary}{Arel-Bundock, 2022}) packages.
 
-We largely reproduced the main findings from Tables 1 and 2 of AKCLM.
-The replication confirms most of the authors' key empirical findings
-regarding the correlates of AI employment across U.S. counties. Nearly
-all coefficients and standard errors match the original results within
-rounding error. However, one notable discrepancy emerged: the Bachelor's
-share coefficient appears inconsistent with the published Table 2,
-though all other variables replicate precisely. The spatial maps also
-reveal inconsistencies with the published figure: Connecticut does not
-appear in the authors' data.csv file (coded as FIPS 9999 for state-level
-rather than individual county codes), resulting in N/A values in our
-replication. Additional visual discrepancies exist between our
-replicated maps and the published maps, which could reflect a copy-paste
-error when the authors merged data files or use of a different data
-source not included in the shared replication materials.
+We attempted to reproduce Table 1, Table 2, amd Figure 1 from AKCLM. The
+replication confirms most of the authors' key empirical findings
+regarding the correlates of AI employment across U.S. counties, as
+described in Tables 1 and 2. Nearly all coefficients and standard errors
+match the original results. However, the coefficient and standard error
+for Bachelor's share is inconsistent with result published in Table 2.
+We can not reproduce the maps in Figure 1, not least because the AKCLM's
+data does not include values for counties in Connecticut.
 
 \begin{table}[H]
 
@@ -463,8 +457,8 @@ Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
 Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
 &  &  & (0.0137) & (0.0137) & (0.0132) \\
 Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
-Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
-R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
+Observations & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,627} \\
+R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988} & {\hspace{0.5em}0.69826} & {\hspace{0.5em}0.71262} \\
 \bottomrule
 \end{talltblr}
 
@@ -472,10 +466,7 @@ R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989
 
 \end{table}%
 
-\newpage
-
-\subsection{Interpretation of Table 1
-Results}\label{interpretation-of-table-1-results}
+\subsection{Table 1}\label{table-1}
 
 Table 1 examines cross-sectional determinants of AI job intensity levels
 from 2014 to 2023. All coefficients represent standardized effects,
@@ -535,8 +526,6 @@ share (p \textless{} 0.001 vs p \textless{} 0.05) combined with larger
 effect size indicates this relationship is both practically important
 and precisely measured.
 
-\newpage
-
 \begin{table}[H]
 
 \caption{\label{tbl-table2}Replication of Table 2 from Andreadis et
@@ -567,24 +556,24 @@ column{1}={}{halign=l,},
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
 Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
-& (0.0250) &  &  & (0.0292) & (0.0263) \\
+& (0.0250) &  &  & (0.0292) & (0.0308) \\
 Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
 & (0.0382) &  &  & (0.0391) & (0.0442) \\
 Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
-& (0.0215) &  &  & (0.0237) & (0.0352) \\
+& (0.0215) &  &  & (0.0237) & (0.0273) \\
 Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
-&  & (0.0151) &  & (0.0163) & (0.0184) \\
+&  & (0.0151) &  & (0.0163) & (0.0164) \\
 Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
-&  &  & (0.0183) & (0.0219) & (0.0198) \\
+&  &  & (0.0183) & (0.0219) & (0.0238) \\
 ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
-&  &  & (0.0153) & (0.0170) & (0.0182) \\
+&  &  & (0.0153) & (0.0170) & (0.0170) \\
 Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
-&  &  & (0.0166) & (0.0181) & (0.0203) \\
+&  &  & (0.0166) & (0.0181) & (0.0195) \\
 Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
-&  &  & (0.0222) & (0.0233) & (0.0271) \\
+&  &  & (0.0222) & (0.0233) & (0.0249) \\
 Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
-Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
-R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,472} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0800} \\
 \bottomrule
 \end{talltblr}
 
@@ -592,10 +581,7 @@ R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} &
 
 \end{table}%
 
-\newpage
-
-\subsection{Interpretation of Table 2
-Results}\label{interpretation-of-table-2-results}
+\subsection{Table 2}\label{table-2}
 
 Table 2 analyzes predictors of AI job growth between 2017-2018 and
 2022-2023. All coefficients represent standardized effects, with
@@ -637,8 +623,6 @@ The growth analysis reveals these structural factors predict levels but
 not changes, as both effect sizes and statistical precision collapse in
 dynamic specifications.
 
-\newpage
-
 \begin{figure}[H]
 
 \centering{
@@ -652,29 +636,19 @@ AI job share across US counties. Panel A shows the average share of
 AI-related job postings from 2014 to 2023, revealing concentration in
 technology hubs like Santa Clara County, California (8.19 percent),
 Fairfax County, Virginia (6.97 percent), and San Francisco County,
-California (6.34 percent), with an overall average of 0.45 percent and
-median of 0.23 percent across all counties. Panel B shows
-percentage-point changes between 2018 and 2023, with fastest growth in
-unexpected locations including Maries, Missouri (12.35 percentage
-points), Hughes, South Dakota (10.43 percentage points), and Osage,
-Michigan (9.82 percentage points), reflecting shifts toward suburban and
-remote-friendly regions. High AI adoption counties tend to be coastal
-metropolitan areas and established tech ecosystems, while rural inland
-regions show minimal activity. Counties with initially high AI shares
-continued strengthening their position, while most experienced modest
-growth, suggesting persistent geographic concentration in AI job
-markets. Connecticut appears with N/A values because the authors'
-data.csv file coded Connecticut data with FIPS 9999 (state-level) rather
-than individual county codes. Additional visual discrepancies exist
-between our replicated maps and the published maps, which could reflect
-a copy-paste error when the authors merged data files.}
+California (6.34 percent). Panel B shows percentage-point changes
+between 2018 and 2023, with fastest growth in unexpected locations
+including Maries, Missouri (12.35 percentage points), Hughes, South
+Dakota (10.43 percentage points), and Osage, Michigan (9.82 percentage
+points). Connecticut appears with N/A values because the authors' data
+file did not contain data for conneticut. Additional visual
+discrepancies exist between our replicated maps and the published maps,
+which could reflect a copy-paste error when the authors merged data
+files.}
 
 \end{figure}%
 
-\newpage
-
-\subsection{Interpretation of Figure 1
-Results}\label{interpretation-of-figure-1-results}
+\subsection{Figure 1}\label{figure-1}
 
 Figure 1 displays the spatial distribution and evolution of AI job
 adoption across US counties from 2014 to 2023. Panel A shows average AI
@@ -723,8 +697,6 @@ AI adoption, where counties lacking initial conditions for AI jobs
 struggle to enter the market even during rapid national expansion. The
 contrast highlights regional disparities that Tables 1 and 2 explain
 through education, innovation, and labor market tightness differentials.
-
-\newpage
 
 \section{Extension: Log-Population Weighting
 Analysis}\label{extension-log-population-weighting-analysis}
