@@ -91,9 +91,12 @@ options(tigris_use_cache = TRUE)
 <!-- Add text for Figure from paper and for our figures. -->
 
 
+<!-- Dependent variable discussion should include both.  -->
+
+<!-- Understand what the code is doing. AI can help! Also, the code for your extensions, should be clean and understandable. For example, you only download data.csv once, even though they download it lots of times. -->
 
 
-
+Understand 
 
 *JEL: J24, O33, R11*
 
@@ -104,7 +107,7 @@ options(tigris_use_cache = TRUE)
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025, henceforth, AKCLM, on the correlation between the level and growth of artificial intelligence employment, on one hand, and a collection of factors involving education, innovation, and industry across U.S. counties from 2014 to 2023. We successfully reproduce some of their results and extend the analysis by using log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also critique unsupported, given their observational design, causal claims made by AKCLM.
+We partially replicate @andreadis2025, henceforth, AKCLM, on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables involving education, innovation, and industry. We successfully reproduce some of their results and extend the analysis by using log-population weights to assess robustness. The core associations persist, though almost all magnitudes shrink. We also critique unsupported causal claims made by AKCLM.
 
 Declaration: There are no financial conflicts of interest to share. 
 
