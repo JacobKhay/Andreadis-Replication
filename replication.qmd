@@ -160,31 +160,37 @@ We attempted to reproduce Table 1, Table 2, amd Figure 1 from AKCLM. The replica
 #| tbl-cap-location: top
 #| tbl-pos: "H"
 
-# Load and prepare data EXACTLY as in original
+# Load data
 data_ai <- read_csv("data.csv") %>% 
   mutate(state_year = paste0(state, Year)) %>% 
   mutate(ai_intensity = ai / nads)
 
-# Create derived variables EXACTLY as in original code
+# Prepare demographics
+data_ai <- data_ai %>% 
+  mutate(logincome = log(medhhincome), loghpi = log(hpi), logemp = log(pop_above18))
+
+data_ai <- data_ai %>% 
+  mutate(lads = log(1 + nads))
+
+data_ai <- data_ai %>% 
+  mutate(lads0 = log(nads))
+
+# Log number of patents, inventors, etc.
+data_ai <- data_ai %>% 
+  mutate(logemp = log(Employed)) %>% 
+  mutate(logpop = log(pop))
+
 data_ai <- data_ai %>% 
   mutate(
-    logincome = log(medhhincome),
-    loghpi = log(hpi),
-    logemp = log(pop_above18),
-    lads = log(1 + nads),
-    logpop = log(pop),
-    
-    # Innovation variables
     logn_patents = log(1 + n_patents),
     logn_inventors = log(1 + n_inventors),
     logai_patents = log(1 + ai_patents),
-    logai_inventors = log(1 + ai_inventors),
-    pat_intensity = n_inventors / Employed,
-    patai_intensity = ai_patents / n_patents
-  ) %>% 
+    logai_inventors = log(1 + ai_inventors)
+  ) %>%
+  mutate(pat_intensity = n_inventors / Employed, patai_intensity = ai_patents / n_patents) %>% 
   mutate(patai_intensity = replace_na(patai_intensity, 0))
 
-# Industry structure variables
+# Industry structure
 data_ai <- data_ai %>% 
   mutate(
     small_firms = small / est,
@@ -192,58 +198,54 @@ data_ai <- data_ai %>%
     management_intensity = management_emp / emp,
     information_intensity = information_emp / emp,
     manuf_intensity = manuf_emp / emp
-  ) %>% 
+  )
+
+data_ai <- data_ai %>% 
   mutate(information_intensity = replace_na(information_intensity, 0))
 
 # Education variables
 data_ai <- data_ai %>% 
+  ungroup() %>%  
   mutate(
     degshare = (udeg + mdeg) / Employed,
     stemshare = (ustemdeg + mstemdeg) / (udeg + mdeg),
     stemshare2 = (ustemdeg) / (udeg)
-  ) %>% 
-  mutate(
-    stemshare = replace_na(stemshare, 0),
-    stemshare2 = replace_na(stemshare2, 0)
   )
+
+data_ai <- data_ai %>%  
+  mutate(stemshare = replace_na(stemshare, 0), stemshare2 = replace_na(stemshare2, 0))
 
 # Labor market variables
-data_ai <- data_ai %>% 
-  mutate(
-    tightness = nads / Unemployed,
-    hpi_ch = hpi_ch / 100  # Convert to decimal
-  )
+data_ai <- data_ai %>%  
+  mutate(tightness = nads / Unemployed)
 
-# Convert AI intensity to percentage (as in original)
-data_ai <- data_ai %>% 
+data_ai <- data_ai %>%  
+  mutate(hpi_ch = hpi_ch / 100)
+
+# Z-scores - VERSION ROBUST with as.numeric()
+data_ai_z <- data_ai %>% 
+  filter(emp != 0) %>%
+  mutate(
+    share_bac = as.numeric(scale(share_bac)),
+    share_black = as.numeric(scale(share_black)),
+    share_poverty = as.numeric(scale(share_poverty)),
+    logpop = as.numeric(scale(logpop)),
+    hpi_ch = as.numeric(scale(hpi_ch)),
+    logincome = as.numeric(scale(logincome)),
+    tightness = as.numeric(scale(tightness)),
+    unrate = as.numeric(scale(unrate)),
+    pat_intensity = as.numeric(scale(pat_intensity)),
+    patai_intensity = as.numeric(scale(patai_intensity)),
+    degshare = as.numeric(scale(degshare)),
+    stemshare = as.numeric(scale(stemshare)),
+    large_firms = as.numeric(scale(large_firms)),
+    information_intensity = as.numeric(scale(information_intensity)),
+    manuf_intensity = as.numeric(scale(manuf_intensity)),
+    TurnOvrS = as.numeric(scale(TurnOvrS))
+  ) %>% 
   mutate(ai_intensity = ai_intensity * 100)
 
-# Filter out zero employment counties first
-data_ai_filtered <- data_ai %>% 
-  filter(emp != 0)
-
-# Create standardized variables (z-scores) EXACTLY as in original
-data_ai_z <- data_ai_filtered %>% 
-  mutate(
-    share_bac = scale(share_bac),
-    share_black = scale(share_black),
-    share_poverty = scale(share_poverty),
-    logpop = scale(logpop),
-    hpi_ch = scale(hpi_ch),
-    logincome = scale(logincome),
-    tightness = scale(tightness),
-    unrate = scale(unrate),
-    pat_intensity = scale(pat_intensity),
-    patai_intensity = scale(patai_intensity),
-    degshare = scale(degshare),
-    stemshare = scale(stemshare),
-    large_firms = scale(large_firms),
-    information_intensity = scale(information_intensity),
-    manuf_intensity = scale(manuf_intensity),
-    TurnOvrS = scale(TurnOvrS)
-  )
-
-# Run models with full specifications for accuracy
+# Run regressions
 est_demog_no <- fixest::feols(
   "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
@@ -290,7 +292,7 @@ models <- list(est_demog_no, est_innovation_no, est_industry_no, est_all, est_al
 obs <- map_chr(models, ~scales::comma(nobs(.x)))
 r2_vals <- map_chr(models, ~sprintf("%.5f", r2(.x, "r2")))
 
-# Create table footer - wrap each value in braces and add spacing before values
+# Create table footer
 extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
   "Fixed effects", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, state-year}",
@@ -298,7 +300,7 @@ extra_rows <- tribble(
   "R²", paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"), paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"), paste0("{\\hspace{0.5em}", r2_vals[5], "}")
 )
 
-# Variable labels - condensed display only
+# Variable labels
 labels <- c(
   "share_bac" = "Bachelor's share",
   "hpi_ch" = "House price growth",
@@ -310,7 +312,24 @@ labels <- c(
   "TurnOvrS" = "Turnover rate"
 )
 
-# Create the table with modelsummary - use d for decimal alignment
+# Create note text
+table_notes <- paste(
+  "This table examines the demographic, innovation, and industry determinants",
+  "of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023.",
+  "The dependent variable is AI job intensity, defined as the ratio of AI job postings",
+  "to total job postings in each county-year, multiplied by 100 to express in percentage terms.",
+  "AI job postings are identified from Lightcast data using skills and keywords associated",
+  "with artificial intelligence. All explanatory variables are standardized as z-scores",
+  "to ensure comparability across predictors. The sample comprises county-year observations",
+  "covering approximately 3,100 U.S. counties annually over the ten-year period.",
+  "All coefficients represent percentage point changes in AI job share for a one standard",
+  "deviation increase in the explanatory variable. Models are estimated using ordinary least",
+  "squares with county and year fixed effects (columns 1-4) or county and state-year fixed",
+  "effects (column 5). Standard errors are clustered at the county level. All explanatory",
+  "variables are lagged by one year."
+)
+
+# Create the table
 modelsummary(
   list(
     "(1)" = est_demog_no,
@@ -327,7 +346,7 @@ modelsummary(
   statistic = "({std.error})",
   fmt = fmt_decimal(4),
   align = "lddddd",
-  notes = "This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year, multiplied by 100 to express in percentage terms. AI job postings are identified from Lightcast data using skills and keywords associated with artificial intelligence. All explanatory variables are standardized as z-scores to ensure comparability across predictors. The sample comprises 24,645 county-year observations covering approximately 3,100 U.S. counties annually over the ten-year period. All coefficients represent percentage point changes in AI job share for a one standard deviation increase in the explanatory variable. Models are estimated using ordinary least squares with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year.  We successfully replicated all coefficients and standard errors from AKCLM."
+  notes = table_notes
 )
 ```
 
