@@ -410,6 +410,66 @@ Larson, 2019}).
 
 All explanatory variables are lagged by one year.
 
+\subsection{Methodological Concern: Mechanical Endogeneity in Labor
+Market
+Tightness}\label{methodological-concern-mechanical-endogeneity-in-labor-market-tightness}
+
+A significant statistical issue arises from the construction of the
+dependent and independent variables. The dependent variable, AI
+intensity, is defined as:
+
+\[
+AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100
+\]
+
+where total job postings appear in the denominator. Meanwhile, labor
+market tightness, one of the key independent variables, is constructed
+as:
+
+\[
+\text{Tightness}_{it} = \frac{\text{Job postings}_{it}}{\text{Unemployed workers}_{it}}
+\]
+
+where job postings appear in the numerator.
+
+This creates \textbf{denominator contamination} or \textbf{mechanical
+endogeneity}: both sides of the regression share the same underlying
+quantity (job postings), inducing a built-in correlation that exists
+purely through algebraic construction rather than economic causation.
+
+\textbf{Why this is problematic:}
+
+When total job postings increase: - AI intensity can mechanically fall
+even if AI postings remain constant (due to the denominator effect) -
+Labor market tightness mechanically increases (due to the numerator
+effect)
+
+This creates a spurious negative correlation between the dependent
+variable and the tightness regressor that has nothing to do with actual
+economic relationships. The regression can pick up patterns driven by
+algebra rather than economics.
+
+\textbf{Formal description:}
+
+This is a violation of OLS assumptions because the regressor embeds a
+component of the dependent variable's denominator, making them
+statistically non-independent by construction. This can bias coefficient
+estimates and overstate statistical significance. The issue is analogous
+to regressing \(Y/Z\) on \(X/Z\) where the shared \(Z\) induces
+correlation even when \(Y\) and \(X\) are truly independent.
+
+\textbf{Why other controls are unaffected:}
+
+Other independent variables (industry shares, patents per worker,
+education, income, turnover) do not share measurement components with
+the dependent variable's construction, so they remain valid in the
+standard OLS framework.
+
+This mechanical relationship should be interpreted with caution, as the
+observed correlation between AI intensity and labor market tightness may
+partially reflect shared measurement error rather than a true causal or
+correlational economic relationship.
+
 \section{Replication}\label{replication}
 
 We used R (\citeproc{ref-r1996}{R Core Team, 1996}), a free and
