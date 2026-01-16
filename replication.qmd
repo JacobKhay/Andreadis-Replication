@@ -157,9 +157,7 @@ The second dependent variable captures the percentage point change in AI job sha
 
 All explanatory variables are lagged by one year. A significant statistical issue arises from the construction of the variables in the original analysis. The dependent variable, AI intensity, is defined as AI job postings divided by total job postings. Meanwhile, labor market tightness, one of the key independent variables, is constructed as total job postings divided by unemployed workers. In other words, the same variable, total job postings, appears in the denominator of the dependent variable and in the numerator of one of the independent variables. 
 
-This creates denominator contamination or mechanical endogeneity, where both sides of the regression share the same underlying quantity (total job postings), inducing a built-in correlation that exists purely through algebraic construction. This can bias coefficient estimates and overstate statistical significance. The issue is analogous to regressing $Y/Z$ on $Z/X$ where the shared $Z$ induces correlation even when $Y$ and $X$ are actually independent. 
-
-<!-- DK: Cite a paper, ideally one which includes a sentence saying clearly not to do this. Ideally, the sentence will mention that including this bad variable biases the other coefficients, which it does!  -->
+This creates denominator contamination or mechanical endogeneity, where both sides of the regression share the same underlying quantity (total job postings), inducing a built-in correlation that exists purely through algebraic construction. This can bias coefficient estimates and overstate statistical significance. The issue is analogous to regressing $Y/Z$ on $Z/X$ where the shared $Z$ induces correlation even when $Y$ and $X$ are actually independent. Kronmal [-@kronmal1993spurious] shows that when the dependent variable is a ratio sharing a component with an independent variable, "regression coefficient estimates for the other independent variables... result in inappropriate conclusions." The paper recommends avoiding ratios in regression analyses when such shared components exist.
 
 ## Replication
 
@@ -995,9 +993,9 @@ est_industry_no <- fixest::feols(
   cluster = "COUNTY_FIPS"
 )
 
-# Run log-population weighted regressions (Models 1-3)
+# Run log-population weighted regressions (Models 1-3) - excluding tightness due to denominator contamination
 est_demog_logpop <- fixest::feols(
-  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
                         tightness, pat_intensity, patai_intensity, degshare, stemshare,
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
@@ -1030,33 +1028,33 @@ variables <- c(
 )
 
 variables_list <- list(
-  c("Bachelor's share", "House price growth", "Labor Tightness"),
+  c("Bachelor's share", "House price growth"),
   c("Patents per emp.", "STEM share"),
   c("Manufacturing intensity", "ICT intensity", "Turnover rate")
 )
 
-# Extract coefficients and SEs from original (lads-weighted) regressions (Models 1-3)
+# Extract coefficients and SEs from original (equal-weighted) regressions (Models 1-3)
 coefs_orig_list <- list(
-  c(coef(est_demog_no)["share_bac"], coef(est_demog_no)["hpi_ch"], coef(est_demog_no)["tightness"]),
+  c(coef(est_demog_no)["share_bac"], coef(est_demog_no)["hpi_ch"]),
   c(coef(est_innovation_no)["pat_intensity"], coef(est_innovation_no)["stemshare"]),
   c(coef(est_industry_no)["manuf_intensity"], coef(est_industry_no)["information_intensity"], coef(est_industry_no)["TurnOvrS"])
 )
 
 ses_orig_list <- list(
-  c(se(est_demog_no)["share_bac"], se(est_demog_no)["hpi_ch"], se(est_demog_no)["tightness"]),
+  c(se(est_demog_no)["share_bac"], se(est_demog_no)["hpi_ch"]),
   c(se(est_innovation_no)["pat_intensity"], se(est_innovation_no)["stemshare"]),
   c(se(est_industry_no)["manuf_intensity"], se(est_industry_no)["information_intensity"], se(est_industry_no)["TurnOvrS"])
 )
 
-# Extract coefficients and SEs from log-pop weighted regressions (Models 1-3)
+# Extract coefficients and SEs from log-pop weighted regressions (Models 1-3) - tightness excluded
 coefs_log_list <- list(
-  c(coef(est_demog_logpop)["share_bac"], coef(est_demog_logpop)["hpi_ch"], coef(est_demog_logpop)["tightness"]),
+  c(coef(est_demog_logpop)["share_bac"], coef(est_demog_logpop)["hpi_ch"]),
   c(coef(est_innovation_logpop)["pat_intensity"], coef(est_innovation_logpop)["stemshare"]),
   c(coef(est_industry_logpop)["manuf_intensity"], coef(est_industry_logpop)["information_intensity"], coef(est_industry_logpop)["TurnOvrS"])
 )
 
 ses_log_list <- list(
-  c(se(est_demog_logpop)["share_bac"], se(est_demog_logpop)["hpi_ch"], se(est_demog_logpop)["tightness"]),
+  c(se(est_demog_logpop)["share_bac"], se(est_demog_logpop)["hpi_ch"]),
   c(se(est_innovation_logpop)["pat_intensity"], se(est_innovation_logpop)["stemshare"]),
   c(se(est_industry_logpop)["manuf_intensity"], se(est_industry_logpop)["information_intensity"], se(est_industry_logpop)["TurnOvrS"])
 )
@@ -1066,14 +1064,14 @@ make_df <- function(model_index) {
   bind_rows(
     data.frame(
       Variable = vars,
-      Coef = coefs_orig_list[[model_index]],
-      SE = ses_orig_list[[model_index]],
+      Coef = coefs_log_list[[model_index]],
+      SE = ses_log_list[[model_index]],
       Scheme = "Equal Weights"
     ),
     data.frame(
       Variable = vars,
-      Coef = coefs_log_list[[model_index]],
-      SE = ses_log_list[[model_index]],
+      Coef = coefs_orig_list[[model_index]],
+      SE = ses_orig_list[[model_index]],
       Scheme = "Log-Population Weights"
     )
   ) %>%
@@ -1081,7 +1079,7 @@ make_df <- function(model_index) {
       lower = Coef - 1.96 * SE,
       upper = Coef + 1.96 * SE,
       Variable = fct_rev(factor(Variable, levels = vars)),
-      Scheme = factor(Scheme, levels = c("Equal Weights", "Log-Population Weights"))
+      Scheme = factor(Scheme, levels = c("Log-Population Weights", "Equal Weights"))
     )
 }
 
@@ -1118,7 +1116,7 @@ plots <- lapply(1:3, function(i) {
       legend.box.spacing = unit(0.5, "cm")
     ) +
     scale_color_manual(
-      values = c("Equal Weights" = "#F24236", "Log-Population Weights" = "#28A745"),
+      values = c("Equal Weights" = "#28A745", "Log-Population Weights" = "#F24236"),
       breaks = c("Equal Weights", "Log-Population Weights")
     ) +
     scale_x_continuous(
@@ -1166,7 +1164,7 @@ plots_with_tags <- lapply(1:3, function(i) {
       legend.box.spacing = unit(0.5, "cm")
     ) +
     scale_color_manual(
-      values = c("Equal Weights" = "#F24236", "Log-Population Weights" = "#28A745"),
+      values = c("Equal Weights" = "#28A745", "Log-Population Weights" = "#F24236"),
       breaks = c("Equal Weights", "Log-Population Weights")
     ) +
     scale_x_continuous(
@@ -1222,16 +1220,16 @@ est_all_state_year <- fixest::feols(
   vcov = "twoway"
 )
 
-# Run log-population weighted regressions (Models 4-5)
+# Run log-population weighted regressions (Models 4-5) - excluding tightness due to denominator contamination
 est_all_logpop <- fixest::feols(
-  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z,
   cluster = "COUNTY_FIPS",
   weights = ~logpop_raw
 )
 
 est_all_state_year_logpop <- fixest::feols(
-  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z,
   vcov = "twoway",
   weights = ~logpop_raw
@@ -1239,7 +1237,7 @@ est_all_state_year_logpop <- fixest::feols(
 
 models_45 <- c("All Controls", "All + State FE")
 variables_45 <- c(
-  "Bachelor's share", "House price growth", "Labor Tightness",
+  "Bachelor's share", "House price growth",
   "Patents per emp.", "STEM share", "ICT intensity", "Manufacturing intensity", "Turnover rate"
 )
 
@@ -1248,46 +1246,46 @@ variables_list_45 <- list(
   variables_45
 )
 
-# Extract coefficients and SEs from original (lads-weighted) regressions (Models 4-5)
+# Extract coefficients and SEs from original (equal-weighted) regressions (Models 4-5)
 coefs_orig_list_45 <- list(
   c(coef(est_all)["share_bac"], coef(est_all)["hpi_ch"],
-    coef(est_all)["tightness"], coef(est_all)["pat_intensity"], coef(est_all)["stemshare"],
+    coef(est_all)["pat_intensity"], coef(est_all)["stemshare"],
     coef(est_all)["information_intensity"], coef(est_all)["manuf_intensity"], coef(est_all)["TurnOvrS"]),
   c(coef(est_all_state_year)["share_bac"], coef(est_all_state_year)["hpi_ch"],
-    coef(est_all_state_year)["tightness"], coef(est_all_state_year)["pat_intensity"],
+    coef(est_all_state_year)["pat_intensity"],
     coef(est_all_state_year)["stemshare"], coef(est_all_state_year)["information_intensity"],
     coef(est_all_state_year)["manuf_intensity"], coef(est_all_state_year)["TurnOvrS"])
 )
 
 ses_orig_list_45 <- list(
   c(se(est_all)["share_bac"], se(est_all)["hpi_ch"],
-    se(est_all)["tightness"], se(est_all)["pat_intensity"], se(est_all)["stemshare"],
+    se(est_all)["pat_intensity"], se(est_all)["stemshare"],
     se(est_all)["information_intensity"], se(est_all)["manuf_intensity"], se(est_all)["TurnOvrS"]),
   c(se(est_all_state_year)["share_bac"], se(est_all_state_year)["hpi_ch"],
-    se(est_all_state_year)["tightness"], se(est_all_state_year)["pat_intensity"],
+    se(est_all_state_year)["pat_intensity"],
     se(est_all_state_year)["stemshare"], se(est_all_state_year)["information_intensity"],
     se(est_all_state_year)["manuf_intensity"], se(est_all_state_year)["TurnOvrS"])
 )
 
-# Extract coefficients and SEs from log-pop weighted regressions (Models 4-5)
+# Extract coefficients and SEs from log-pop weighted regressions (Models 4-5) - tightness excluded
 coefs_log_list_45 <- list(
   c(coef(est_all_logpop)["share_bac"], coef(est_all_logpop)["hpi_ch"],
-    coef(est_all_logpop)["tightness"], coef(est_all_logpop)["pat_intensity"],
+    coef(est_all_logpop)["pat_intensity"],
     coef(est_all_logpop)["stemshare"], coef(est_all_logpop)["information_intensity"],
     coef(est_all_logpop)["manuf_intensity"], coef(est_all_logpop)["TurnOvrS"]),
   c(coef(est_all_state_year_logpop)["share_bac"], coef(est_all_state_year_logpop)["hpi_ch"],
-    coef(est_all_state_year_logpop)["tightness"], coef(est_all_state_year_logpop)["pat_intensity"],
+    coef(est_all_state_year_logpop)["pat_intensity"],
     coef(est_all_state_year_logpop)["stemshare"], coef(est_all_state_year_logpop)["information_intensity"],
     coef(est_all_state_year_logpop)["manuf_intensity"], coef(est_all_state_year_logpop)["TurnOvrS"])
 )
 
 ses_log_list_45 <- list(
   c(se(est_all_logpop)["share_bac"], se(est_all_logpop)["hpi_ch"],
-    se(est_all_logpop)["tightness"], se(est_all_logpop)["pat_intensity"],
+    se(est_all_logpop)["pat_intensity"],
     se(est_all_logpop)["stemshare"], se(est_all_logpop)["information_intensity"],
     se(est_all_logpop)["manuf_intensity"], se(est_all_logpop)["TurnOvrS"]),
   c(se(est_all_state_year_logpop)["share_bac"], se(est_all_state_year_logpop)["hpi_ch"],
-    se(est_all_state_year_logpop)["tightness"], se(est_all_state_year_logpop)["pat_intensity"],
+    se(est_all_state_year_logpop)["pat_intensity"],
     se(est_all_state_year_logpop)["stemshare"], se(est_all_state_year_logpop)["information_intensity"],
     se(est_all_state_year_logpop)["manuf_intensity"], se(est_all_state_year_logpop)["TurnOvrS"])
 )
@@ -1297,14 +1295,14 @@ make_df_45 <- function(model_index) {
   bind_rows(
     data.frame(
       Variable = vars,
-      Coef = coefs_orig_list_45[[model_index]],
-      SE = ses_orig_list_45[[model_index]],
+      Coef = coefs_log_list_45[[model_index]],
+      SE = ses_log_list_45[[model_index]],
       Scheme = "Equal Weights"
     ),
     data.frame(
       Variable = vars,
-      Coef = coefs_log_list_45[[model_index]],
-      SE = ses_log_list_45[[model_index]],
+      Coef = coefs_orig_list_45[[model_index]],
+      SE = ses_orig_list_45[[model_index]],
       Scheme = "Log-Population Weights"
     )
   ) %>%
@@ -1312,7 +1310,7 @@ make_df_45 <- function(model_index) {
       lower = Coef - 1.96 * SE,
       upper = Coef + 1.96 * SE,
       Variable = fct_rev(factor(Variable, levels = vars)),
-      Scheme = factor(Scheme, levels = c("Equal Weights", "Log-Population Weights"))
+      Scheme = factor(Scheme, levels = c("Log-Population Weights", "Equal Weights"))
     )
 }
 
@@ -1346,7 +1344,7 @@ plots_45 <- lapply(1:2, function(i) {
       legend.text = element_text(size = 12, color = "gray20")
     ) +
     scale_color_manual(
-      values = c("Equal Weights" = "#F24236", "Log-Population Weights" = "#28A745"),
+      values = c("Equal Weights" = "#28A745", "Log-Population Weights" = "#F24236"),
       breaks = c("Equal Weights", "Log-Population Weights")
     ) +
     scale_x_continuous(
@@ -1391,7 +1389,7 @@ plots_45_with_tags <- lapply(1:2, function(i) {
       legend.text = element_text(size = 12, color = "gray20")
     ) +
     scale_color_manual(
-      values = c("Equal Weights" = "#F24236", "Log-Population Weights" = "#28A745"),
+      values = c("Equal Weights" = "#28A745", "Log-Population Weights" = "#F24236"),
       breaks = c("Equal Weights", "Log-Population Weights")
     ) +
     scale_x_continuous(
@@ -1465,9 +1463,9 @@ est_t2_industry_no <- fixest::feols(
   cluster = "COUNTY_FIPS"
 )
 
-# Run population weighted regressions for Table 2 Models 1-3 (use raw population, not log)
+# Run population weighted regressions for Table 2 Models 1-3 - excluding tightness due to denominator contamination
 est_t2_demog_logpop <- fixest::feols(
-  "dai_intensity9 ~ share_bac14 + hpi_ch14 + tightness14" %>% as.formula(),
+  "dai_intensity9 ~ share_bac14 + hpi_ch14" %>% as.formula(),
   data_t2_z,
   cluster = "COUNTY_FIPS",
   weights = ~exp(logpop_raw)  # Use actual population (exp of log population)
@@ -1490,32 +1488,33 @@ est_t2_industry_logpop <- fixest::feols(
 models <- c("Demographics", "Innovation", "Industry")
 
 variables_list <- list(
-  c("Bachelors Share", "House Price Growth", "Tightness"),
+  c("Bachelors Share", "House Price Growth"),
   c("Patents per emp.", "STEM Degrees' share"),
   c("Manufacturing Intensity %", "ICT sector Intensity %", "Turnover Rate %")
 )
 
-# Extract coefficients from actual regressions
+# Extract coefficients from actual (equal-weighted) regressions
 coefs_actual_list <- list(
-  c(coef(est_t2_demog_no)["share_bac14"], coef(est_t2_demog_no)["hpi_ch14"], coef(est_t2_demog_no)["tightness14"]),
+  c(coef(est_t2_demog_no)["share_bac14"], coef(est_t2_demog_no)["hpi_ch14"]),
   c(coef(est_t2_innovation_no)["pat_intensity14"], coef(est_t2_innovation_no)["stemshare14"]),
   c(coef(est_t2_industry_no)["manuf_intensity14"], coef(est_t2_industry_no)["information_intensity14"], coef(est_t2_industry_no)["TurnOvrS14"])
 )
 
 ses_actual_list <- list(
-  c(se(est_t2_demog_no)["share_bac14"], se(est_t2_demog_no)["hpi_ch14"], se(est_t2_demog_no)["tightness14"]),
+  c(se(est_t2_demog_no)["share_bac14"], se(est_t2_demog_no)["hpi_ch14"]),
   c(se(est_t2_innovation_no)["pat_intensity14"], se(est_t2_innovation_no)["stemshare14"]),
   c(se(est_t2_industry_no)["manuf_intensity14"], se(est_t2_industry_no)["information_intensity14"], se(est_t2_industry_no)["TurnOvrS14"])
 )
 
+# Extract coefficients from log-pop weighted regressions - tightness excluded
 coefs_logpop_list <- list(
-  c(coef(est_t2_demog_logpop)["share_bac14"], coef(est_t2_demog_logpop)["hpi_ch14"], coef(est_t2_demog_logpop)["tightness14"]),
+  c(coef(est_t2_demog_logpop)["share_bac14"], coef(est_t2_demog_logpop)["hpi_ch14"]),
   c(coef(est_t2_innovation_logpop)["pat_intensity14"], coef(est_t2_innovation_logpop)["stemshare14"]),
   c(coef(est_t2_industry_logpop)["manuf_intensity14"], coef(est_t2_industry_logpop)["information_intensity14"], coef(est_t2_industry_logpop)["TurnOvrS14"])
 )
 
 ses_logpop_list <- list(
-  c(se(est_t2_demog_logpop)["share_bac14"], se(est_t2_demog_logpop)["hpi_ch14"], se(est_t2_demog_logpop)["tightness14"]),
+  c(se(est_t2_demog_logpop)["share_bac14"], se(est_t2_demog_logpop)["hpi_ch14"]),
   c(se(est_t2_innovation_logpop)["pat_intensity14"], se(est_t2_innovation_logpop)["stemshare14"]),
   c(se(est_t2_industry_logpop)["manuf_intensity14"], se(est_t2_industry_logpop)["information_intensity14"], se(est_t2_industry_logpop)["TurnOvrS14"])
 )
@@ -1685,16 +1684,16 @@ est_t2_all_state_no <- fixest::feols(
   cluster = "COUNTY_FIPS"
 )
 
-# Run population weighted regressions for Table 2 Models 4-5
+# Run population weighted regressions for Table 2 Models 4-5 - excluding tightness due to denominator contamination
 est_t2_all_logpop <- fixest::feols(
-  "dai_intensity9 ~ share_bac14 + hpi_ch14 + tightness14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14" %>% as.formula(),
+  "dai_intensity9 ~ share_bac14 + hpi_ch14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14" %>% as.formula(),
   data_t2_z,
   cluster = "COUNTY_FIPS",
   weights = ~exp(logpop_raw)
 )
 
 est_t2_all_state_logpop <- fixest::feols(
-  "dai_intensity9 ~ share_bac14 + hpi_ch14 + tightness14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14 | state" %>% as.formula(),
+  "dai_intensity9 ~ share_bac14 + hpi_ch14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14 | state" %>% as.formula(),
   data_t2_z,
   cluster = "COUNTY_FIPS",
   weights = ~exp(logpop_raw)
@@ -1703,53 +1702,54 @@ est_t2_all_state_logpop <- fixest::feols(
 models_t2_45 <- c("All Controls", "All + State FE")
 
 variables_list_t2_45 <- list(
-  c("Bachelors Share", "House Price Growth", "Tightness", "Patents per emp.", "STEM Degrees' share",
+  c("Bachelors Share", "House Price Growth", "Patents per emp.", "STEM Degrees' share",
     "ICT sector Intensity %", "Manufacturing Intensity %", "Turnover Rate %"),
-  c("Bachelors Share", "House Price Growth", "Tightness", "Patents per emp.", "STEM Degrees' share",
+  c("Bachelors Share", "House Price Growth", "Patents per emp.", "STEM Degrees' share",
     "ICT sector Intensity %", "Manufacturing Intensity %", "Turnover Rate %")
 )
 
-# Extract coefficients from actual regressions - Models 4-5
+# Extract coefficients from actual (equal-weighted) regressions - Models 4-5
 coefs_actual_t2_45 <- list(
   c(coef(est_t2_all_no)["share_bac14"], coef(est_t2_all_no)["hpi_ch14"],
-    coef(est_t2_all_no)["tightness14"], coef(est_t2_all_no)["pat_intensity14"],
+    coef(est_t2_all_no)["pat_intensity14"],
     coef(est_t2_all_no)["stemshare14"], coef(est_t2_all_no)["information_intensity14"],
     coef(est_t2_all_no)["manuf_intensity14"], coef(est_t2_all_no)["TurnOvrS14"]),
   c(coef(est_t2_all_state_no)["share_bac14"], coef(est_t2_all_state_no)["hpi_ch14"],
-    coef(est_t2_all_state_no)["tightness14"], coef(est_t2_all_state_no)["pat_intensity14"],
+    coef(est_t2_all_state_no)["pat_intensity14"],
     coef(est_t2_all_state_no)["stemshare14"], coef(est_t2_all_state_no)["information_intensity14"],
     coef(est_t2_all_state_no)["manuf_intensity14"], coef(est_t2_all_state_no)["TurnOvrS14"])
 )
 
 ses_actual_t2_45 <- list(
   c(se(est_t2_all_no)["share_bac14"], se(est_t2_all_no)["hpi_ch14"],
-    se(est_t2_all_no)["tightness14"], se(est_t2_all_no)["pat_intensity14"],
+    se(est_t2_all_no)["pat_intensity14"],
     se(est_t2_all_no)["stemshare14"], se(est_t2_all_no)["information_intensity14"],
     se(est_t2_all_no)["manuf_intensity14"], se(est_t2_all_no)["TurnOvrS14"]),
   c(se(est_t2_all_state_no)["share_bac14"], se(est_t2_all_state_no)["hpi_ch14"],
-    se(est_t2_all_state_no)["tightness14"], se(est_t2_all_state_no)["pat_intensity14"],
+    se(est_t2_all_state_no)["pat_intensity14"],
     se(est_t2_all_state_no)["stemshare14"], se(est_t2_all_state_no)["information_intensity14"],
     se(est_t2_all_state_no)["manuf_intensity14"], se(est_t2_all_state_no)["TurnOvrS14"])
 )
 
+# Extract coefficients from log-pop weighted regressions - tightness excluded
 coefs_logpop_t2_45 <- list(
   c(coef(est_t2_all_logpop)["share_bac14"], coef(est_t2_all_logpop)["hpi_ch14"],
-    coef(est_t2_all_logpop)["tightness14"], coef(est_t2_all_logpop)["pat_intensity14"],
+    coef(est_t2_all_logpop)["pat_intensity14"],
     coef(est_t2_all_logpop)["stemshare14"], coef(est_t2_all_logpop)["information_intensity14"],
     coef(est_t2_all_logpop)["manuf_intensity14"], coef(est_t2_all_logpop)["TurnOvrS14"]),
   c(coef(est_t2_all_state_logpop)["share_bac14"], coef(est_t2_all_state_logpop)["hpi_ch14"],
-    coef(est_t2_all_state_logpop)["tightness14"], coef(est_t2_all_state_logpop)["pat_intensity14"],
+    coef(est_t2_all_state_logpop)["pat_intensity14"],
     coef(est_t2_all_state_logpop)["stemshare14"], coef(est_t2_all_state_logpop)["information_intensity14"],
     coef(est_t2_all_state_logpop)["manuf_intensity14"], coef(est_t2_all_state_logpop)["TurnOvrS14"])
 )
 
 ses_logpop_t2_45 <- list(
   c(se(est_t2_all_logpop)["share_bac14"], se(est_t2_all_logpop)["hpi_ch14"],
-    se(est_t2_all_logpop)["tightness14"], se(est_t2_all_logpop)["pat_intensity14"],
+    se(est_t2_all_logpop)["pat_intensity14"],
     se(est_t2_all_logpop)["stemshare14"], se(est_t2_all_logpop)["information_intensity14"],
     se(est_t2_all_logpop)["manuf_intensity14"], se(est_t2_all_logpop)["TurnOvrS14"]),
   c(se(est_t2_all_state_logpop)["share_bac14"], se(est_t2_all_state_logpop)["hpi_ch14"],
-    se(est_t2_all_state_logpop)["tightness14"], se(est_t2_all_state_logpop)["pat_intensity14"],
+    se(est_t2_all_state_logpop)["pat_intensity14"],
     se(est_t2_all_state_logpop)["stemshare14"], se(est_t2_all_state_logpop)["information_intensity14"],
     se(est_t2_all_state_logpop)["manuf_intensity14"], se(est_t2_all_state_logpop)["TurnOvrS14"])
 )

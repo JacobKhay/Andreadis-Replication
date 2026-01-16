@@ -281,8 +281,8 @@ level and growth of artificial intelligence employment across U.S.
 counties from 2014 to 2023 and a collection of variables involving
 education, innovation, and industry. We successfully reproduce most of
 their results and extend their analysis by using log-population weights
-to assess robustness. The core associations persist. We also critique
-their unsupported causal claims.
+to assess robustness. Only some of the associations persist. We also
+critique their variable construction and unsupported causal claims.
 
 Declaration: There are no financial conflicts of interest to share.
 
@@ -409,36 +409,28 @@ Housing Finance Agency (\citeproc{ref-bogin2019}{Bogin, Doerner, and
 Larson, 2019}).
 
 All explanatory variables are lagged by one year. A significant
-statistical issue arises from the construction of the dependent and
-independent variables in the original analysis. The dependent variable,
-AI intensity, is defined as AI job postings divided by total job
-postings, where total job postings appear in the denominator. Meanwhile,
-labor market tightness, one of the key independent variables, is
-constructed as job postings divided by unemployed workers, where job
-postings appear in the numerator. This creates denominator contamination
-or mechanical endogeneity, where both sides of the regression share the
-same underlying quantity (job postings), inducing a built-in correlation
-that exists purely through algebraic construction rather than economic
-causation. When total job postings increase, AI intensity can
-mechanically fall even if AI postings remain constant (due to the
-denominator effect), while labor market tightness mechanically increases
-(due to the numerator effect). This creates a spurious negative
-correlation between the dependent variable and the tightness regressor
-that has nothing to do with actual economic relationships, as the
-regression can pick up patterns driven by algebra rather than economics.
-This is a violation of OLS assumptions because the regressor embeds a
-component of the dependent variable's denominator, making them
-statistically non-independent by construction. This can bias coefficient
-estimates and overstate statistical significance. The issue is analogous
-to regressing \(Y/Z\) on \(X/Z\) where the shared \(Z\) induces
-correlation even when \(Y\) and \(X\) are truly independent. Other
-independent variables (industry shares, patents per worker, education,
-income, turnover) do not share measurement components with the dependent
-variable's construction, so they remain valid in the standard OLS
-framework. This mechanical relationship should be interpreted with
-caution, as the observed correlation between AI intensity and labor
-market tightness may partially reflect shared measurement error rather
-than a true causal or correlational economic relationship.
+statistical issue arises from the construction of the variables in the
+original analysis. The dependent variable, AI intensity, is defined as
+AI job postings divided by total job postings. Meanwhile, labor market
+tightness, one of the key independent variables, is constructed as total
+job postings divided by unemployed workers. In other words, the same
+variable, total job postings, appears in the denominator of the
+dependent variable and in the numerator of one of the independent
+variables.
+
+This creates denominator contamination or mechanical endogeneity, where
+both sides of the regression share the same underlying quantity (total
+job postings), inducing a built-in correlation that exists purely
+through algebraic construction. This can bias coefficient estimates and
+overstate statistical significance. The issue is analogous to regressing
+\(Y/Z\) on \(Z/X\) where the shared \(Z\) induces correlation even when
+\(Y\) and \(X\) are actually independent. Kronmal
+(\citeproc{ref-kronmal1993spurious}{1993}) shows that when the dependent
+variable is a ratio sharing a component with an independent variable,
+``regression coefficient estimates for the other independent
+variables\ldots{} result in inappropriate conclusions.'' The paper
+recommends avoiding ratios in regression analyses when such shared
+components exist.
 
 \section{Replication}\label{replication}
 
@@ -1383,6 +1375,12 @@ public policy: Some simple welfare economics of local economic
 development programs.''} \emph{Annual Review of Economics} 6: 629--662.
 DOI:
 \href{https://doi.org/10.1146/annurev-economics-080213-041024}{10.1146/annurev-economics-080213-041024}.
+
+\bibitem[\citeproctext]{ref-kronmal1993spurious}
+\textbf{Kronmal, R. A.} 1993. {``Spurious correlation and the fallacy of
+the ratio standard revisited.''} \emph{Journal of the Royal Statistical
+Society: Series A (Statistics in Society)} 156(3): 379--392. DOI:
+\href{https://doi.org/10.2307/2983064}{10.2307/2983064}.
 
 \bibitem[\citeproctext]{ref-r1996}
 \textbf{R Core Team}. 1996. \emph{R: A language and environment for
