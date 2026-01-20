@@ -109,7 +109,7 @@ Understand
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables involving education, innovation, and industry. We successfully reproduce most of their results and extend their analysis by using log-population weights to assess robustness. Only some of the associations persist. We also critique their variable construction and unsupported causal claims.
+We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables involving education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Only some of the associations persist. We critique the construction of a key variable and their unsupported causal claims.
 
 Declaration: There are no financial conflicts of interest to share. 
 
