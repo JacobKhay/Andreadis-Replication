@@ -109,7 +109,7 @@ Understand
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables involving education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Only some of the associations persist. We critique the construction of a key variable and their unsupported causal claims.
+We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment openings across U.S. counties from 2014 to 2023 and a collection of variables involving education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Only some of the associations persist. We critique the construction of a key variable and their unsupported causal claims.
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -121,7 +121,7 @@ This paper replicates the analysis of @andreadis2025, henceforth AKCLM, on the c
 
 <!-- DK: Either years desccribed explicitly in both or in neither. Should be both! And mention the US! -->
 
-There are two outcome variables. First, the share of AI-related job postings at the county-year level captures the absolute level of AI employment opportunities in a given county and year. Second, the percentage point change in AI job share between 2017-2018 and 2022-2023 measures how AI employment growth varies across counties. Together, these outcomes distinguish between where AI jobs are concentrated (levels) and where AI adoption is accelerating most rapidly (growth). Tracking both dynamics provides insight into which regions gain early access to AI-driven employment and which experience the fastest expansion.
+There are two outcome variables. First, the share of AI-related job postings at the county-year level captures the level of AI employment opportunities in a given county and year. Second, the percentage point change in AI job share between 2017-2018 and 2022-2023 captures how AI employment growth varies across counties. Together, these outcomes distinguish between where AI jobs are concentrated (levels) and where AI adoption is accelerating most rapidly (growth). Tracking both dynamics provides insight into which regions gain early access to AI-driven employment and which experience the fastest expansion.
 
 The original study links county-level AI employment to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity [@giczy2022], and industry factors by the composition of employment across sectors. Together, these variables represent structural characteristics that might condition whether a region becomes a hub for AI-related work.
 
@@ -938,14 +938,13 @@ final_plot
 
 
 ### Figure 1
+Figure 1 displays the spatial distribution and growth of AI job shares across US counties from 2014 to 2023. Panel A shows average AI job shares, while Panel B shows growth between 2018 and 2023.
 
-Figure 1 displays the spatial distribution and evolution of AI job adoption across US counties from 2014 to 2023. Panel A shows average AI job shares, while Panel B captures growth dynamics between 2018 and 2023.
+In Panel A, Santa Clara County, California (8.19 percent) shows 35.6 times the national median AI job share (0.23 percent). Fairfax County, Virginia (6.97 percent) and San Francisco County, California (6.34 percent) show 30.3 and 27.6 times the median respectively. Most rural and inland counties show minimal AI job shares (0–0.14 percent).
 
-Comparing the geographic concentration patterns between coastal tech hubs and inland regions in Panel A, Santa Clara County, California (8.19 percent) shows 35.6 times higher AI job share than the national median (0.23 percent). Similarly, Fairfax County, Virginia (6.97 percent) and San Francisco County, California (6.34 percent) exhibit AI shares 30.3 and 27.6 times the median respectively. These coastal metropolitan areas demonstrate extreme concentration, while most rural and inland counties show minimal AI activity (0–0.14 percent range). The geographic disparity reveals that AI job markets cluster in established technology ecosystems, with the top counties accounting for disproportionate shares of national AI employment demand. This concentration pattern suggests that human capital, innovation infrastructure, and industry composition create self-reinforcing advantages for tech hubs.
+In Panel B, Maries, Missouri (12.35 percentage points), Hughes, South Dakota (10.43 percentage points), and Osage, Michigan (9.82 percentage points) show the highest growth between 2018 and 2023. The median growth is 0.088 percentage points, with the ninetieth percentile at 0.93 percentage points and the tenth percentile at -0.29 percentage points.
 
-Within Panel B growth patterns, comparing unexpected high-growth counties with traditional tech centers reveals surprising shifts. Maries, Missouri experienced 12.35 percentage points growth, Hughes, South Dakota grew 10.43 percentage points, and Osage, Michigan increased 9.82 percentage points between 2018 and 2023. These growth rates far exceed those in established tech hubs, suggesting geographic diffusion driven by remote work adoption following pandemic lockdowns. Counties with initially high AI shares continued strengthening their absolute positions, but the highest growth rates appeared in suburban and lower-cost regions. This divergence between levels (Panel A) and changes (Panel B) indicates that while concentration persists, the marginal growth shifted toward areas with lower housing costs and remote-friendly environments. The median growth of 0.088 percentage points masks substantial heterogeneity, with the ninetieth percentile showing 0.93 percentage points growth compared to tenth percentile decline of 0.29 percentage points.
-
-Comparing Panel A concentration patterns with Panel B growth dynamics reveals that initial advantages compound over time. Counties in the highest AI share category (0.71–10 percent in Panel A) show moderate absolute growth in Panel B, while their percentage increases remain substantial. Conversely, counties with zero AI activity in Panel A largely remain unchanged in Panel B, showing minimal growth (0–0.09 percentage points range). This persistence suggests path dependency in AI adoption, where counties lacking initial conditions for AI jobs struggle to enter the market even during rapid national expansion. The contrast highlights regional disparities that Tables 1 and 2 explain through education, innovation, and labor market tightness differentials.
+Counties with high AI job shares in Panel A show moderate growth in Panel B. Counties with zero AI job shares in Panel A show minimal growth in Panel B (0–0.09 percentage points).
 
 
 ## Extension: Log-Population Weighting Analysis
