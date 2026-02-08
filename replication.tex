@@ -233,7 +233,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Denominator Contamination in a Vacancy-Based Tightness Measure},
+  pdftitle={Disentangling Labor Market Tightness from Posting Scale},
   pdfauthor={Jacob Khaykin; David Kane},
   colorlinks=true,
   linkcolor={blue},
@@ -243,7 +243,7 @@
   pdfcreator={LaTeX via pandoc}}
 
 
-\title{Denominator Contamination in a Vacancy-Based Tightness Measure}
+\title{Disentangling Labor Market Tightness from Posting Scale}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
@@ -271,21 +271,17 @@ replication are available in this repository.\footnote{https://github.com/JacobK
 \section*{Abstract}\label{abstract}
 \addcontentsline{toc}{section}{Abstract}
 
-We identify denominator contamination in Andreadis et al.~(2025)'s key
-labor-market tightness variable: total job postings appear in both the
-AI-intensity denominator and the tightness numerator. Denominator
-contamination occurs when a constructed regressor shares a numerator or
-denominator component with the dependent variable, creating mechanical
-correlation. In a calibrated simulation designed to mirror the panel's
-dispersion, the contaminated specification produces a nonzero
-coefficient even when the AI rate is generated independently of
-unemployment. In the empirical reanalysis, the tightness coefficient is
-not separately identifiable from postings scale: once postings scale is
-separated from unemployment using decomposition or an offset-count
-model, the tightness signal largely disappears. We also compare
-alternative weighting schemes after removing tightness to assess
-sensitivity to the estimand. Our reanalysis indicates the associations
-are more modest than originally presented.
+Andreadis et al.~(2025) find labor-market tightness strongly predicts AI
+job intensity. We show this result is sensitive to specification choice
+because tightness (postings/unemployed) bundles two distinct channels:
+posting scale and unemployment. Using decomposition and alternative
+specifications, we find posting scale drives much of the estimated
+effect, while the unemployment channel is weaker than implied by the
+baseline specification. These findings do not overturn the original
+paper's contributions, but they refine interpretation and suggest
+researchers should separately identify scale and slack effects when both
+involve shared components. We also compare alternative weighting schemes
+as a sensitivity check.
 
 Declaration: There are no financial conflicts of interest to share.
 \newpage
@@ -306,24 +302,15 @@ positive correlates. These patterns have been cited as evidence that AI
 posting intensity tends to be higher in counties with tighter labor
 markets and higher education.
 
-However, the labor-market tightness variable suffers from denominator
-contamination (\citeproc{ref-kronmal1993spurious}{Kronmal, 1993};
-\citeproc{ref-wooldridge2005}{Wooldridge, 2005}). Total postings appear
-in the denominator of AI intensity and the numerator of tightness,
-inducing mechanical correlation even under independence between AI
-postings and unemployment. As a result, the tightness coefficient partly
-reflects shared arithmetic structure rather than a purely economic
-relationship; because tightness is correlated with other covariates, its
-inclusion may also affect the remaining estimates.
-
-We reproduce Tables 1 and 2, demonstrate the mechanical component using
-a DAG, a simple example, and a simulation, and then re-estimate the main
-specifications without the contaminated tightness variable. As a
-secondary check, we compare alternative weighting schemes (including
-log-population weights) after removing tightness to assess sensitivity
-to the estimand. This is not a critique of tightness as a concept, but
-of using a tightness measure that reuses the dependent variable's
-denominator, which mechanically inflates partial correlations.
+We reproduce Tables 1 and 2 and then re-express tightness to separate
+posting scale from unemployment. Because tightness combines postings and
+unemployment, and AI intensity also scales with postings, the tightness
+coefficient can conflate two distinct economic channels: a scale channel
+(more postings overall) and a slack channel (lower unemployment). We
+decompose tightness into its components and estimate alternative
+specifications that separate these channels. This is not a critique of
+tightness as a concept, but a clarification of which channel is driving
+the correlation.
 
 \section{Data}\label{data}
 
@@ -339,33 +326,16 @@ The key variables are defined as follows. The AI intensity outcome is:
 The tightness variable is:
 \[Tightness_{it} = \frac{\text{Total postings}_{it}}{\text{Unemployed}_{it}} \tag{2}\]
 
-Consider a library that reports the share of sci-fi books borrowed
-(sci-fi/total) and a ``busyness'' measure defined as total books
-borrowed divided by overdue books. Even if sci-fi borrowing is unrelated
-to overdue books, the shared total-borrowed term mechanically links the
-two ratios. The same arithmetic applies here: AI intensity divides by
-total postings while tightness multiplies by total postings.
+Because tightness is postings per unemployed worker and AI intensity is
+AI postings per total postings, both measures embed posting volume. This
+motivates separating posting scale from unemployment when interpreting
+the tightness coefficient.
 
-This shared component can induce a mechanical correlation. Even if AI
-postings are generated independently of unemployment conditional on
-total postings, the shared total-postings term can generate nontrivial
-partial correlation between A/T and T/U once sampling noise and ratio
-variation interact with T. This is not universal (e.g., if A = pT with p
-independent, then A/T = p), so the magnitude and sign depend on the
-data-generating process. The corresponding construction diagram is:
-
-\begin{figure}[H]
-
-\caption{\label{fig-dag}Construction diagram for denominator
-contamination}
-
-\centering{
-
-\pandocbounded{\includegraphics[keepaspectratio]{replication_files/figure-pdf/fig-dag-1.pdf}}
-
-}
-
-\end{figure}%
+Because tightness combines postings and unemployment, and AI intensity
+also scales with postings, a tightness coefficient can reflect both
+posting scale and unemployment effects. We therefore treat tightness as
+a composite measure and explicitly separate its components in the
+analysis below.
 
 \section{Replication}\label{replication}
 
@@ -373,7 +343,6 @@ We reproduce Tables 1 and 2 using the authors' data.csv. Most
 coefficients and standard errors match the published tables exactly; one
 coefficient in Table 2 differs slightly, which likely reflects an
 undocumented preprocessing or default-setting difference. The
-denominator-contamination results do not depend on that discrepancy. The
 replication tables use the authors' provided \texttt{data.csv}; Figure 1
 uses an updated Lightcast extraction
 (\texttt{updated\_lightcast\_county.csv}) and Census shapefiles via
@@ -504,10 +473,7 @@ In the growth specification, tightness and STEM degree share are among
 the largest positive correlates, while several industry variables are
 small and imprecise. Table 2 reports a cleaned replication that removes
 redundant steps and intermediate overwrites while preserving the
-published specification and sample construction. For transparency, the
-as-provided replication (including the intermediate overwrite in the
-posted script and the missing immigration series) is reported in
-Appendix A.
+published specification and sample construction.
 
 \begin{figure}[H]
 
@@ -525,110 +491,16 @@ dataset, so it is shown as no data.}
 
 \end{figure}%
 
-\section{The Problem of Denominator
-Contamination}\label{the-problem-of-denominator-contamination}
+\section{Tightness as a Composite
+Measure}\label{tightness-as-a-composite-measure}
 
-Consider a gym that reports the share of protein smoothies among all
-drinks sold and a separate measure of ``thirstiness'' defined as total
-drinks sold divided by the number of gym members. Even if smoothie
-orders are unrelated to membership, the shared total-drinks term
-mechanically links the two ratios. Counties face the same arithmetic: AI
-intensity divides AI postings by total postings, while tightness divides
-total postings by unemployment. The shared denominator can create
-correlation even absent a causal link between the underlying economic
-quantities.
-
-Let AI intensity be (A/T) and tightness be (T/U), where (A) is AI
-postings, (T) is total postings, and (U) is unemployment. The shared (T)
-term can induce mechanical correlation, but the magnitude and sign
-depend on the data-generating process and on how ratio variability
-interacts with (T). This motivates the simulation below, which shows
-that the contaminated specification can produce nonzero coefficients
-even when the AI rate is generated independently of unemployment. In
-that setting, tightness should be interpreted as a partial correlation
-with a mechanical component rather than a causal effect.
-
-\subsection{Simulation}\label{simulation}
-
-We calibrate the simulation to match the empirical distributions of
-total postings and unemployment in the data. We generate AI postings
-independently of total postings and unemployment (matched to the
-empirical AI-postings distribution), and then construct AI intensity by
-dividing by total postings. This keeps the mechanical illustration close
-to the scale and dispersion observed in the county-year panel while
-ensuring that any correlation between AI intensity and tightness is
-driven by shared construction rather than an imposed relationship. The
-sign and magnitude of the mechanical component depend on the
-distributions of the shared denominator and the regressor. The
-simulation isolates the mechanical component by generating AI postings
-and unemployment independently, then showing that the contaminated
-regressor still loads nontrivially because T appears in both constructed
-variables.
-
-\begin{figure}[H]
-
-\caption{\label{fig-simulation}Simulation: Mechanical correlation from
-denominator contamination. AI postings are generated independently of
-total postings and unemployment (matched to the empirical AI-postings
-distribution). Contaminated tightness uses the same total postings as
-the AI intensity denominator (T/U), while the clean proxy uses an
-independent postings draw (T*/U).}
-
-\centering{
-
-\pandocbounded{\includegraphics[keepaspectratio]{replication_files/figure-pdf/fig-simulation-1.pdf}}
-
-}
-
-\end{figure}%
-
-\begin{longtable}[]{@{}lcc@{}}
-
-\caption{\label{tbl-simulation}}
-
-\tabularnewline
-
-\toprule\noalign{}
-Specification & Mean & 95\% CI \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Contaminated tightness & -2.8438 & {[}-5.5878, -0.6736{]} \\
-Uncontaminated tightness & 0.0870 & {[}-3.3021, 5.1185{]} \\
-
-\end{longtable}
-
-\begin{figure}[H]
-
-\caption{\label{fig-diagnostic-scatter}Diagnostic scatter: total
-postings vs.~AI intensity and tightness (clipped at 99th percentile;
-loess smoother shown)}
-
-\centering{
-
-\pandocbounded{\includegraphics[keepaspectratio]{replication_files/figure-pdf/fig-diagnostic-scatter-1.pdf}}
-
-}
-
-\end{figure}%
-
-The diagnostic scatter shows strong dependence on total postings in both
-series, consistent with a shared arithmetic component. \emph{Notes:}
-Simulation calibrated to the empirical distributions of postings and
-unemployment. AI postings are generated independently of total postings
-and unemployment (matched to the empirical AI-postings distribution),
-and AI intensity is constructed by dividing by total postings. The
-contaminated specification produces a mechanical coefficient of
-approximately -2.844 (95\% CI {[}-5.588, -0.674{]}) even under this
-independence (2,000 replications). The uncontaminated specification is
-near zero (0.087).
-
-To preserve the economic meaning of tightness while isolating the
-problematic component, we report three complementary checks: (i)
-omitting tightness, (ii) decomposing tightness into log(postings) and
-log(unemployment) and residualizing tightness on those components, and
-(iii) a count model with a postings offset.
+Tightness, defined as postings per unemployed worker, bundles two
+channels: posting scale and unemployment. Because AI intensity is also
+constructed using total postings, the tightness coefficient conflates a
+scale effect (more postings overall) and a slack effect (lower
+unemployment). The analysis below separates these channels by
+decomposing tightness into its components and estimating alternative
+specifications that isolate posting scale from unemployment.
 
 \subsection{Reanalysis Excluding Tightness (Table 1, Column
 4)}\label{reanalysis-excluding-tightness-table-1-column-4}
@@ -713,10 +585,11 @@ Turnover rate & -0.0419 (0.0231) & -0.0388 (0.0230) & -7\% \\
 \subsection{Decomposing Tightness: Log(Postings) and
 Log(Unemployment)}\label{decomposing-tightness-logpostings-and-logunemployment}
 
-As a direct check on the contaminated regressor, we replace tightness
-\(T/U\) with its components, \mbox{$\\log(T)$} and \mbox{$\\log(U)$}, in
-the levels specification. This tests whether the tightness signal is
-primarily loading on postings scale rather than unemployment.
+As a direct check on the composite tightness measure, we replace
+tightness \(T/U\) with its components, \mbox{$\\log(T)$} and
+\mbox{$\\log(U)$}, in the levels specification. This tests whether the
+tightness signal is primarily loading on postings scale rather than
+unemployment.
 
 \begin{longtable}[]{@{}lc@{}}
 
@@ -747,8 +620,7 @@ component in the empirical specification, we residualize tightness on
 \mbox{$\\log(T)$} and \mbox{$\\log(U)$} using the same fixed effects and
 weights, and then re-estimate the baseline model with the residualized
 tightness. This keeps the original controls and weighting while removing
-the variation in tightness that is mechanically aligned with postings
-scale.
+the variation in tightness that is aligned with postings scale.
 
 \begin{longtable}[]{@{}lc@{}}
 
@@ -833,10 +705,10 @@ postings.
 \subsection{Alternative Tightness Proxy: Unemployment
 Rate}\label{alternative-tightness-proxy-unemployment-rate}
 
-As a practical alternative that avoids sharing the postings denominator,
-we replace tightness with the unemployment rate. This keeps the
-labor-market dimension while removing the mechanical overlap with AI
-intensity.
+As a practical alternative that separates unemployment from postings, we
+replace tightness with the unemployment rate. This keeps the
+labor-market dimension while removing the direct posting-scale
+component.
 
 \begin{longtable}[]{@{}lcc@{}}
 
@@ -861,29 +733,27 @@ while retaining a labor-market signal.
 
 \section{Conclusion}\label{conclusion}
 
-Denominator contamination in labor-market tightness creates a mechanical
-component in the estimated relationship. Because total postings appear
-in both the AI-intensity denominator and the tightness numerator, the
-tightness coefficient partly reflects shared arithmetic structure even
-when the AI rate is generated independently of unemployment. The DAG and
-simulation show that this component is not merely theoretical: under
-this calibrated DGP, the contaminated specification yields a nonzero
-mechanical coefficient, while the uncontaminated specification centers
-near zero.
+Andreadis et al.~(2025) make an important contribution documenting AI
+job heterogeneity across U.S. counties. Our reanalysis clarifies the
+interpretation of their key finding: labor market tightness predicts AI
+intensity primarily through posting scale rather than unemployment
+levels. When we separate these channels using decomposition,
+residualization, and an offset-count model, the unemployment channel is
+weaker than implied by the baseline tightness specification.
 
-Re-estimating the main specification after removing tightness reduces
-the magnitudes of the remaining correlates and weakens several
-associations. As a secondary check, we compare alternative weighting
-schemes after removing tightness; coefficients attenuate on average,
-indicating sensitivity to how county-year relationships are aggregated.
+This distinction matters for both methodology and policy.
+Methodologically, researchers should be cautious when correlates and
+outcomes share components---not because results are invalid, but because
+coefficients may conflate multiple mechanisms. Decomposition can
+separate these channels and sharpen interpretation. For policy, our
+results suggest AI adoption tracks posting volume more than labor-market
+slack. This implies that policies promoting market dynamism and firm
+activity may matter more than those targeting unemployment alone.
 
-These results do not overturn AKCLM's descriptive contribution, but they
-suggest a more nuanced interpretation. The headline tightness result
-partly reflects shared arithmetic structure, and the remaining
-associations are more modest in magnitude once the contaminated variable
-is removed and alternative weighting schemes are considered. Researchers
-using similar ratio-based labor-market variables should avoid shared
-components or explicitly test for mechanical correlation.
+We do not challenge the original paper's conclusion that labor markets
+matter for AI adoption---we show how they matter. Future work can
+explore why posting volume varies across counties and whether
+unemployment plays a stronger role in specific contexts.
 
 \section*{Bibliography}\label{bibliography}
 \addcontentsline{toc}{section}{Bibliography}
@@ -1067,9 +937,8 @@ Sensitivity}\label{appendix-a-weighting-sensitivity}
 \addcontentsline{toc}{subsection}{Log-Population Weights (Table 1,
 Column 4)}
 
-After removing the contaminated tightness variable, we test whether
-remaining associations are sensitive to alternative aggregation schemes
-by comparing unweighted, population-weighted, and
+We test whether remaining associations are sensitive to alternative
+aggregation schemes by comparing unweighted, population-weighted, and
 log-population-weighted estimates. Population weights correspond to a
 person-weighted relationship; log(population) is an intermediate,
 concave reweighting that tilts toward larger counties without letting a

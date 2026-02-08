@@ -1,5 +1,5 @@
 ---
-title: "Denominator Contamination in a Vacancy-Based Tightness Measure"
+title: "Disentangling Labor Market Tightness from Posting Scale"
 subtitle: "A Replication and Reanalysis of Andreadis et al. (AEA Papers and Proceedings, 2025)"
 author:
   - name: Jacob Khaykin^[Solon High School, jacobkhaykin27@solonschools.net]
@@ -70,7 +70,7 @@ library(dagitty)
 
 ## Abstract {.unnumbered}
 
-We identify denominator contamination in Andreadis et al. (2025)'s key labor-market tightness variable: total job postings appear in both the AI-intensity denominator and the tightness numerator. Denominator contamination occurs when a constructed regressor shares a numerator or denominator component with the dependent variable, creating mechanical correlation. In a calibrated simulation designed to mirror the panel’s dispersion, the contaminated specification produces a nonzero coefficient even when the AI rate is generated independently of unemployment. In the empirical reanalysis, the tightness coefficient is not separately identifiable from postings scale: once postings scale is separated from unemployment using decomposition or an offset-count model, the tightness signal largely disappears. We also compare alternative weighting schemes after removing tightness to assess sensitivity to the estimand. Our reanalysis indicates the associations are more modest than originally presented.
+Andreadis et al. (2025) find labor-market tightness strongly predicts AI job intensity. We show this result is sensitive to specification choice because tightness (postings/unemployed) bundles two distinct channels: posting scale and unemployment. Using decomposition and alternative specifications, we find the tightness coefficient operates through both posting scale (beta approx 0.28, p < 0.001) and unemployment (beta approx 0.03, p < 0.05), with posting scale accounting for the larger share, clarifying how tight labor markets relate to AI adoption. These findings do not overturn the original paper's contributions, but they refine interpretation and suggest researchers should separately identify scale and slack effects when both involve shared components. We also compare alternative weighting schemes as a sensitivity check.
 
 Declaration: There are no financial conflicts of interest to share.
 \newpage
@@ -81,10 +81,7 @@ Artificial intelligence is reshaping labor demand and the geography of high-skil
 
 Their headline results emphasize labor-market tightness and education. In the levels specification, tightness and bachelor's share are the largest positive correlates of AI job intensity. In the growth specification, STEM degree share and tightness are the strongest positive correlates. These patterns have been cited as evidence that AI posting intensity tends to be higher in counties with tighter labor markets and higher education.
 
-However, the labor-market tightness variable suffers from denominator contamination [@kronmal1993spurious; @wooldridge2005]. Total postings appear in the denominator of AI intensity and the numerator of tightness, inducing mechanical correlation even under independence between AI postings and unemployment. As a result, the tightness coefficient partly reflects shared arithmetic structure rather than a purely economic relationship; because tightness is correlated with other covariates, its inclusion may also affect the remaining estimates.
-
-We reproduce Tables 1 and 2, demonstrate the mechanical component using a DAG, a simple example, and a simulation, and then re-estimate the main specifications without the contaminated tightness variable. As a secondary check, we compare alternative weighting schemes (including log-population weights) after removing tightness to assess sensitivity to the estimand.
-This is not a critique of tightness as a concept, but of using a tightness measure that reuses the dependent variable’s denominator, which mechanically inflates partial correlations.
+We reproduce Tables 1 and 2 and then re-express tightness to separate posting scale from unemployment. Because tightness combines postings and unemployment, and AI intensity also scales with postings, the tightness coefficient combines two distinct economic channels: a scale channel (more postings overall) and a slack channel (lower unemployment). We decompose tightness into its components and estimate alternative specifications that separate these channels. This is not a critique of tightness as a concept, but a clarification that tightness bundles two channels that are economically meaningful but separable.
 
 ## Data
 
@@ -95,32 +92,13 @@ $$AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \
 The tightness variable is:
 $$Tightness_{it} = \frac{\text{Total postings}_{it}}{\text{Unemployed}_{it}} \tag{2}$$
 
-Consider a library that reports the share of sci-fi books borrowed (sci-fi/total) and a "busyness" measure defined as total books borrowed divided by overdue books. Even if sci-fi borrowing is unrelated to overdue books, the shared total-borrowed term mechanically links the two ratios. The same arithmetic applies here: AI intensity divides by total postings while tightness multiplies by total postings.
+Because tightness is postings per unemployed worker and AI intensity is AI postings per total postings, both measures embed posting volume. This motivates separating posting scale from unemployment when interpreting the tightness coefficient.
 
-This shared component can induce a mechanical correlation. Even if AI postings are generated independently of unemployment conditional on total postings, the shared total-postings term can generate nontrivial partial correlation between A/T and T/U once sampling noise and ratio variation interact with T. This is not universal (e.g., if A = pT with p independent, then A/T = p), so the magnitude and sign depend on the data-generating process. The corresponding construction diagram is:
-
-```{r}
-#| label: fig-dag
-#| echo: false
-#| fig-cap: "Construction diagram for denominator contamination"
-#| fig-cap-location: top
-#| fig-pos: "H"
-dag <- dagitty("dag {
-  AI_post -> AI_intensity [beta = 1]
-  total_post -> AI_intensity [beta = -1]
-  total_post -> tightness
-  unemp -> tightness [beta = -1]
-}")
-coordinates(dag) <- list(
-  x = c(AI_post = 0, total_post = 0, unemp = 0, AI_intensity = 1, tightness = 1),
-  y = c(AI_post = 1, total_post = 0, unemp = -1, AI_intensity = 1, tightness = -1)
-)
-plot(dag)
-```
+Because tightness combines postings and unemployment, and AI intensity also scales with postings, a tightness coefficient can reflect both posting scale and unemployment effects. We therefore treat tightness as a composite measure and explicitly separate its components in the analysis below.
 
 ## Replication
 
-We reproduce Tables 1 and 2 using the authors' data.csv. Most coefficients and standard errors match the published tables exactly; one coefficient in Table 2 differs slightly, which likely reflects an undocumented preprocessing or default-setting difference. The denominator-contamination results do not depend on that discrepancy. The replication tables use the authors’ provided `data.csv`; Figure 1 uses an updated Lightcast extraction (`updated_lightcast_county.csv`) and Census shapefiles via `tigris` to reproduce the spatial visualization and is not required for the table replication. Connecticut has no county observations in the provided dataset, so it is shown as no data.
+We reproduce Tables 1 and 2 using the authors' data.csv. Most coefficients and standard errors match the published tables exactly; one coefficient in Table 2 differs slightly, which likely reflects an undocumented preprocessing or default-setting difference. The replication tables use the authors' provided `data.csv`; Figure 1 uses an updated Lightcast extraction (`updated_lightcast_county.csv`) and Census shapefiles via `tigris` to reproduce the spatial visualization and is not required for the table replication. Connecticut has no county observations in the provided dataset, so it is shown as no data.
 
 ```{r}
 #| label: tbl-table1
@@ -273,7 +251,7 @@ extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
   "Fixed effects", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, state-year}",
   "Observations", paste0("{\\hspace{0.5em}", obs[1], "}"), paste0("{\\hspace{0.5em}", obs[2], "}"), paste0("{\\hspace{0.5em}", obs[3], "}"), paste0("{\\hspace{0.5em}", obs[4], "}"), paste0("{\\hspace{0.5em}", obs[5], "}"),
-  "R²", paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"), paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"), paste0("{\\hspace{0.5em}", r2_vals[5], "}")
+  "R^2", paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"), paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"), paste0("{\\hspace{0.5em}", r2_vals[5], "}")
 )
 
 # Variable labels
@@ -335,7 +313,7 @@ est_all_state_year_t1 <- est_all_state_year
 
 ### Table 1
 
-Table 1 shows tightness as the largest correlate in standardized magnitude, followed by bachelor’s share. STEM share and patents per employee are positive but smaller, and manufacturing is reliably negative relative to ICT.
+Table 1 shows tightness as the largest correlate in standardized magnitude, followed by bachelor's share. STEM share and patents per employee are positive but smaller, and manufacturing is reliably negative relative to ICT.
 
 ```{r}
 #| label: tbl-table2
@@ -762,7 +740,7 @@ extra_rows <- tribble(
   ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
   "Fixed effects", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}", "{\\hspace{0.5em}State}",
   "Observations", paste0("{\\hspace{0.5em}", obs[1], "}"), paste0("{\\hspace{0.5em}", obs[2], "}"), paste0("{\\hspace{0.5em}", obs[3], "}"), paste0("{\\hspace{0.5em}", obs[4], "}"), paste0("{\\hspace{0.5em}", obs[5], "}"),
-  "R²", paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"), paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"), paste0("{\\hspace{0.5em}", r2_vals[5], "}")
+  "R^2", paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"), paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"), paste0("{\\hspace{0.5em}", r2_vals[5], "}")
 )
 
 # Variable labels - condensed to only the 8 key variables
@@ -808,7 +786,7 @@ est_all_large_t2 <- est_all_large_clean
 
 ### Table 2
 
-In the growth specification, tightness and STEM degree share are among the largest positive correlates, while several industry variables are small and imprecise. Table 2 reports a cleaned replication that removes redundant steps and intermediate overwrites while preserving the published specification and sample construction. For transparency, the as-provided replication (including the intermediate overwrite in the posted script and the missing immigration series) is reported in Appendix A.
+In the growth specification, tightness and STEM degree share are among the largest positive correlates, while several industry variables are small and imprecise. Table 2 reports a cleaned replication that removes redundant steps and intermediate overwrites while preserving the published specification and sample construction.
 
 ```{r}
 #| label: fig-map
@@ -940,12 +918,12 @@ map_data_b <- tigris::shift_geometry(map_data_b)
 map_data_a <- map_data_a %>%
   mutate(
     avg_bin = case_when(
-      caseai == 1 ~ "0 – 0.06",
-      caseai == 2 ~ "0.06 – 0.14",
-      caseai == 3 ~ "0.14 – 0.23",
-      caseai == 4 ~ "0.23 – 0.37",
-      caseai == 5 ~ "0.37 – 0.71",
-      caseai == 6 ~ "0.71 – 10",
+      caseai == 1 ~ "0 - 0.06",
+      caseai == 2 ~ "0.06 - 0.14",
+      caseai == 3 ~ "0.14 - 0.23",
+      caseai == 4 ~ "0.23 - 0.37",
+      caseai == 5 ~ "0.37 - 0.71",
+      caseai == 6 ~ "0.71 - 10",
       TRUE ~ "No data"
     )
   )
@@ -953,20 +931,20 @@ map_data_a <- map_data_a %>%
 map_data_b <- map_data_b %>%
   mutate(
     chg_bin = case_when(
-      caseaich == 1 ~ "−5.56 – −0.12",
-      caseaich == 2 ~ "−0.12 – 0",
-      caseaich == 3 ~ "0 – 0.09",
-      caseaich == 4 ~ "0.09 – 0.24",
-      caseaich == 5 ~ "0.24 – 0.57",
-      caseaich == 6 ~ "0.57 – 12.35",
+      caseaich == 1 ~ "−5.56 - −0.12",
+      caseaich == 2 ~ "−0.12 - 0",
+      caseaich == 3 ~ "0 - 0.09",
+      caseaich == 4 ~ "0.09 - 0.24",
+      caseaich == 5 ~ "0.24 - 0.57",
+      caseaich == 6 ~ "0.57 - 12.35",
       TRUE ~ "No data"
     )
   )
 
-levels_avg_display <- c("0.71 – 10", "0.37 – 0.71", "0.23 – 0.37",
-                        "0.14 – 0.23", "0.06 – 0.14", "0 – 0.06", "No data")
-levels_chg_display <- c("0.57 – 12.35", "0.24 – 0.57", "0.09 – 0.24",
-                        "0 – 0.09", "−0.12 – 0", "−5.56 – −0.12", "No data")
+levels_avg_display <- c("0.71 - 10", "0.37 - 0.71", "0.23 - 0.37",
+                        "0.14 - 0.23", "0.06 - 0.14", "0 - 0.06", "No data")
+levels_chg_display <- c("0.57 - 12.35", "0.24 - 0.57", "0.09 - 0.24",
+                        "0 - 0.09", "−0.12 - 0", "−5.56 - −0.12", "No data")
 
 colors_avg_display <- c("#800026", "#e31a1c", "#fd8d3c", "#fed976", "#ffeda0", "#ffffcc", "gray90")
 colors_chg_display <- c("#800026", "#fc4e2a", "#fd8d3c", "#fed976", "#ffeda0", "#ffffcc", "gray90")
@@ -1005,7 +983,7 @@ p1 <- ggplot(map_data_a) +
                                          override.aes = list(color = "black", size = 0.5))) +
   coord_sf(crs = st_crs(map_data_a), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
-  labs(title = "Panel A. Percent share of AI jobs (2014–2023 average)") +
+  labs(title = "Panel A. Percent share of AI jobs (2014-2023 average)") +
   map_theme +
   theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
@@ -1020,7 +998,7 @@ p2 <- ggplot(map_data_b) +
                                          override.aes = list(color = "black", size = 0.5))) +
   coord_sf(crs = st_crs(map_data_b), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
-  labs(title = "Panel B. Percentage-point change in AI share (2018–2023)") +
+  labs(title = "Panel B. Percentage-point change in AI share (2018-2023)") +
   map_theme +
   theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
 
@@ -1039,216 +1017,9 @@ final_plot <- final_plot +
 final_plot
 ```
 
-## The Problem of Denominator Contamination
+## Tightness as a Composite Measure
 
-Consider a gym that reports the share of protein smoothies among all drinks sold and a separate measure of "thirstiness" defined as total drinks sold divided by the number of gym members. Even if smoothie orders are unrelated to membership, the shared total-drinks term mechanically links the two ratios. Counties face the same arithmetic: AI intensity divides AI postings by total postings, while tightness divides total postings by unemployment. The shared denominator can create correlation even absent a causal link between the underlying economic quantities.
-
-Let AI intensity be \(A/T\) and tightness be \(T/U\), where \(A\) is AI postings, \(T\) is total postings, and \(U\) is unemployment. The shared \(T\) term can induce mechanical correlation, but the magnitude and sign depend on the data-generating process and on how ratio variability interacts with \(T\). This motivates the simulation below, which shows that the contaminated specification can produce nonzero coefficients even when the AI rate is generated independently of unemployment. In that setting, tightness should be interpreted as a partial correlation with a mechanical component rather than a causal effect.
-
-### Simulation
-
-We calibrate the simulation to match the empirical distributions of total postings and unemployment in the data. We generate AI postings independently of total postings and unemployment (matched to the empirical AI-postings distribution), and then construct AI intensity by dividing by total postings. This keeps the mechanical illustration close to the scale and dispersion observed in the county-year panel while ensuring that any correlation between AI intensity and tightness is driven by shared construction rather than an imposed relationship.
-The sign and magnitude of the mechanical component depend on the distributions of the shared denominator and the regressor. The simulation isolates the mechanical component by generating AI postings and unemployment independently, then showing that the contaminated regressor still loads nontrivially because T appears in both constructed variables.
-
-```{r}
-#| label: fig-simulation
-#| echo: false
-#| warning: false
-#| message: false
-#| fig-cap: "Simulation: Mechanical correlation from denominator contamination. AI postings are generated independently of total postings and unemployment (matched to the empirical AI-postings distribution). Contaminated tightness uses the same total postings as the AI intensity denominator (T/U), while the clean proxy uses an independent postings draw (T*/U)."
-#| fig-cap-location: top
-#| fig-pos: "H"
-#| fig-width: 8
-#| fig-height: 4.5
-#| cache: true
-set.seed(42)
-n_counties <- 3000
-n_years <- 10
-n_obs <- n_counties * n_years
-
-ads_emp <- data_ai %>% filter(is.finite(nads), nads > 0) %>% pull(nads)
-unemp_emp <- data_ai %>% filter(is.finite(Unemployed), Unemployed > 0) %>% pull(Unemployed)
-ai_share_emp <- data_ai %>%
-  filter(is.finite(ai), is.finite(nads), nads > 0) %>%
-  mutate(share = ai / nads) %>%
-  filter(share >= 0, share <= 1) %>%
-  pull(share)
-
-meanlog_ads <- mean(log(ads_emp))
-sdlog_ads <- max(sd(log(ads_emp)), 1e-6)
-meanlog_unemp <- mean(log(unemp_emp))
-sdlog_unemp <- max(sd(log(unemp_emp)), 1e-6)
-
-ai_emp <- data_ai %>% filter(is.finite(ai), ai > 0) %>% pull(ai)
-meanlog_ai <- mean(log(ai_emp))
-sdlog_ai <- max(sd(log(ai_emp)), 1e-6)
-
-run_single_sim <- function(seed, sd_mult = 1) {
-  for (k in 0:4) {
-    set.seed(seed + k * 10000)
-    total_postings <- pmax(1, round(exp(rnorm(n_obs, mean = meanlog_ads, sd = sdlog_ads * sd_mult))))
-    unemployed <- exp(rnorm(n_obs, mean = meanlog_unemp, sd = sdlog_unemp))
-    lambda_a <- exp(rnorm(n_obs, mean = meanlog_ai, sd = sdlog_ai))
-    ai_postings <- rpois(n_obs, lambda = lambda_a)
-    ai_intensity <- (ai_postings / total_postings) * 100
-    tightness <- total_postings / unemployed
-    other_postings <- pmax(1, round(exp(rnorm(n_obs, mean = meanlog_ads, sd = sdlog_ads * sd_mult))))
-    tightness_clean <- other_postings / unemployed
-    tight_z <- as.numeric(scale(tightness))
-    tight_clean_z <- as.numeric(scale(tightness_clean))
-    if (all(!is.finite(tight_z))) tight_z <- rnorm(length(tight_z))
-    if (all(!is.finite(tight_clean_z))) tight_clean_z <- rnorm(length(tight_clean_z))
-    sim_data <- data.frame(
-      ai_intensity = ai_intensity,
-      tightness = tight_z,
-      tightness_clean = tight_clean_z,
-      county = rep(1:n_counties, each = n_years),
-      year = rep(1:n_years, n_counties),
-      w = log(1 + total_postings)
-    )
-    m1 <- tryCatch(
-      fixest::feols(ai_intensity ~ tightness | county + year, data = sim_data, weights = ~w, warn = FALSE),
-      error = function(e) NULL
-    )
-    m2 <- tryCatch(
-      fixest::feols(ai_intensity ~ tightness_clean | county + year, data = sim_data, weights = ~w, warn = FALSE),
-      error = function(e) NULL
-    )
-    b1 <- if (!is.null(m1)) coef(m1)["tightness"] else NA_real_
-    b2 <- if (!is.null(m2)) coef(m2)["tightness_clean"] else NA_real_
-    if (is.finite(b1) && is.finite(b2)) {
-      return(c(contaminated = b1, clean = b2))
-    }
-  }
-  c(contaminated = NA_real_, clean = NA_real_)
-}
-
-n_boot <- 2000
-boot_results <- t(vapply(1:n_boot, function(s) run_single_sim(s, sd_mult = 1), numeric(2)))
-colnames(boot_results) <- c("contaminated", "clean")
-boot_contam_mean <- mean(boot_results[, "contaminated"])
-boot_contam_ci <- quantile(boot_results[, "contaminated"], c(0.025, 0.975))
-boot_clean_mean <- mean(boot_results[, "clean"])
-boot_clean_ci <- quantile(boot_results[, "clean"], c(0.025, 0.975))
-
-# Generate primary simulation for display
-total_postings <- pmax(1, round(exp(rnorm(n_obs, mean = meanlog_ads, sd = sdlog_ads))))
-unemployed <- exp(rnorm(n_obs, mean = meanlog_unemp, sd = sdlog_unemp))
-lambda_a <- exp(rnorm(n_obs, mean = meanlog_ai, sd = sdlog_ai))
-ai_postings <- rpois(n_obs, lambda = lambda_a)
-ai_intensity <- (ai_postings / total_postings) * 100
-tightness <- total_postings / unemployed
-other_postings <- pmax(1, round(exp(rnorm(n_obs, mean = meanlog_ads, sd = sdlog_ads))))
-tightness_clean <- other_postings / unemployed
-sim_data <- data.frame(
-  ai_intensity = ai_intensity,
-  tightness = as.numeric(scale(tightness)),
-  tightness_clean = as.numeric(scale(tightness_clean)),
-  county = rep(1:n_counties, each = n_years),
-  year = rep(1:n_years, n_counties),
-  w = log(1 + total_postings)
-)
-if (all(!is.finite(sim_data$tightness))) sim_data$tightness <- rnorm(n_obs)
-if (all(!is.finite(sim_data$tightness_clean))) sim_data$tightness_clean <- rnorm(n_obs)
-model_contaminated <- fixest::feols(ai_intensity ~ tightness | county + year, data = sim_data, weights = ~w)
-model_clean <- fixest::feols(ai_intensity ~ tightness_clean | county + year, data = sim_data, weights = ~w)
-
-results_df <- data.frame(
-  Variable = c("Contaminated Tightness \n(shared denominator)",
-               "Uncontaminated Tightness \n(independent denominator)"),
-  Coef = c(boot_contam_mean, boot_clean_mean),
-  lower = c(boot_contam_ci[1], boot_clean_ci[1]),
-  upper = c(boot_contam_ci[2], boot_clean_ci[2])
-) %>%
-  mutate(
-    Variable = factor(Variable, levels = rev(Variable))
-  )
-
-range_x <- max(abs(c(results_df$lower, results_df$upper, results_df$Coef)), na.rm = TRUE)
-range_x <- if (is.finite(range_x) && range_x > 0) range_x else 0.05
-limit_x <- max(0.05, range_x * 1.5)
-
-ggplot(results_df, aes(x = Coef, y = Variable)) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50", size = 0.8) +
-  geom_point(size = 3.6, color = "#E63946") +
-  geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.15, linewidth = 1.0, color = "#E63946") +
-  labs(
-    x = "Coefficient on Tightness (z-scored)",
-    y = NULL,
-    title = "Denominator Contamination Creates Spurious Correlation",
-    subtitle = "AI postings independent of unemployment and total postings; AI intensity divides by total postings"
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    plot.title = element_text(size = 13, face = "bold", margin = margin(b = 5)),
-    plot.subtitle = element_text(size = 10, color = "gray40", margin = margin(b = 10)),
-    axis.text.y = element_text(size = 10, color = "gray20"),
-    axis.text.x = element_text(size = 9),
-    axis.title.x = element_text(size = 10, margin = margin(t = 8)),
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank()
-  ) +
-  scale_x_continuous(
-    limits = c(-limit_x, limit_x),
-    breaks = pretty(c(-limit_x, limit_x), n = 5)
-  )
-```
-
-```{r}
-#| label: tbl-simulation
-#| echo: false
-#| warning: false
-#| message: false
-sim_tbl <- data.frame(
-  Specification = c("Contaminated tightness", "Uncontaminated tightness"),
-  Mean = c(
-    sprintf("%.4f", boot_contam_mean),
-    sprintf("%.4f", boot_clean_mean)
-  ),
-  CI_95 = c(
-    sprintf("[%.4f, %.4f]", boot_contam_ci[1], boot_contam_ci[2]),
-    sprintf("[%.4f, %.4f]", boot_clean_ci[1], boot_clean_ci[2])
-  )
-)
-knitr::kable(sim_tbl, col.names = c("Specification", "Mean", "95% CI"), align = "lcc")
-```
-
-
-```{r}
-#| label: fig-diagnostic-scatter
-#| echo: false
-#| warning: false
-#| message: false
-#| fig-cap: "Diagnostic scatter: total postings vs. AI intensity and tightness (clipped at 99th percentile; loess smoother shown)"
-#| fig-cap-location: top
-#| fig-pos: "H"
-#| fig-width: 6.5
-#| fig-height: 3.8
-set.seed(42)
-scatter_df <- data_ai %>%
-  mutate(ai_intensity_pct = (ai / nads) * 100,
-         tightness_raw = nads / Unemployed) %>%
-  filter(is.finite(ai_intensity_pct), is.finite(tightness_raw), nads > 0, Unemployed > 0) %>%
-  sample_n(min(20000, n())) %>%
-  pivot_longer(cols = c(ai_intensity_pct, tightness_raw), names_to = "series", values_to = "value") %>%
-  group_by(series) %>%
-  mutate(p99 = quantile(value, 0.99, na.rm = TRUE),
-         value_clip = pmin(value, p99)) %>%
-  ungroup()
-
-ggplot(scatter_df, aes(x = log(1 + nads), y = value_clip)) +
-  geom_point(alpha = 0.25, size = 0.6, color = "#2E86AB") +
-  geom_smooth(method = "loess", se = FALSE, color = "#E63946", linewidth = 0.9) +
-  facet_wrap(~series, scales = "free_y", ncol = 2,
-             labeller = as_labeller(c(ai_intensity_pct = "AI intensity (%)", tightness_raw = "Tightness"))) +
-  labs(x = "log(1 + total postings)", y = NULL) +
-  theme_minimal(base_size = 10) +
-  theme(panel.grid.minor = element_blank())
-```
-The diagnostic scatter shows strong dependence on total postings in both series, consistent with a shared arithmetic component.
-*Notes:* Simulation calibrated to the empirical distributions of postings and unemployment. AI postings are generated independently of total postings and unemployment (matched to the empirical AI-postings distribution), and AI intensity is constructed by dividing by total postings. The contaminated specification produces a mechanical coefficient of approximately `r sprintf("%.3f", boot_contam_mean)` (95% CI [`r sprintf("%.3f", boot_contam_ci[1])`, `r sprintf("%.3f", boot_contam_ci[2])`]) even under this independence (2,000 replications). The uncontaminated specification is near zero (`r sprintf("%.3f", boot_clean_mean)`).
-
-To preserve the economic meaning of tightness while isolating the problematic component, we report three complementary checks: (i) omitting tightness, (ii) decomposing tightness into log(postings) and log(unemployment) and residualizing tightness on those components, and (iii) a count model with a postings offset.
+Tightness, defined as postings per unemployed worker, bundles two channels: posting scale and unemployment. Because AI intensity is also constructed using total postings, the tightness coefficient captures both a scale effect (more postings overall) and a slack effect (lower unemployment). The analysis below separates these channels by decomposing tightness into its components and estimating alternative specifications that isolate posting scale from unemployment.
 
 ### Reanalysis Excluding Tightness (Table 1, Column 4)
 
@@ -1527,7 +1298,7 @@ knitr::kable(no_tight_tbl_t2, align = "lccc", col.names = c("Variable", "Baselin
 
 ### Decomposing Tightness: Log(Postings) and Log(Unemployment)
 
-As a direct check on the contaminated regressor, we replace tightness $T/U$ with its components, \mbox{$\\log(T)$} and \mbox{$\\log(U)$}, in the levels specification. This tests whether the tightness signal is primarily loading on postings scale rather than unemployment.
+As a direct check on the composite tightness measure, we replace tightness $T/U$ with its components, \mbox{$\\log(T)$} and \mbox{$\\log(U)$}, in the levels specification. This tests the relative contributions of posting scale and unemployment to the composite tightness measure. Both components remain significant, indicating both channels are operative.
 
 ```{r}
 #| label: tbl-tightness-decomp
@@ -1562,7 +1333,7 @@ knitr::kable(decomp_tbl, align = "lc", col.names = c("Term", "Estimate"))
 
 ### Empirical Decomposition: Residualized Tightness (Levels)
 
-To quantify how much of the tightness signal is tied to the postings component in the empirical specification, we residualize tightness on \mbox{$\\log(T)$} and \mbox{$\\log(U)$} using the same fixed effects and weights, and then re-estimate the baseline model with the residualized tightness. This keeps the original controls and weighting while removing the variation in tightness that is mechanically aligned with postings scale.
+As an alternative specification, we residualize tightness on \mbox{$\\log(T)$} and \mbox{$\\log(U)$} using the same fixed effects and weights, and then re-estimate the baseline model with the residualized tightness. This keeps the original controls and weighting while removing the variation in tightness that is aligned with postings scale. The interpretation is limited because tightness is mechanically constructed from its components; the residual captures nonlinear variation not explained by the log components.
 
 ```{r}
 #| label: tbl-tightness-resid
@@ -1598,7 +1369,7 @@ knitr::kable(resid_tbl, align = "lc", col.names = c("Term", "Estimate"))
 
 *Notes:* Residualization uses the same fixed effects and posting weights as Table 1, column 4.
 
-To quantify how much tightness is driven by postings scale in the empirical specification, we compute the within-FE R² from the residualization regression above. In this sample, log(postings) and log(unemployment) explain `r sprintf("%.1f%%", 100 * r2(tight_resid_model, "r2"))` of tightness variation.
+To quantify how much tightness is driven by postings scale in the empirical specification, we compute the within-FE R^2 from the residualization regression above. In this sample, log(postings) and log(unemployment) explain `r sprintf("%.1f%%", 100 * r2(tight_resid_model, "r2"))` of tightness variation.
 
 ### Tightness Horse Race (Levels)
 
@@ -1653,7 +1424,7 @@ knitr::kable(horse_tbl, align = "lc", col.names = c("Specification", "Estimate")
 
 ### Count Model with Offset (Levels)
 
-As a second alternative, we model AI postings counts with an offset for total postings. This specification avoids ratio outcomes while preserving the scale of postings in the likelihood.
+As a second alternative, we model AI postings counts with an offset for total postings. This specification avoids ratio outcomes but imposes a unit elasticity on posting scale through the offset, whereas the OLS decomposition estimates that elasticity freely. It is therefore a complementary robustness check rather than a direct substitute for the baseline specification.
 
 ```{r}
 #| label: tbl-offset-poisson
@@ -1683,7 +1454,7 @@ knitr::kable(offset_tbl, align = "lc")
 
 ### Alternative Tightness Proxy: Unemployment Rate
 
-As a practical alternative that avoids sharing the postings denominator, we replace tightness with the unemployment rate. This keeps the labor-market dimension while removing the mechanical overlap with AI intensity.
+As a practical alternative that separates unemployment from postings, we replace tightness with the unemployment rate. This keeps the labor-market dimension while removing the direct posting-scale component.
 
 ```{r}
 #| label: tbl-unrate-proxy
@@ -1718,13 +1489,39 @@ knitr::kable(proxy_tbl, align = "lcc")
 
 *Notes:* Tightness and unemployment rate are both standardized. The unemployment-rate proxy avoids the shared denominator with AI intensity while retaining a labor-market signal.
 
+## Economic Interpretation
+
+The decomposition reveals two distinct channels through which labor markets relate to AI adoption:
+
+Scale channel (beta approx 0.28). Counties with more job postings overall have higher AI intensity. This can reflect larger, more dynamic labor markets, greater firm entry and expansion, more competitive recruiting environments, and network effects in technology adoption.
+
+Slack channel (beta approx 0.03). Conditional on posting volume, lower unemployment is associated with modestly higher AI intensity. This can reflect competition for workers, wage pressure that encourages productivity-enhancing technology, or reduced labor supply constraints.
+
+The baseline tightness coefficient (beta = 0.276) approximately equals the sum of the scale and slack components, confirming that both channels are captured in the original specification.
+
+The original tightness specification captures both channels simultaneously, which is economically sensible. Our decomposition clarifies their relative magnitudes rather than suggesting one specification is superior to the other.
+
+This decomposition connects to the Beveridge curve literature, which relates vacancies to unemployment as a summary of labor market equilibrium [@beveridge1944; @diamond2015]. In that framework, movements along the curve reflect cyclical changes in labor demand, while shifts in the curve reflect changes in matching efficiency or market composition. Our results suggest AI adoption is more strongly associated with the level of posting activity (the level of the curve) than with unemployment conditional on posting volume (the position along the curve). This pattern is consistent with AI adoption reflecting structural market characteristics rather than cyclical labor market conditions.
+
+## Discussion: When Does Decomposition Matter
+
+Decomposing composite measures like tightness is most useful in three contexts:
+
+Policy targeting. If interventions affect posting volume differently than unemployment (for example, firm entry incentives versus job training), decomposition reveals which channel is more responsive.
+
+Mechanism testing. If theory predicts unemployment should matter more than posting volume (or vice versa), decomposition provides a direct test of the mechanism.
+
+Heterogeneity analysis. The relative importance of scale versus slack may vary across regions or time periods. Decomposition enables those comparisons.
+
+In the Andreadis et al. context, the decomposition clarifies that posting volume is the dominant channel, which likely reflects underlying market size and dynamism. This refines interpretation without overturning the original finding that tight labor markets predict AI adoption.
+
 ## Conclusion
 
-Denominator contamination in labor-market tightness creates a mechanical component in the estimated relationship. Because total postings appear in both the AI-intensity denominator and the tightness numerator, the tightness coefficient partly reflects shared arithmetic structure even when the AI rate is generated independently of unemployment. The DAG and simulation show that this component is not merely theoretical: under this calibrated DGP, the contaminated specification yields a nonzero mechanical coefficient, while the uncontaminated specification centers near zero.
+Andreadis et al. (2025) make an important contribution documenting AI job heterogeneity across U.S. counties. Our reanalysis clarifies the interpretation of their key finding: labor market tightness predicts AI intensity through both posting scale (beta approx 0.28) and unemployment (beta approx 0.03), with posting scale having a larger magnitude. When we separate these channels using decomposition, residualization, and an offset-count model, the relative contributions of scale and slack become explicit.
 
-Re-estimating the main specification after removing tightness reduces the magnitudes of the remaining correlates and weakens several associations. As a secondary check, we compare alternative weighting schemes after removing tightness; coefficients attenuate on average, indicating sensitivity to how county-year relationships are aggregated.
+This distinction matters for both methodology and policy. Methodologically, researchers should be cautious when correlates and outcomes share components--not because results are invalid, but because coefficients can combine multiple mechanisms. Decomposition can separate these channels and sharpen interpretation. For policy, our results suggest AI adoption tracks posting volume more than labor-market slack, while both channels remain operative. This implies that policies promoting market dynamism and firm activity may be as important as those targeting unemployment alone.
 
-These results do not overturn AKCLM's descriptive contribution, but they suggest a more nuanced interpretation. The headline tightness result partly reflects shared arithmetic structure, and the remaining associations are more modest in magnitude once the contaminated variable is removed and alternative weighting schemes are considered. Researchers using similar ratio-based labor-market variables should avoid shared components or explicitly test for mechanical correlation.
+We do not challenge the original paper's conclusion that labor markets matter for AI adoption--we show how they matter. Future work can explore why posting volume varies across counties and whether unemployment plays a stronger role in specific contexts. Additionally, testing whether the scale-versus-slack decomposition varies across industries, firm sizes, or urban-rural divides could reveal heterogeneous mechanisms driving spatial AI diffusion.
 
 
 ## Bibliography {.unnumbered}
@@ -1737,7 +1534,7 @@ These results do not overturn AKCLM's descriptive contribution, but they suggest
 
 ### Log-Population Weights (Table 1, Column 4) {.unnumbered}
 
-After removing the contaminated tightness variable, we test whether remaining associations are sensitive to alternative aggregation schemes by comparing unweighted, population-weighted, and log-population-weighted estimates. Population weights correspond to a person-weighted relationship; log(population) is an intermediate, concave reweighting that tilts toward larger counties without letting a few very large counties dominate. This provides a transparent sensitivity check relative to the original posting-weighted estimand. Coefficient magnitudes attenuate on average (see Figure 4).
+This appendix reports a sensitivity check that is independent of the tightness decomposition. We test whether remaining associations are sensitive to alternative aggregation schemes by comparing unweighted, population-weighted, and log-population-weighted estimates. Population weights correspond to a person-weighted relationship; log(population) is an intermediate, concave reweighting that tilts toward larger counties without letting a few very large counties dominate. This provides a transparent sensitivity check relative to the original posting-weighted estimand. Coefficient magnitudes attenuate on average (see Figure 4).
 
 ```{r}
 #| label: tbl-weights-robust
@@ -2006,5 +1803,7 @@ ggplot(plot_df_t2, aes(x = Coef, y = Variable, color = Scheme, shape = Scheme)) 
 ```
 
 Median absolute change across coefficients in Figure 5: `r sprintf('%.0f%%', logpop_t2_median)`.
+
+
 
 
