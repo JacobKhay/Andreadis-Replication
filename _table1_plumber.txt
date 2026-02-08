@@ -1,0 +1,32 @@
+Table 1— The Correlates of the Share of AI Jobs
+Model 1 2 3 4 5
+( ) ( ) ( ) ( ) ( )
+Bachelor’s share, z-score 0.1906 0.1814 0.1034
+0.0513 0.0505 0.0459
+( ) ( ) ( )
+House price growth, z-score 0.0144 0.0141 0.0156
+− − −
+0.0080 0.0079 0.0074
+( ) ( ) ( )
+Labor market tightness, z-score 0.2780 0.2765 0.3156
+0.0583 0.0585 0.0643
+( ) ( ) ( )
+Patents per employee, z-score 0.0232 0.0294 0.0312
+0.0090 0.0113 0.0138
+( ) ( ) ( )
+STEM degrees share, z-score 0.0686 0.0475 0.0375
+0.0238 0.0205 0.0184
+( ) ( ) ( )
+ICT sector intensity, z-score 0.0121 0.0257 0.0280
+0.0144 0.0135 0.0136
+( ) ( ) ( )
+Manufacturing intensity, z -score 0.0630 0.0333 0.0247
+− − −
+0.0113 0.0108 0.0111
+( ) ( ) ( )
+Turnover rate, z-score 0.0345 0.0188 0.0154
+0.0137 0.0137 0.0132
+( ) ( ) ( )
+Fixed effects County, year County, year County, year County, year County, state-year
+Observations 24,645 24,645 24,645 24,645 24,645
+R2 0.69739 0.68013 0.67989 0.69828 0.71558

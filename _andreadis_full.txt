@@ -1,0 +1,354 @@
+
+AEA Papers and Proceedings 2025, 115: 29–34
+https://doi.org/10.1257/pandp.20251001
+Local Heterogeneity in Artificial Intelligence Jobs
+over Time and Space†
+By Lefteris Andreadis, Eleni Kalotychou, Manolis Chatzikonstantinou,
+Christodoulos Louca, and Christos A. Makridis*
+We have witnessed a profound technological transformation driven by the rapid adoption of arti-
+ficial intelligence AI over the past decade. Between 2014 and 2022, AI-related job postings surged
+( )
+from 0.5 percent to 2.05 percent of all job postings with projections indicating that up to 80 percent of
+the workforce could see at least 10 percent of their tasks influenced by AI and large language models
+Eloundou et al. 2024 . As with other general-purpose technologies GPTs , such as electricity and
+( ) ( )
+the internet Bresnahan and Trajtenberg 1995 , AI and machine learning ML systems could drive
+( ) ( )
+substantial economic gains. However, their modest observed impact on aggregate productivity has
+raised skepticism about their transformative benefits Acemoglu 2024 or suggested that these bene-
+( )
+fits may require longer time horizons to materialize Brynjolfsson, Rock, and Syverson 2021 .
+( )
+Rather than focusing on aggregate macroeconomic effects, Andreadis et al. 2024 focus on micro-
+( )
+economic dynamics and document substantial variability in AI economic benefits at the local county
+level and show that these benefits are mostly over the long run. In this paper, we build on and extend
+this paper by taking a local approach to understanding the spatial and temporal predictors of AI adop-
+tion between 2014 and 2023. First, we document substantial variation in the adoption of AI-related
+jobs across US counties, with some counties e.g., Slope County, North Dakota; Santa Clara,
+(
+California demonstrating exceptionally high AI job shares due to their established tech ecosystems,
+)
+while others, primarily rural areas, report no activity. Between 2018 and 2023, the fastest growth in
+AI-related jobs occurred in some unexpected locations, such as Maries, Missouri, and Hughes, South
+Dakota, perhaps reflecting a shift toward suburban and remote-friendly regions impacted by the rise
+of remote work. Most counties experienced modest growth with a median change of 0.088 percentage
+points during this period.
+Second, we identify several key drivers of AI job intensity, including demographics, innovation,
+and industry factors, after controlling for county and year fixed effects. Specifically, higher shares of
+STEM degrees, labor market tightness, and patent activity significantly predict greater AI adoption,
+underscoring the importance of education, innovation, and dynamic labor markets. Conversely, man-
+ufacturing intensity is negatively associated with AI intensity, reflecting challenges in integrating AI
+into traditional industrial locations Makridis and Mishra 2022 . The findings are robust to including
+( )
+state year fixed effects specifications, confirming the stability of these relationships. Importantly,
+×
+the growth in AI jobs highlights the potential for regional disparities in technological adoption, with
+suburban and innovation-driven areas benefiting most from the expansion of AI.
+Our study contributes to several strands of literature. It adds to the growing body of research exam-
+ining AI’s economic effects, which traditionally focuses on macroeconomic perspectives Acemoglu
+(
+2024; Aghion, Jones, and Jones 2017 . Our work is most relevant to studies taking a micro perspec-
+)
+tive, such as those examining AI’s impact on firm growth Babina et al. 2024 and entrepreneurship
+( )
+Gofman and Jin 2024 However, none of these studies focus on the regional economy correlates
+( ).
+* Andreadis: Bank of Greece email: lefandreadis@gmail.com; Kalotychou: Cyprus University of Technology email: eleni.
+( ) (
+kalotychou@cut.ac.cy; Louca: Cyprus University of Technology email: christodoulos.louca@cut.ac.cy; Chatzikonstantinou:
+) ( )
+Georgetown University in Qatar email: ec1269@georgetown.edu; Makridis: Arizona State University and Institute for the
+( )
+Future, University of Nicosia email: cmakridi@asu.edu. We thank Ashley Peterson and Chris Compton at Lightcast for their
+( )
+graciousness in sharing the data.
+† Go to https://doi.org/10.1257/pandp.20251001 to visit the article page for additional materials and author disclosure
+statements.
+( )
+29
+30 AEA PAPERS AND PROCEEDINGS MAY 2025
+of AI adoption. Our research fills this gap by taking a local labor market approach to studying the
+rise of AI and its determinants. Our results underscore the importance of local human capital and
+labor market policy as measured by the share of STEM degrees, bachelor’s graduates, labor market
+tightness, and the turnover rate as robust determinants of AI adoption. We also find that the surge in
+housing prices can stifle AI adoption, explaining why some have moved to more rural areas. Overall,
+these results are consistent with the view that AI can benefit municipalities Andreadis et al. 2024 .
+( )
+I. Data and Measurement
+A. Job Postings and AI
+We proxy for AI labor investments using data from Lightcast, a leading source with a vast reposi-
+tory of millions of job postings. Lightcast data offer two main advantages: First, they contain a com-
+prehensive list of skills and an occupational taxonomy with over 1,900 specialized occupations that
++
+are mapped to the Standardized Occupation Classification SOC . Second, they have precise location
+( )
+data for job postings, allowing us to link labor demand at a county-level.
+We measure AI labor investments using the skills and keywords relating to AI associated with each
+vacancy. This list of skills has been associated with the use and development of AI e.g., Acemoglu
+(
+et al. 2022; Babina et al. 2024; and Makridis and Alterovitz 2024 . Then we create for each county
+)
+a measure of AI intensity, which is defined as the share of the job posts that mentions AI skills in a
+county, and we merge these data with one-year-lagged county characteristics, described below:
+( )
+B. County Demographics
+We use the American Community Survey ACS from the Census Bureau, specifically each
+( )
+five-year sample during 2 013–2022 to create y ear-to-year estimates for each county’s population,
+median household income, share of the workforce with a bachelor’s degree, share of Black popula-
+tion, and share of the population under poverty. We also use information from the Federal Housing
+Finance Agency FHFA on housing prices see Bogin, Doerner, and Larson 2019 .
+( ) ( )
+C. County Labor and Industry Indicators
+We use the number of job advertisements from Lightcast data along with data on unemployed
+workers from the Local Area Unemployment Statistics program of the Bureau of Labor Statistics
+to create estimates of labor market tightness for each county. We use labor market turnover and the
+share of establishments that are small, medium, or large along with the share of employment in the
+manufacturing and information sectors from the County Business Patterns CBP and the Quarterly
+( )
+Workforce Indicators QWI .
+( )
+D. County Innovation Indicators
+We use publicly available patent data from the US Patent and Trademark Office USPTO
+( )
+PatentsView that provide location information for each inventor, and we measure for each county
+( )
+the number of inventors per worker. In addition, we use the AI patent dataset of the USPTO see
+(
+Giczy, Pairolero, and Toole 2022 to obtain the share of published patents that is related to AI for
+)
+each county over time. We complement these data with information from the National Center for
+Education Statistics Integrated Postsecondary Education Data System database on the number of
+( )
+bachelor’s and master’s degrees granted per capita and the share of STEM-related degrees.
+II. Descriptive Patterns
+Panel A of Figure 1 displays significant variation in the proportion of AI-related job postings across
+counties averaged between 2014 and 2023 average 0.45 percent and median 0.23 percent .
+( = = )
+VOL. 115 LOCAL HETEROGENEITY IN ARTIFICIAL INTELLIGENCE JOBS OVER TIME AND SPACE 31
+Panel A. Percent share of AI jobs, Panel B. Percentage point change in AI share,
+2014–2023 2018–2023
+0.71 – 10 0.37 – 0.71 0.23 – 0.37 0.57 – 12.35 0.24 – 0.57 0.09 – 0.24
+0.14 – 0.23 0.06 – 0.14 0 – 0.06 0 – 0.09 0.12 – 0 5.56 – 0.12
+− − −
+No data No data
+Figure 1. Spatial Heterogeneity in the Share of and Change in AI Jobs
+Notes: Panel A plots the share average 2014–2023 of job postings related to AI in a county. Panel B plots the percentage point
+( )
+change 2023–2018 in the share of AI jobs.
+( )
+Perhaps surprisingly, at the top of the list is Slope County, North Dakota, with an AI job posting share
+of 10.0 percent. Other high-ranking counties include Santa Clara County, California 8.19 percent ,
+( )
+Fairfax County, Virginia 6.97 percent , San Francisco County, California 6.34 percent , and Hudson
+( ) ( )
+County, New Jersey 6.13 percent . These counties are well-known for their strong connections to
+( )
+technology industries, innovation ecosystems, or proximity to major economic centers. On the other
+hand, several counties show no recorded AI-related job postings. These counties are primarily rural
+and less integrated into the technological workforce. This variation shows the localized not just
+(
+national nature of AI’s economic impact and the potential for regional disparities in technological
+)
+adoption.
+Before we continue, we pause to explain the period 2018–2023 shown in panel B. While our data
+start in 2014, the share of AI jobs is low during the early years of our sample period, with only a 0.028
+percentage point median change between 2014 and 2018. Accordingly, to get a more representative
+view of the growth in AI job shares, in Panel B, we report the percentage point growth in AI job shares
+from 2018–2019 to 2022–2023. During this period, there is an average increase of 0.278 percentage
+points and a standard deviation of 0.995. In addition, this period features both substantial growth and
+declines, as the changes range from a decrease of 0.29 percentage points at the tenth percentile to
+( )
+an increase of 0.93 at the ninetieth percentile . Most counties experienced modest changes with the
+( )
+median being a 0.088 change.
+From 2018 to 2023, the areas with the fastest growth in AI-related job postings include Maries,
+Missouri 12.35 percentage points , Hughes, South Dakota 10.43 percentage points , Osage,
+( ) ( )
+Michigan 9.82 percentage points , Forest, Pennsylvania 8.99 percentage points , Nevada overall
+( ) ( )
+7.28 percentage points , Calhoun, Illinois 7.23 percentage points and Lynn, Texas 6.80 percentage
+( ) ( ) (
+points . These counties may appear c ounterintuitive considering the conventional wisdom that AI jobs
+)
+are most plentiful in areas like San Francisco, Boston, and New York! However, the growth in AI jobs,
+particularly following the lockdowns, has been in more suburban areas as these jobs can often be done
+remotely, and, therefore, people move to areas with a lower cost of living.
+III. Spatial Correlates of AI Jobs
+Table 1 presents the results of regressions analyzing the determinants of AI job posting shares across
+counties from 2014 to 2023 as a function of demographic, innovation, and industry characteristics
+32 AEA PAPERS AND PROCEEDINGS MAY 2025
+Table 1— The Correlates of the Share of AI Jobs
+Model 1 2 3 4 5
+( ) ( ) ( ) ( ) ( )
+Bachelor’s share, z-score 0.1906 0.1814 0.1034
+0.0513 0.0505 0.0459
+( ) ( ) ( )
+House price growth, z-score 0.0144 0.0141 0.0156
+− − −
+0.0080 0.0079 0.0074
+( ) ( ) ( )
+Labor market tightness, z-score 0.2780 0.2765 0.3156
+0.0583 0.0585 0.0643
+( ) ( ) ( )
+Patents per employee, z-score 0.0232 0.0294 0.0312
+0.0090 0.0113 0.0138
+( ) ( ) ( )
+STEM degrees share, z-score 0.0686 0.0475 0.0375
+0.0238 0.0205 0.0184
+( ) ( ) ( )
+ICT sector intensity, z-score 0.0121 0.0257 0.0280
+0.0144 0.0135 0.0136
+( ) ( ) ( )
+Manufacturing intensity, z -score 0.0630 0.0333 0.0247
+− − −
+0.0113 0.0108 0.0111
+( ) ( ) ( )
+Turnover rate, z-score 0.0345 0.0188 0.0154
+0.0137 0.0137 0.0132
+( ) ( ) ( )
+Fixed effects County, year County, year County, year County, year County, state-year
+Observations 24,645 24,645 24,645 24,645 24,645
+R2 0.69739 0.68013 0.67989 0.69828 0.71558
+Notes: The tables report the demographic, innovation, and industry determinants of the share of AI jobs. Standard errors are
+clustered at the c ounty level.
+all measured as z-scores to ensure comparability, conditional on county and year fixed effects col-
+(
+umns 1–4 and state year fixed effects column 5 . For brevity, rows with controls having insignif-
+) × ( )
+icant coefficients are not reported.
+We begin by examining the effects of demographic characteristics in column 1. The share of
+individuals with a bachelor’s degree is strongly and positively associated with AI intensity 0.1906,
+(
+p 0.01 , indicating that counties with more highly educated populations tend to exhibit greater
+< )
+AI-related job activity. Other demographic variables, such as the share of Black population and pov-
+erty share or median income are not statistically significant. Population size shows a positive but
+insignificant relationship with AI intensity.
+Column 2 focuses on innovation characteristics. Labor market tightness emerges as a key driver,
+with a positive and highly significant coefficient 0.2780, p 0.01 . STEM degrees’ share and pat-
+( < )
+ents per employee also show positive and significant associations, highlighting the importance of
+technical education and local innovation capacity in fostering AI job growth. AI patents’ share and
+degrees awarded per capita are not significant, suggesting that general innovation activity may matter
+more than AI-specific metrics.
+Column 3 examines industry characteristics. Manufacturing intensity is negatively associated with
+AI intensity 0.0630, p 0.01 , suggesting that counties with a stronger manufacturing presence
+(− < )
+may face challenges in AI adoption. In contrast, information and communications technology ICT
+( )
+sector intensity is positively related to AI intensity but only marginally significant. The presence of a
+higher share of large establishments does not play a significant role, while the turnover rate shows a
+weak positive association.
+Column 4 integrates all controls with county and year fixed effects and serves as the baseline
+model. The coefficients for key predictors, such as bachelor’s share 0.1814, p 0.01 , labor market
+( < )
+tightness 0.2765, p 0.01 , patents per employee 0.0294, p 0.01 , and STEM degrees share
+( < ) ( < )
+0.0475, p 0.05 , remain economically and statistically significant. Manufacturing intensity con-
+( < )
+tinues to show a significant negative relationship 0.0333, p 0.01 , while ICT sector intensity
+(− < )
+gains significance 0.0257, p 0.10 . Column 5 adds state fixed effects as a robustness check with
+( < )
+stable coefficients and significance for the same variables.
+Table 2 examines factors influencing percentage point changes in county AI shares from the
+2017–2018 and 2022–2023 averages. Columns 1–3 separately analyze demographic, innovation, and
+VOL. 115 LOCAL HETEROGENEITY IN ARTIFICIAL INTELLIGENCE JOBS OVER TIME AND SPACE 33
+Table 2—The Correlates of the Percentage Point Change in the Share of AI Jobs
+Model 1 2 3 4 5
+( ) ( ) ( ) ( ) ( )
+Bachelor’s share, z-score in 2017 0.0022 0.0035 0.0044
+− −
+0.0027 0.0032 0.0029
+( ) ( ) ( )
+Income, log z-score in 2017 0.0784 0.0695 0.0614
+0.0382 0.0391 0.0442
+( ) ( ) ( )
+Tightness, z-score in 2017 0.0744 0.0732 0.0726
+0.0215 0.0237 0.0352
+( ) ( ) ( )
+STEM degrees share, z-score in 2017 0.0742 0.0539 0.0455
+0.0151 0.0163 0.0184
+( ) ( ) ( )
+Large establishments, % z-score in 2017 0.0411 0.0158 0.0165
+− −
+0.0183 0.0219 0.0198
+( ) ( ) ( )
+ICT sector intensity, % z-score in 2017 0.0401 0.0137 0.0219
+0.0153 0.0170 0.0182
+( ) ( ) ( )
+Manufacturing intensity, % z -score in 2017 0.0447 0.0128 0.0001
+− −
+0.0166 0.0181 0.0203
+( ) ( ) ( )
+Turnover rate, % z -score in 2017 0.0556 0.0419 0.0389
+− − −
+0.0222 0.0233 0.0271
+( ) ( ) ( )
+Fixed effects No No No No State
+Observations 2,473 2,473 2,473 2,473 2,473
+R2 0.02126 0.01929 0.01554 0.03147 0.08165
+Notes: The tables report the demographic, innovation, and industry determinants of the change in AI shares in a county.
+Standard errors are clustered at the c ounty level.
+industry factors. Bachelor’s share and income are not significant drivers of change, but labor market
+tightness 0.0744, p 0.01 and STEM degrees share 0.0742, p 0.01 show strong positive
+( < ) ( < )
+effects. Manufacturing intensity is negatively associated 0.0448, p 0.01 .
+(− < )
+Column 4 includes all controls, confirming the positive role of STEM degrees 0.0539, p 0.01
+( < )
+and labor tightness 0.0732, p 0.05 , while turnover rate becomes significant 0.0556,
+( < ) (−
+p 0.01 . Column 5 adds state fixed effects as a robustness check with stable results for tightness,
+< )
+STEM degrees, and turnover rate.
+Overall, STEM degrees, and tight labor markets drive AI job growth, while manufacturing inten-
+sity and labor turnover rates show negative effects.
+IV. Conclusion
+Despite the rapid expansion of AI-related jobs at a national level, there is substantial county-level
+variation. Counties with stronger innovation ecosystems, higher STEM degree attainment, and tighter
+labor markets have seen greater AI job growth, whereas manufacturing-heavy regions and areas
+with high labor turnover have faced challenges in integrating AI. These findings point to the role of
+place-based policies to attract and retain top-tier talent for economic development Kline and Moretti
+(
+2014 .
+)
+REFERENCES
+Acemoglu, Daron. 2024. “The Simple Macroeconomics of AI.” NBER Working Paper 32487.
+Acemoglu, Daron, David Autor, Jonathon Hazell, and Pascual Restrepo. 2022. “Artificial Intelligence and Jobs:
+Evidence from Online Vacancies.” Journal of Labor Economics 40 1 : S341–82.
+( )
+Andreadis, Lefteris, Manolis Chatzikonstantinou, Elena Kalotychou, Christodoulos Louca, and Christos A.
+Makridis. 2024. “The Local Effects of Artificial Intelligence Labor Investments: Evidence from the Munici-
+pal Bond Market.” Preprint, SSRN. https://dx.doi.org/10.2139/ssrn.4987037.
+Aghion, Philippe, Benjamin F. Jones, and Charles I. Jones. 2017. “Artificial Intelligence and Economic Growth.”
+NBER Working Paper 23928.
+34 AEA PAPERS AND PROCEEDINGS MAY 2025
+Babina, Tania, Anastassia Fedyk, Alex He, and James Hodson. 2024. “Artificial Intelligence, Firm Growth, and
+Product Innovation.” Journal of Financial Economics 151: 103745.
+Bogin, Alexander, William Doerner, and William Larson. 2019. “Local House Price Dynamics: New Indices and
+Stylized Facts.” Real Estate Economics 47 2 : 365–98.
+( )
+Bresnahan, Timothy F., and M. Trajtenberg. 1995. “General-Purpose Technologies ‘Engines of Growth’?” Jour-
+nal of Econometrics 65 1 : 83–108.
+( )
+Brynjolfsson, Erik, Daniel Rock, and Chad Syverson. 2021. “The Productivity J-Curve: How Intangibles Com-
+plement General Purpose Technologies.” American Economic Journal: Macroeconomics 13 1 : 333–72.
+( )
+Eloundou, Tyna, Sam Manning, Pamela Mishkin, and Daniel Rock. 2024. “GPTs Are GPTs: Labor Market
+Impact Potential of LLMs.” Science 384 6702 : 1306–08.
+( )
+Giczy, Alexander V., Nicholas A. Pairolero, and Andrew A. Toole. 2022. “Identifying Artificial Intelligence AI
+( )
+Invention: A Novel AI Patent Dataset.” Journal of Technology Transfer 47 2 : 476–505.
+( )
+Gofman, Michael, and Zhao Jin. 2024. “Artificial Intelligence, Education, and Entrepreneurship.” Journal of
+Finance 79 1 : 631–67.
+( )
+Kline, Patrick, and Enrico Moretti. 2014. “People, Places, and Public Policy: Some Simple Welfare Economics
+of Local Economic Development Programs.” Annual Review of Economics 6: 629–62.
+Makridis, Christos A., and Saurabh Mishra. 2022. “Artificial Intelligence as a Service, Economic Growth, and
+Well-Being.” Journal of Services Research 25 4 : 515–20.
+( )

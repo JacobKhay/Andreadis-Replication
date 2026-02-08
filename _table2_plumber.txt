@@ -1,0 +1,32 @@
+Table 2—The Correlates of the Percentage Point Change in the Share of AI Jobs
+Model 1 2 3 4 5
+( ) ( ) ( ) ( ) ( )
+Bachelor’s share, z-score in 2017 0.0022 0.0035 0.0044
+− −
+0.0027 0.0032 0.0029
+( ) ( ) ( )
+Income, log z-score in 2017 0.0784 0.0695 0.0614
+0.0382 0.0391 0.0442
+( ) ( ) ( )
+Tightness, z-score in 2017 0.0744 0.0732 0.0726
+0.0215 0.0237 0.0352
+( ) ( ) ( )
+STEM degrees share, z-score in 2017 0.0742 0.0539 0.0455
+0.0151 0.0163 0.0184
+( ) ( ) ( )
+Large establishments, % z-score in 2017 0.0411 0.0158 0.0165
+− −
+0.0183 0.0219 0.0198
+( ) ( ) ( )
+ICT sector intensity, % z-score in 2017 0.0401 0.0137 0.0219
+0.0153 0.0170 0.0182
+( ) ( ) ( )
+Manufacturing intensity, % z -score in 2017 0.0447 0.0128 0.0001
+− −
+0.0166 0.0181 0.0203
+( ) ( ) ( )
+Turnover rate, % z -score in 2017 0.0556 0.0419 0.0389
+− − −
+0.0222 0.0233 0.0271
+( ) ( ) ( )
+Fixed effects No No No No State
