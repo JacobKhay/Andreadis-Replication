@@ -110,7 +110,7 @@ Understand
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables involving education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Only some of the associations persist. We critique the construction of a key variable and their unsupported causal claims. We also illustrate denominator contamination with explicit ratio formulas and a directed acyclic graph (DAG).
+We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables involving education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Only some of the associations persist. We critique the construction of a key variable and their unsupported causal claims. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -278,11 +278,11 @@ text(
 )
 ```
 
-Notes: The arrows show algebraic construction rather than causal effects. The same component, Total Postings, appears in both ratios, which can induce mechanical correlation.
+Notes: The arrows show algebraic construction rather than causal effects. The same component, Total Job Postings, appears in both ratios, which can induce mechanical correlation.
 
 ## Replication
 
-We used R [@r1996], a free and open-source statistical computing environment, and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we used the fixest [@fixest] and modelsummary [@modelsummary] packages.
+We used R [@ihaka1996r], a free and open-source statistical computing environment, and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we used the fixest [@fixest] and modelsummary [@modelsummary] packages.
 
 We attempted to reproduce Table 1, Table 2, amd Figure 1 from AKCLM. The replication confirms most of the authors' key empirical findings regarding the correlates of AI employment across U.S. counties, as described in Tables 1 and 2. Nearly all coefficients and standard errors match the original results. However, the coefficient and standard error for Bachelor's share is inconsistent with result published in Table 2. We can not reproduce the maps in Figure 1, not least because the AKCLM's data does not include values for counties in Connecticut.
 
