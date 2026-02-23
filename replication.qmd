@@ -72,20 +72,25 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- Number the denominator contamination formula. -->
+<!-- Only discuss Model 4 since that is the only thing they discuss! -->
 
-<!-- Paragraph breaks! -->
+<!-- I don't like this sentence: "Additional visual discrepancies exist between our replicated maps and the published maps." Maybe, "Hundreds of counties have different values in our replication, especially in Panel B." -->
 
-<!-- Make sure you can define each word! make sure not to use two different words to refer to the same thing: e.g., predictors and regressors. -->
+<!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. -->
 
-<!-- Must have at least one clear formula describing the model. Insert it in Replication section, after the first paragraph with the software references. No variable formulas here, just variable names. -->
+<!-- Fix discussion of Figure 1. -->
 
-<!-- What does "AI Employment" refer to? Need to make clear to the reader the commonalities between Tables 1 and 2, and their differences. Maybe "AI intensity" amd "growth in AI intensity".  -->
+<!-- Why is AI job share still being used? You need to decide on the names of variables and use those names consistently. -->
 
-<!-- Must check for typos like "amd" instead of "and." -->
+<!-- Might (?) be very useful to have a phrase which refers to both dependent variables at the same time.  Maybe "AI intensity?" But maybe you don't need this. -->
 
+<!-- Cut lots of stuff! 80% of Figure 1 discussion should go. No one cares about your description of weird counties. -->
 
+<!-- Is there a good reason why Tables 1 and 2 differ in the width? -->
 
+<!-- Do we use "8.19 percent"? Seems weird. Why? Why not 8.19%? -->
+
+<!-- Understand what the code is doing. AI can help! Also, the code for your extensions, should be clean and understandable. For example, you only download data.csv once, even though they download it lots of times. -->
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
@@ -99,9 +104,9 @@ options(tigris_use_cache = TRUE)
 
 <!-- Dependent variable discussion should include both.  -->
 
-<!-- Understand what the code is doing. AI can help! Also, the code for your extensions, should be clean and understandable. For example, you only download data.csv once, even though they download it lots of times. -->
 
-<!-- DK: Mostly replace phrases like original study with AKCLM. -->
+
+<!-- Mostly replace phrases like original study with AKCLM. -->
 
 
 Understand 
@@ -724,7 +729,7 @@ Among industry variables, manufacturing intensity (−0.013, p = 0.48) and ICT i
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "This figure shows the spatial heterogeneity in AI job share across US counties. Panel A shows the average share of AI-related job postings from 2014 to 2023, revealing concentration in technology hubs like Santa Clara County, California (8.19 percent), Fairfax County, Virginia (6.97 percent), and San Francisco County, California (6.34 percent). Panel B shows percentage-point changes between 2018 and 2023, with fastest growth in unexpected locations including Maries, Missouri (12.35 percentage points), Hughes, South Dakota (10.43 percentage points), and Osage, Michigan (9.82 percentage points). Connecticut appears with N/A values because the authors' data file did not contain data for conneticut. Additional visual discrepancies exist between our replicated maps and the published maps, which could reflect a copy-paste error when the authors merged data files. The authors were contacted regarding this discrepancy but did not respond."
+#| fig-cap: "This figure shows the spatial heterogeneity in AI job share across US counties. Panel A shows the average share of AI-related job postings from 2014 to 2023. Panel B shows percentage-point changes between 2018 and 2023. Connecticut appears with N/A values because the authors' data file did not contain data for Connecticut. Additional visual discrepancies exist between our replicated maps and the published maps. The authors were contacted regarding these discrepancies but did not respond."
 #| fig-cap-location: bottom
 #| fig-pos: "H"
 #| fig-width: 18
@@ -957,8 +962,6 @@ Figure 1 displays the spatial distribution and evolution of AI job intensity acr
 Panel A reveals extreme geographic concentration. Santa Clara County (8.19%) exhibits an AI job share 35.6 times the national median (0.23%), followed by Fairfax County (6.97%, 30.3 times the median) and San Francisco County (6.34%, 27.6 times the median). Most rural and inland counties fall in the 0–0.14% range. The distribution is thus highly right-skewed, with a small number of coastal metropolitan counties accounting for a disproportionate share of national AI intensity.
 
 Panel B reveals a divergent growth pattern. The highest growth rates between 2018 and 2023 appear not in established tech hubs but in counties such as Maries, Missouri (12.35 percentage points), Hughes, South Dakota (10.43 percentage points), and Osage, Michigan (9.82 percentage points). The median growth of 0.088 percentage points masks substantial heterogeneity: the 90th percentile records 0.93 percentage points of growth while the 10th percentile shows a decline of 0.29 percentage points.
-
-Comparing Panel A and Panel B, counties with zero AI activity in the levels map largely remain unchanged in the growth map, while counties in the highest share category (0.71–10%) exhibit moderate but positive absolute growth. The correlation between initial AI intensity and subsequent growth is thus positive but imperfect, with the highest growth rates concentrated in mid-tier counties rather than at either tail of the initial distribution.
 
 
 ## Extension: Log-Population Weighting Analysis
