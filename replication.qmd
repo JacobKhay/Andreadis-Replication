@@ -72,19 +72,17 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- Only discuss Model 4 since that is the only thing they discuss! Done.-->
+<!-- Nice if the Tables and Figure show up in the correct Table 1, Table 2, and Figure 1 sections. -->
 
-<!-- I don't like this sentence: "Additional visual discrepancies exist between our replicated maps and the published maps." Maybe, "Hundreds of counties have different values in our replication, especially in Panel B." Done. -->
+<!-- "two largest predictors?" I think "most important" is preferred larger. Maybe?  -->
+
+<!-- This phrasing is bad because it is not a comparison: "A one-standard-deviationincrease in tightness corresponds to 0.095 percentage points — 61% of the sample mean of 0.45% — compared with 40% for bachelor’s share" In particular, "corresponds" is a bad word. Better i something like: "We exect two counties which differ by 1 standard deviation in tightness to differ by 0.09 percentage points in AI intensity." -->
+
+<!-- Maybe cut out all discussion of intensity. -->
+
+<!-- Begin each Table/Figure section with the most important points. Could you replicate? Or maybe that goes at the end of each section? -->
 
 <!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
-
-<!-- Fix discussion of Figure 1. Fixed. -->
-
-<!-- Why is AI job share still being used? You need to decide on the names of variables and use those names consistently. Fixed, use AI Intensity and change in AI intensity-->
-
-<!-- Might (?) be very useful to have a phrase which refers to both dependent variables at the same time.  Maybe "AI intensity?" But maybe you don't need this. I did the above instead.-->
-
-<!-- Cut lots of stuff! 80% of Figure 1 discussion should go. No one cares about your description of weird counties. Done. -->
 
 <!-- Is there a good reason why Tables 1 and 2 differ in the width? -->
 
@@ -94,6 +92,10 @@ options(tigris_use_cache = TRUE)
 
 <!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
+<!-- "wo-way fixed-effects regression" Correct terminology? "two way?" -->
+
+<!-- Need to give the formula for second regression even though the dependent variables are the same as the first. -->
+
 
 <!-- All write up in terms of comparing two groups, e.g., counties with average home price compared with counties with home price growth one standard deviation higher. The second group of counties has AI job percentage with is  1.5% (?) lower. Put in section 3. -->
 
@@ -101,15 +103,10 @@ options(tigris_use_cache = TRUE)
 
 <!-- Add text for Figure from paper and for our figures. -->
 
-
 <!-- Dependent variable discussion should include both.  -->
-
-
 
 <!-- Mostly replace phrases like original study with AKCLM. -->
 
-
-Understand 
 
 *JEL: J24, O33, R11*
 
