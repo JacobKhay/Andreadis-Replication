@@ -364,14 +364,14 @@ information from over 40,000 online job boards, newspapers, and employer
 websites. AI-related jobs are identified through skills and keywords
 associated with AI development and use
 (\citeproc{ref-acemoglu2022}{Acemoglu et al., 2022}). The first
-dependent variable, AI job share \(AI_{it}\), is defined as:
+dependent variable, AI Intensity \(AI_{it}\), is defined as:
 
 \[
 AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{1}
 \]
 
 The second dependent variable captures the percentage point change in AI
-job share between the 2017-2018 average and the 2022-2023 average:
+Intensity between the 2017-2018 average and the 2022-2023 average:
 \(\Delta AI_i = \overline{AI}_{i,2022-2023} - \overline{AI}_{i,2017-2018}\).
 
 \emph{Demographic Variables}: From the American Community Survey
@@ -449,7 +449,7 @@ ICT intensity, turnover rate, and demographic controls), and
 \(\varepsilon_{it}\) is an error term clustered at the county level. For
 the growth outcome, we estimate the same specification without county
 and year fixed effects, replacing \(\text{AI Intensity}_{it}\) with the
-percentage point change in AI job share between 2017--2018 and
+percentage point change in AI Intensity between 2017--2018 and
 2022--2023.
 
 We reproduce Table 1, Table 2, and Figure 1 from AKCLM. Nearly all
@@ -470,7 +470,7 @@ Jobs}
 \centering
 \begin{talltblr}[         %% tabularray outer open
 entry=none,label=none,
-note{}={This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year, multiplied by 100 to express in percentage terms. AI job postings are identified from Lightcast data using skills and keywords associated with artificial intelligence. All explanatory variables are standardized as z-scores to ensure comparability across predictors. The sample comprises county-year observations covering approximately 3,100 U.S. counties annually over the ten-year period. All coefficients represent percentage point changes in AI job share for a one standard deviation increase in the explanatory variable. Models are estimated using ordinary least squares with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year.},
+note{}={This table examines the demographic, innovation, and industry determinants of the share of artificial intelligence jobs across U.S. counties from 2014 to 2023. The dependent variable is AI job intensity, defined as the ratio of AI job postings to total job postings in each county-year, multiplied by 100 to express in percentage terms. AI job postings are identified from Lightcast data using skills and keywords associated with artificial intelligence. All explanatory variables are standardized as z-scores to ensure comparability across predictors. The sample comprises county-year observations covering approximately 3,100 U.S. counties annually over the ten-year period. All coefficients represent percentage point changes in AI Intensity for a one standard deviation increase in the explanatory variable. Models are estimated using ordinary least squares with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year.},
 ]                     %% tabularray outer close
 {                     %% tabularray inner open
 colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
@@ -505,8 +505,8 @@ Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
 Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
 &  &  & (0.0137) & (0.0137) & (0.0132) \\
 Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
-Observations & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,627} \\
-R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988} & {\hspace{0.5em}0.69826} & {\hspace{0.5em}0.71262} \\
+Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
+R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
 \bottomrule
 \end{talltblr}
 
@@ -568,7 +568,7 @@ of AI Jobs}
 \centering
 \begin{talltblr}[         %% tabularray outer open
 entry=none,label=none,
-note{}={This table examines the demographic, innovation, and industry determinants of the percentage point change in AI job share between two pooled periods: 2017-2018 and 2022-2023. The dependent variable measures the change in AI intensity (multiplied by 100 to express in percentage points), capturing dynamic shifts rather than static levels. All explanatory variables are measured in 2017 (before the growth period) and standardized as z-scores. The sample includes 2,473 counties with sufficient data across both periods. All coefficients represent percentage point changes in the growth of AI job share for a one standard deviation increase in the 2017 explanatory variable. Models are estimated using ordinary least squares with no fixed effects (columns 1-4) or state fixed effects (column 5). Standard errors are clustered at the county level. We were unable to fully replicate the Bachelor's share coefficients across all five model specifications. The Bachelor's share discrepancy appears systematically across models, with our replicated coefficients differing from the published values. All other coefficients successfully replicate the original results. The authors were contacted regarding this discrepancy but did not respond.},
+note{}={This table examines the demographic, innovation, and industry determinants of the percentage point change in AI  share between two pooled periods: 2017-2018 and 2022-2023. The dependent variable measures the change in AI intensity (multiplied by 100 to express in percentage points), capturing dynamic shifts rather than static levels. All explanatory variables are measured in 2017 (before the growth period) and standardized as z-scores. The sample includes 2,473 counties with sufficient data across both periods. All coefficients represent percentage point changes in the growth of AI Intensity for a one standard deviation increase in the 2017 explanatory variable. Models are estimated using ordinary least squares with no fixed effects (columns 1-4) or state fixed effects (column 5). Standard errors are clustered at the county level. We were unable to fully replicate the Bachelor's share coefficients across all five model specifications. The Bachelor's share discrepancy appears systematically across models, with our replicated coefficients differing from the published values. All other coefficients successfully replicate the original results. The authors were contacted regarding this discrepancy but did not respond.},
 ]                     %% tabularray outer close
 {                     %% tabularray inner open
 colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
@@ -587,24 +587,24 @@ column{1}={}{halign=l,},
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
 Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
-& (0.0250) &  &  & (0.0292) & (0.0308) \\
+& (0.0250) &  &  & (0.0292) & (0.0263) \\
 Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
 & (0.0382) &  &  & (0.0391) & (0.0442) \\
 Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
-& (0.0215) &  &  & (0.0237) & (0.0273) \\
+& (0.0215) &  &  & (0.0237) & (0.0352) \\
 Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
-&  & (0.0151) &  & (0.0163) & (0.0164) \\
+&  & (0.0151) &  & (0.0163) & (0.0184) \\
 Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
-&  &  & (0.0183) & (0.0219) & (0.0238) \\
+&  &  & (0.0183) & (0.0219) & (0.0198) \\
 ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
-&  &  & (0.0153) & (0.0170) & (0.0170) \\
+&  &  & (0.0153) & (0.0170) & (0.0182) \\
 Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
-&  &  & (0.0166) & (0.0181) & (0.0195) \\
+&  &  & (0.0166) & (0.0181) & (0.0203) \\
 Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
-&  &  & (0.0222) & (0.0233) & (0.0249) \\
+&  &  & (0.0222) & (0.0233) & (0.0271) \\
 Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
-Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,472} \\
-R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0800} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
 \bottomrule
 \end{talltblr}
 
@@ -614,34 +614,38 @@ R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} &
 
 \subsection{Table 2}\label{table-2}
 
-TTable 2 analyzes predictors of the growth of AI intensity between
+Table 2 analyzes predictors of the growth of AI intensity between
 2017--2018 and 2022--2023. All regressors are standardized, with
 explanatory variables measured in 2017. Column 4 includes the full
 control set and serves as the preferred specification; all subsequent
-discussion refers to this column. Labor market tightness (0.073, p
-\textless{} 0.01) carries a coefficient 36\% larger than STEM degree
-share (0.054, p \textless{} 0.001). A one-standard-deviation increase in
-tightness corresponds to 0.019 more percentage points of growth than an
-equivalent shift in STEM degree share. Relative to median growth of
-0.088 percentage points, tightness accounts for 83\% and STEM degree
-share for 61\%. Both coefficients are significant at the 1\% level.
-Tightness thus exhibits a larger point estimate, though the gap is
-considerably narrower than in the levels specification of Table 1. Among
-labor market variables, turnover rate (−0.042, p = 0.072) carries a
-coefficient 2.7 times larger in magnitude than large establishment share
-(−0.016, p = 0.47). A one-standard-deviation difference in turnover rate
-corresponds to 48\% of median growth, compared with 18\% for large
-establishment share. Turnover rate approaches significance at the 10\%
-level, while large establishment share shows no statistical evidence.
-Turnover rate thus exhibits both larger magnitude and greater precision,
-though neither estimate is precisely measured. Among industry variables,
-manufacturing intensity (−0.013, p = 0.48) and ICT intensity (0.014, p =
-0.42) show nearly identical effect sizes but opposite signs. Neither
-coefficient approaches statistical significance. This contrasts sharply
-with the levels specification of Table 1, where manufacturing intensity
-is significant at the 1\% level with a coefficient of −0.033. Both
-effect sizes and statistical precision collapse in the growth
-specification of Table 2.
+discussion refers to this column.
+
+Labor market tightness (0.073, p \textless{} 0.01) carries a coefficient
+36\% larger than STEM degree share (0.054, p \textless{} 0.001). A
+one-standard-deviation increase in tightness corresponds to 0.019 more
+percentage points of growth than an equivalent shift in STEM degree
+share. Relative to median growth of 0.088 percentage points, tightness
+accounts for 83\% and STEM degree share for 61\%. Both coefficients are
+significant at the 1\% level. Tightness thus exhibits a larger point
+estimate, though the gap is considerably narrower than in the levels
+specification of Table 1.
+
+Among labor market variables, turnover rate (−0.042, p = 0.072) carries
+a coefficient 2.7 times larger in magnitude than large establishment
+share (−0.016, p = 0.47). A one-standard-deviation difference in
+turnover rate corresponds to 48\% of median growth, compared with 18\%
+for large establishment share. Turnover rate approaches significance at
+the 10\% level, while large establishment share shows no statistical
+evidence. Turnover rate thus exhibits both larger magnitude and greater
+precision, though neither estimate is precisely measured.
+
+Among industry variables, manufacturing intensity (−0.013, p = 0.48) and
+ICT intensity (0.014, p = 0.42) show nearly identical effect sizes but
+opposite signs. Neither coefficient approaches statistical significance.
+This contrasts sharply with the levels specification of Table 1, where
+manufacturing intensity is significant at the 1\% level with a
+coefficient of −0.033. Both effect sizes and statistical precision
+collapse in the growth specification of Table 2.
 
 \begin{figure}[H]
 
@@ -652,62 +656,34 @@ specification of Table 2.
 }
 
 \caption{\label{fig-map}This figure shows the spatial heterogeneity in
-AI job share across US counties. Panel A shows the average share of
-AI-related job postings from 2014 to 2023, revealing concentration in
-technology hubs like Santa Clara County, California (8.19 percent),
-Fairfax County, Virginia (6.97 percent), and San Francisco County,
-California (6.34 percent). Panel B shows percentage-point changes
-between 2018 and 2023, with fastest growth in unexpected locations
-including Maries, Missouri (12.35 percentage points), Hughes, South
-Dakota (10.43 percentage points), and Osage, Michigan (9.82 percentage
-points). Connecticut appears with N/A values because the authors' data
-file did not contain data for conneticut. Additional visual
-discrepancies exist between our replicated maps and the published maps,
-which could reflect a copy-paste error when the authors merged data
-files. The authors were contacted regarding this discrepancy but did not
-respond.}
+AI intensity across U.S. counties. Panel A shows average AI intensity
+from 2014 to 2023. Panel B shows the change in AI intensity between 2018
+and 2023. Connecticut appears with N/A values because AKCLM's data does
+not include Connecticut counties. Hundreds of counties have different
+values in our replication, especially in Panel B. The authors were
+contacted regarding these discrepancies but did not respond.}
 
 \end{figure}%
 
 \subsection{Figure 1}\label{figure-1}
 
-Figure 1 displays the spatial distribution and evolution of AI job
-intensity across U.S. counties from 2014 to 2023. Panel A shows average
-AI job shares; Panel B captures growth dynamics between 2018 and 2023.
-
-Panel A reveals extreme geographic concentration. Santa Clara County
-(8.19\%) exhibits an AI job share 35.6 times the national median
-(0.23\%), followed by Fairfax County (6.97\%, 30.3 times the median) and
-San Francisco County (6.34\%, 27.6 times the median). Most rural and
-inland counties fall in the 0--0.14\% range. The distribution is thus
-highly right-skewed, with a small number of coastal metropolitan
-counties accounting for a disproportionate share of national AI
-intensity.
-
-Panel B reveals a divergent growth pattern. The highest growth rates
-between 2018 and 2023 appear not in established tech hubs but in
-counties such as Maries, Missouri (12.35 percentage points), Hughes,
-South Dakota (10.43 percentage points), and Osage, Michigan (9.82
-percentage points). The median growth of 0.088 percentage points masks
-substantial heterogeneity: the 90th percentile records 0.93 percentage
-points of growth while the 10th percentile shows a decline of 0.29
-percentage points.
-
-Comparing Panel A and Panel B, counties with zero AI activity in the
-levels map largely remain unchanged in the growth map, while counties in
-the highest share category (0.71--10\%) exhibit moderate but positive
-absolute growth. The correlation between initial AI intensity and
-subsequent growth is thus positive but imperfect, with the highest
-growth rates concentrated in mid-tier counties rather than at either
-tail of the initial distribution.
+Figure 1 displays the spatial distribution and evolution of AI intensity
+across U.S. counties from 2014 to 2023. Panel A shows that AI intensity
+is highly concentrated in a small number of coastal metropolitan
+counties, with most rural and inland counties falling in the 0--0.14\%
+range. Panel B shows that the highest growth in AI intensity between
+2018 and 2023 did not occur in established tech hubs, and that median
+growth of 0.088 percentage points masks substantial heterogeneity across
+counties.
 
 \section{Extension: Log-Population Weighting
 Analysis}\label{extension-log-population-weighting-analysis}
 
-To assess the robustness of the original findings, we re-estimated all
-models using log-population weights. This weighting scheme gives more
-weight to populous counties compared to equal weighting (where each
-county receives the same weight regardless of population size).
+To assess robustness, we re-estimate all models using log-population
+weights, omitting labor market tightness due to the denominator
+contamination problem described above. Log-population weights give more
+weight to populous counties relative to equal weighting, where each
+county receives the same weight regardless of population size.
 
 \begin{figure}[H]
 
@@ -724,72 +700,20 @@ Log-Population weights (Models 1-3)}
 \end{figure}%
 
 \emph{Notes:} This figure compares coefficient estimates from
-equal-weighted regressions (where each county receives the same weight)
-versus log-population-weighted regressions (where counties are weighted
-by log(population)) for Models 1-3 of Table 1 from Andreadis et
-al.~(2025). These models examine AI job share (the percentage of job
-postings that are AI-related) as the outcome variable. Model 1
-(Demographics) includes bachelor's share, house price growth, and labor
-market tightness. Model 2 (Innovation) includes patents per employee and
-STEM degree share. Model 3 (Industry) includes manufacturing intensity,
-ICT sector intensity, and turnover rate. All models include county and
-year fixed effects. All variables are standardized (z-scored), so
-coefficients represent the change in AI job share percentage points
-associated with a one standard deviation increase in each predictor,
-holding other variables constant. The confidence intervals shown
-represent 95\% confidence levels (±1.96 standard errors). Green points
-indicate equal-weighted estimates, while red points indicate
+equal-weighted regressions versus log-population-weighted regressions
+for Models 1--3 of Table 1. These models examine AI intensity as the
+outcome variable. Model 1 (Demographics) includes bachelor's share,
+house price growth, and labor market tightness. Model 2 (Innovation)
+includes patents per employee and STEM degree share. Model 3 (Industry)
+includes manufacturing intensity, ICT intensity, and turnover rate. All
+models include county and year fixed effects. Labor market tightness is
+omitted from log-population-weighted models due to denominator
+contamination. All variables are standardized, so coefficients represent
+the change in AI intensity in percentage points associated with a
+one-standard-deviation increase in each predictor, holding other
+variables constant. Confidence intervals represent 95\% levels. Green
+points indicate equal-weighted estimates and red points indicate
 log-population-weighted estimates.
-
-The comparison between equal weights and log-population weights across
-Models 1-3 reveals modest differences in coefficient magnitudes,
-suggesting that the correlations documented in Table 1 are relatively
-robust to weighting schemes. In the Demographics panel, a one standard
-deviation increase in bachelor's share is associated with approximately
-a 0.01 percentage point increase in AI job share under both weighting
-schemes, meaning that counties with higher educational attainment have
-slightly higher shares of AI-related job postings. Similarly, a one
-standard deviation increase in labor market tightness corresponds to
-roughly a 0.08-0.09 percentage point increase in AI intensity,
-indicating that tighter labor markets (more job openings relative to
-unemployed workers) are associated with higher AI job shares. House
-price growth shows minimal association with AI intensity across both
-weighting approaches. The near-identical coefficients under equal
-weights versus log-population weights indicate that these demographic
-relationships hold similarly across counties regardless of population
-size.
-
-The Innovation panel demonstrates that innovation capacity strongly
-predicts AI adoption. A one standard deviation increase in patents per
-employee is associated with approximately a 0.06 percentage point
-increase in AI job share, while a one standard deviation increase in
-STEM degree share corresponds to roughly a 0.09 percentage point
-increase in AI intensity. These effect sizes are consistent across both
-weighting schemes, suggesting that innovation infrastructure correlates
-with AI adoption in both small and large counties rather than being
-driven predominantly by metropolitan areas. The magnitudes indicate that
-innovation-related factors are among the strongest predictors of AI job
-concentration.
-
-The Industry panel reveals that industry composition substantially
-shapes AI job presence. A one standard deviation increase in
-manufacturing intensity is associated with approximately a 0.03
-percentage point decrease in AI job share, reflecting that
-manufacturing-heavy counties have lower AI adoption. Conversely, a one
-standard deviation increase in ICT sector intensity corresponds to
-roughly a 0.12 percentage point increase in AI intensity, making it one
-of the strongest predictors---counties with established tech sectors
-show substantially higher AI job shares. Turnover rate shows a positive
-association of approximately 0.18 percentage points per standard
-deviation increase, the largest effect size across all variables,
-suggesting that dynamic labor markets with higher worker mobility
-concentrate more AI activity. These relationships maintain similar
-magnitudes under both equal weights and log-population weights,
-indicating that industry composition effects are not artifacts of giving
-disproportionate influence to large urban counties. The stability of
-these relationships across weighting approaches strengthens confidence
-that the Table 1 findings reflect genuine associations rather than
-statistical artifacts of how observations are weighted.
 
 \begin{figure}[H]
 
@@ -806,75 +730,42 @@ Log-Population weights (Models 4-5)}
 \end{figure}%
 
 \emph{Notes:} This figure compares coefficient estimates from
-equal-weighted regressions (where each county receives the same weight)
-versus log-population-weighted regressions (where counties are weighted
-by log(population)) for Models 4-5 of Table 1 from Andreadis et
-al.~(2025). These models examine AI job share (the percentage of job
-postings that are AI-related) as the outcome variable. Model 4 (All
-Controls) includes all demographic, innovation, and industry variables
-together with county and year fixed effects. Model 5 (All + State FE)
-adds state-year fixed effects to Model 4, absorbing state-level
-time-invariant factors. Both models include bachelor's share, house
-price growth, labor market tightness, patents per employee, STEM degree
-share, ICT sector intensity, manufacturing intensity, and turnover rate.
-All variables are standardized (z-scored), so coefficients represent the
-change in AI job share percentage points associated with a one standard
-deviation increase in each predictor, holding all other variables
-constant. The confidence intervals shown represent 95\% confidence
-levels (±1.96 standard errors). Green points indicate equal-weighted
-estimates, while red points indicate log-population-weighted estimates.
+equal-weighted regressions versus log-population-weighted regressions
+for Models 4--5 of Table 1. These models examine AI intensity as the
+outcome variable. Model 4 (All Controls) includes all demographic,
+innovation, and industry variables with county and year fixed effects.
+Model 5 (All + State FE) replaces year fixed effects with state-year
+fixed effects. Both models include bachelor's share, house price growth,
+labor market tightness, patents per employee, STEM degree share, ICT
+intensity, manufacturing intensity, and turnover rate. Labor market
+tightness is omitted from log-population-weighted models due to
+denominator contamination. All variables are standardized, so
+coefficients represent the change in AI intensity in percentage points
+associated with a one-standard-deviation increase in each predictor,
+holding all other variables constant. Confidence intervals represent
+95\% levels. Green points indicate equal-weighted estimates and red
+points indicate log-population-weighted estimates.
 
-The comprehensive specifications in Models 4-5 reinforce the pattern
-observed in Models 1-3: coefficient estimates remain remarkably stable
-across weighting schemes. In the ``All Controls'' panel, which includes
-all eight variables simultaneously, we see that a one standard deviation
-increase in bachelor's share is associated with approximately a 0.01
-percentage point increase in AI job share, while house price growth
-shows minimal independent effect. Labor market tightness maintains a
-strong positive association of roughly 0.08 percentage points per
-standard deviation increase. Among innovation measures, patents per
+In Model 4, coefficient estimates remain stable across weighting
+schemes. Bachelor's share is associated with approximately a 0.01
+percentage point increase in AI intensity per standard deviation, while
+house price growth shows minimal independent effect. Labor market
+tightness maintains a positive association of roughly 0.08 percentage
+points per standard deviation. Among innovation variables, patents per
 employee shows approximately a 0.05 percentage point increase and STEM
-share shows roughly a 0.09 percentage point increase per standard
-deviation. For industry composition, manufacturing intensity is
+degree share shows roughly a 0.09 percentage point increase per standard
+deviation. Among industry variables, manufacturing intensity is
 associated with approximately a 0.03 percentage point decrease, ICT
-sector intensity with a 0.12 percentage point increase, and turnover
-rate with the largest effect of approximately 0.18 percentage points per
-standard deviation increase. These coefficients represent the
-independent contribution of each variable when controlling for all
-others, and they remain nearly identical under both equal weights and
-log-population weights, indicating that these multivariate relationships
-hold regardless of whether we give equal influence to all counties or
-weight observations by population size.
-
-The ``All + State FE'' panel, which adds state-year fixed effects to
-control for state-specific time trends, demonstrates even tighter
-alignment between the two weighting schemes while isolating within-state
-variation. The state-year fixed effects absorb state-level variation in
-AI adoption patterns, leaving only within-state differences to identify
-the coefficients. Under this more demanding specification, the effect
-sizes remain substantively similar to Model 4, though some variables
-show slightly attenuated magnitudes as state-level confounds are
-removed. For example, ICT sector intensity maintains approximately a
-0.10-0.11 percentage point increase per standard deviation, while
-turnover rate remains the strongest predictor at roughly 0.16-0.17
-percentage points. The equal-weighted and log-population-weighted
-estimates are virtually indistinguishable across all variables,
-suggesting that the relationships between county characteristics and AI
-intensity operate similarly within states regardless of county
-population size.
-
-Overall, the stability of coefficients across weighting schemes in both
-Models 4 and 5 provides strong evidence that the Table 1 findings are
-not driven by the influence of large metropolitan counties. The
-standardized coefficients allow direct comparison of effect magnitudes:
-turnover rate emerges as the strongest predictor (0.16-0.18 percentage
-points), followed by ICT sector intensity (0.10-0.12 percentage points)
-and STEM share (0.08-0.09 percentage points), while bachelor's share
-shows the smallest independent effect (0.01 percentage points). These
-correlations between education, innovation, industry composition, and AI
-intensity appear to be genuine features of the data that hold across the
-county size distribution, rather than artifacts of how we aggregate
-county-level observations.
+intensity with a 0.12 percentage point increase, and turnover rate with
+the largest effect of approximately 0.18 percentage points per standard
+deviation. These coefficients remain nearly identical under both
+weighting schemes, suggesting that the associations between education,
+innovation, industry composition, and AI intensity hold across the
+county size distribution rather than being driven by large metropolitan
+counties. Turnover rate is the strongest predictor (0.18 percentage
+points), followed by ICT intensity (0.12 percentage points) and STEM
+degree share (0.09 percentage points), while bachelor's share shows the
+smallest independent effect (0.01 percentage points).
 
 \begin{figure}[H]
 
@@ -891,108 +782,21 @@ Log-Population weights (Models 1-3)}
 \end{figure}%
 
 \emph{Notes:} This figure compares coefficient estimates from
-equal-weighted regressions (where each county receives the same weight)
-versus population-weighted regressions (where counties are weighted by
-their population size) for Models 1-3 of Table 2 from Andreadis et
-al.~(2025). These models examine the percentage point change in AI job
-share from 2017 to 2022 as the outcome variable, representing AI job
-growth dynamics over time. Model 1 (Demographics) includes bachelor's
-share, house price growth, and labor market tightness. Model 2
-(Innovation) includes patents per employee and STEM degree share. Model
-3 (Industry) includes manufacturing intensity, ICT sector intensity, and
-turnover rate. All predictors are lagged to 2017 values to predict
-subsequent growth. All variables are standardized (z-scored), so
-coefficients represent the change in AI job share growth (in percentage
-points) associated with a one standard deviation increase in each 2017
-predictor. The confidence intervals shown represent 95\% confidence
-levels (±1.96 standard errors). Green points indicate equal-weighted
-estimates, red points indicate log-population-weighted estimates, and
-for Model 1, blue points show the Andreadis et al.~(2025) published
-bachelor's share coefficient for comparison.
-
-This figure reveals substantial weighting sensitivity in the dynamic
-models of AI job growth. Across all three models, the equal-weighted
-estimates (green) show systematically larger magnitudes than the
-log-population-weighted estimates (red), indicating that smaller
-counties drive much of the relationships observed in the growth models.
-In the Demographics model, a one standard deviation increase in 2017
-bachelor's share is associated with approximately a 0.007 percentage
-point increase in AI job share growth under equal weights, meaning that
-counties with higher initial educational attainment experienced slightly
-faster AI job growth over 2017-2022. This effect declines to
-approximately 0.0035 percentage points under population weights, a 50\%
-reduction, indicating that the education-growth relationship is
-particularly strong in smaller counties. Similarly, a one standard
-deviation increase in 2017 labor market tightness corresponds to roughly
-a 0.089 percentage point increase in AI growth under equal weights,
-declining to 0.045 percentage points under population weights. House
-price growth shows minimal predictive power for AI job growth across
-both weighting schemes. The comparison with Andreadis et al.~(2025)'s
-published bachelor's share coefficient (blue, approximately 0.0022
-percentage points) reveals that our equal-weighted estimate is
-substantially larger, suggesting different analytical choices or data
-construction.
-
-The Innovation model demonstrates even more dramatic weighting effects.
-A one standard deviation increase in 2017 patents per employee is
-associated with approximately a 0.060 percentage point increase in AI
-growth under equal weights, shrinking to 0.036 percentage points under
-population weights---a 40\% reduction. Similarly, a one standard
-deviation increase in STEM degree share corresponds to roughly a 0.087
-percentage point increase under equal weights, declining to 0.052
-percentage points under population weights, also a 40\% reduction. These
-substantial magnitude differences indicate that innovation metrics
-predict AI job growth more strongly in smaller counties, possibly
-because larger metropolitan areas already have high baseline levels of
-AI adoption, leaving less room for growth. The magnitudes suggest that
-innovation infrastructure was a powerful predictor of where AI jobs
-expanded most rapidly during 2017-2022, especially in smaller labor
-markets.
-
-The Industry model shows similarly substantial weighting effects across
-all three variables. A one standard deviation increase in 2017
-manufacturing intensity is associated with approximately a 0.036
-percentage point decrease in AI growth under equal weights, declining to
-a 0.022 percentage point decrease under population weights (a 39\%
-reduction in absolute magnitude), reflecting that manufacturing-heavy
-counties experienced slower AI job expansion. Conversely, a one standard
-deviation increase in ICT sector intensity corresponds to approximately
-a 0.123 percentage point increase under equal weights, dropping to 0.074
-percentage points under population weights (a 40\% reduction), making it
-one of the strongest predictors of AI growth---counties with established
-tech sectors in 2017 saw substantially faster AI job expansion. Most
-dramatically, turnover rate shows approximately a 0.178 percentage point
-increase per standard deviation under equal weights, falling to 0.107
-percentage points under population weights (a 40\% reduction but still
-the largest effect size), suggesting that dynamic labor markets with
-higher worker mobility in 2017 concentrated much of the subsequent AI
-job growth. Despite these magnitude differences, most relationships
-maintain statistical significance across both weighting schemes,
-indicating that while effect sizes depend on county size distributions,
-the fundamental correlational patterns persist.
-
-The consistency of the approximate 40-50\% magnitude reductions across
-most variables suggests a systematic pattern: smaller counties exhibit
-stronger correlations between 2017 county characteristics and 2017-2022
-AI job growth rates. This could reflect several underlying mechanisms.
-First, smaller counties may be starting from lower baseline AI adoption
-levels in 2017, creating more potential for rapid percentage point
-changes when favorable conditions emerge. Second, in smaller labor
-markets, the introduction of even a few AI-intensive firms can generate
-substantial percentage point shifts in the AI job share, whereas large
-metropolitan areas with thousands of employers experience more gradual
-changes. Third, larger counties may have already been experiencing AI
-job growth before 2017, leaving less room for additional expansion
-during the study period. These findings underscore the importance of
-weighting choices in regional economic analyses, particularly when
-studying dynamic growth processes where baseline conditions and scale
-effects differ systematically across the county size distribution. The
-standardized coefficients reveal that turnover rate was the strongest
-predictor of AI growth (0.11-0.18 percentage points depending on
-weighting), followed by ICT sector intensity (0.07-0.12 percentage
-points), suggesting that labor market dynamism and existing tech
-infrastructure were the key determinants of where AI jobs expanded most
-rapidly.
+equal-weighted regressions versus log-population-weighted regressions
+for Models 1--3 of Table 2. These models examine the change in AI
+intensity between 2017--2018 and 2022--2023 as the outcome variable.
+Model 1 (Demographics) includes bachelor's share, house price growth,
+and labor market tightness. Model 2 (Innovation) includes patents per
+employee and STEM degree share. Model 3 (Industry) includes
+manufacturing intensity, ICT intensity, and turnover rate. All
+predictors are measured in 2017, the base period before the growth
+window. All variables are standardized, so coefficients represent the
+change in AI intensity growth in percentage points associated with a
+one-standard-deviation increase in each predictor. Confidence intervals
+represent 95\% levels. Green points indicate equal-weighted estimates,
+red points indicate log-population-weighted estimates, and blue points
+show the published bachelor's share coefficient from AKCLM for
+comparison.
 
 \begin{figure}[H]
 
@@ -1009,104 +813,41 @@ Log-Population weights (Models 4-5)}
 \end{figure}%
 
 \emph{Notes:} This figure compares coefficient estimates from
-equal-weighted regressions (where each county receives the same weight)
-versus population-weighted regressions (where counties are weighted by
-their population size) for Models 4-5 of Table 2 from Andreadis et
-al.~(2025). These models examine the percentage point change in AI job
-share from 2017 to 2022 as the outcome variable. Model 4 (All Controls)
-includes all demographic, innovation, and industry variables. Model 5
-(All + State FE) adds state fixed effects to Model 4, absorbing
-state-level time-invariant factors. Both models include bachelor's
-share, house price growth, labor market tightness, patents per employee,
-STEM degree share, ICT sector intensity, manufacturing intensity, and
-turnover rate as predictors, all lagged to 2017 values to predict
-subsequent 2017-2022 growth. All variables are standardized (z-scored),
-so coefficients represent the change in AI job share growth (in
-percentage points) associated with a one standard deviation increase in
-each 2017 predictor, holding all other variables constant. The
-confidence intervals shown represent 95\% confidence levels (±1.96
-standard errors). Green points indicate equal-weighted estimates, red
-points indicate log-population-weighted estimates, and blue points show
-the Andreadis et al.~(2025) published bachelor's share coefficients for
+equal-weighted regressions versus log-population-weighted regressions
+for Models 4--5 of Table 2. These models examine the change in AI
+intensity between 2017--2018 and 2022--2023 as the outcome variable.
+Model 4 (All Controls) includes all demographic, innovation, and
+industry variables with no fixed effects. Model 5 (All + State FE) adds
+state fixed effects to Model 4. All predictors are measured in 2017, the
+base period before the growth window. All variables are standardized, so
+coefficients represent the change in AI intensity growth in percentage
+points associated with a one-standard-deviation increase in each
+predictor, holding all other variables constant. Confidence intervals
+represent 95\% levels. Green points indicate equal-weighted estimates,
+red points indicate log-population-weighted estimates, and blue points
+show the published bachelor's share coefficients from AKCLM for
 comparison.
 
-This figure demonstrates the weighting sensitivity in the fully
-specified dynamic models of AI job growth. When all controls are
-included simultaneously in Model 4, a one standard deviation increase in
-2017 bachelor's share is associated with approximately a -0.032
-percentage point change in AI growth under equal weights, declining to
-approximately -0.040 percentage points under population weights (note
-the negative sign indicates that, controlling for all other factors,
-higher educational attainment in 2017 predicted slightly slower AI
-growth, likely because educated counties already had higher baseline AI
-levels). House price growth shows minimal independent effect. Labor
-market tightness maintains a strong positive association of
-approximately 0.09-0.10 percentage points per standard deviation across
-both weighting schemes. Among innovation measures, a one standard
-deviation increase in patents per employee is associated with
-approximately a 0.06 percentage point increase under equal weights,
-dropping to 0.04 percentage points under population weights (a 33\%
-reduction), while STEM degree share shows roughly a 0.08 percentage
-point increase under equal weights, declining to 0.05 percentage points
-under population weights (a 38\% reduction). For industry composition,
-manufacturing intensity is associated with approximately a 0.03-0.04
-percentage point decrease, ICT sector intensity with approximately a
-0.12 percentage point increase under equal weights (declining to 0.07
-percentage points under population weights, a 42\% reduction), and
-turnover rate shows the largest effect of approximately 0.17-0.18
-percentage points under equal weights (declining to 0.11 percentage
-points under population weights, a 39\% reduction). These coefficients
-represent the independent contribution of each 2017 variable in
-predicting 2017-2022 AI growth when controlling for all others.
-
-The Model 4 to Model 5 comparison reveals how state fixed effects
-interact with weighting schemes while isolating within-state variation.
-Adding state fixed effects in Model 5 absorbs state-level differences in
-AI growth trajectories, leaving only within-state variation to identify
-coefficients. Under this more demanding specification, a one standard
-deviation increase in 2017 bachelor's share is associated with
-approximately a -0.03 percentage point change under equal weights and
--0.04 percentage points under population weights. Labor market tightness
-maintains approximately a 0.10 percentage point increase per standard
-deviation under equal weights, rising slightly to 0.12 percentage points
-under population weights---making it one of the few variables where the
-population-weighted estimate exceeds the equal-weighted estimate. This
-suggests that tight labor markets in 2017 correlated with AI job growth
-more strongly in large metropolitan areas, the opposite pattern from
-most other variables. For innovation variables, patents per employee
-shows approximately 0.05 percentage points under equal weights
-(declining to 0.03 under population weights), while STEM share shows
-roughly 0.07 percentage points under equal weights (declining to 0.04
-under population weights). Industry variables maintain their patterns:
-manufacturing intensity approximately -0.03 percentage points, ICT
-intensity approximately 0.11 percentage points under equal weights
-(declining to 0.06 under population weights), and turnover rate
-approximately 0.16 percentage points under equal weights (declining to
-0.10 under population weights).
-
-The approximately 40\% magnitude reductions observed for innovation and
-industry variables across both Model 4 and Model 5 indicate robust
-weighting sensitivity that persists even after controlling for all
-covariates and state fixed effects. The standardized coefficients allow
-direct comparison: turnover rate emerges as the strongest predictor of
-2017-2022 AI growth (0.10-0.18 percentage points depending on
-specification and weighting), followed by ICT sector intensity
-(0.06-0.12 percentage points) and labor market tightness (0.09-0.12
-percentage points). This suggests that the relationships between
-innovation metrics (patents, STEM degrees), industry composition
-(manufacturing, ICT, turnover), and AI job growth are fundamentally
-stronger in smaller counties. One interpretation is that smaller
-counties experience more dramatic structural transformations when
-AI-intensive industries emerge, whereas large metropolitan areas with
-diversified economies show more gradual AI penetration. The statistical
-significance patterns remain relatively stable across weighting schemes
-for most variables, indicating that while smaller counties drive the
-magnitude of effects, the underlying correlational relationships exist
-across the full county size distribution. These findings underscore the
-critical importance of transparent weighting decisions in regional
-economic research, particularly when studying dynamic outcomes where
-baseline conditions and growth potential vary systematically with
-geographic scale.
+In the fully specified Model 4, bachelor's share shows a small negative
+association with the growth of AI intensity under both weighting
+schemes, suggesting that counties with higher educational attainment in
+2017 already had higher baseline AI intensity, leaving less room for
+growth. House price growth shows minimal independent effect. Labor
+market tightness maintains a positive association of approximately
+0.09--0.10 percentage points per standard deviation across both
+weighting schemes. Among innovation variables, patents per employee
+declines from 0.06 percentage points under equal weights to 0.04 under
+log-population weights (a 33\% reduction), while STEM degree share
+declines from 0.08 to 0.05 percentage points (a 38\% reduction). Among
+industry variables, manufacturing intensity shows a negative association
+of approximately 0.03--0.04 percentage points, ICT intensity declines
+from 0.12 to 0.07 percentage points (a 42\% reduction), and turnover
+rate --- the largest predictor --- declines from 0.17--0.18 to 0.11
+percentage points (a 39\% reduction). The consistent 40\% magnitude
+reductions across innovation and industry variables suggest that these
+associations are stronger in smaller counties, while labor market
+tightness shows the most stable association across the county size
+distribution.
 
 \subsection{Results}\label{results}
 
