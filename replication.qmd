@@ -72,7 +72,7 @@ options(tigris_use_cache = TRUE)
 
 <!-- DK:  -->
 
-<!-- WHAT IS THE DISTRIBUTION OF AI INTENSITY AND CHANGE IN AI INTENSITY? Mean and the standard deviation.  -->
+<!-- WHAT IS THE DISTRIBUTION OF AI INTENSITY AND CHANGE IN AI INTENSITY? Mean and the standard deviation. Add those numbers to the variable descriptions definitions.  -->
 
 <!-- Explain wny there is not sub t in formula 4. This is because there is only row per county. -->
 
