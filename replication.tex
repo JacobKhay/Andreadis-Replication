@@ -261,8 +261,6 @@ Kane\footnote{New College of Florida,
 \maketitle
 
 
-Understand
-
 \emph{JEL: J24, O33, R11}
 
 \emph{Keywords:} Artificial Intelligence, Regional Economics, Labor
@@ -372,7 +370,7 @@ AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \ti
 
 The second dependent variable captures the percentage point change in AI
 Intensity between the 2017-2018 average and the 2022-2023 average:
-\(\Delta AI_i = \overline{AI}_{i,2022-2023} - \overline{AI}_{i,2017-2018}\).
+\(\Delta AI_{it} = \overline{AI}_{i,2022-2023} - \overline{AI}_{i,2017-2018}\).
 
 \emph{Demographic Variables}: From the American Community Survey
 (\citeproc{ref-census_acs}{U.S. Census Bureau, 2024a}), we include
@@ -414,8 +412,10 @@ and in the numerator of one of the independent variables.
 
 This creates denominator contamination, or mechanical endogeneity: both
 sides of the regression share the same underlying quantity, inducing a
-correlation that exists purely through algebraic construction. \[
-\frac{AIJobs_{it}}{TotalJobs_{it}} = \alpha + \beta \frac{TotalJobs_{it}}{Unemployed_{it}} + X'_{it}\gamma + \varepsilon_{it} \tag{2}
+correlation that exists purely through algebraic construction.
+
+\[
+\frac{AI_{it}}{TotalJobs_{it}} = \alpha + \beta \frac{TotalJobs_{it}}{Unemployed_{it}} + X'_{it}\gamma + \varepsilon_{it} \tag{2}
 \]
 
 This can bias coefficient estimates and overstate statistical
@@ -429,35 +429,30 @@ conclusions.''
 
 \section{Replication}\label{replication}
 
-We use R (\citeproc{ref-ihaka1996r}{Ihaka and Gentleman, 1996}), a free
-and open-source statistical computing environment, and the tidyverse
-collection of packages (\citeproc{ref-tidyverse}{Wickham et al., 2019}).
-To estimate and display regression models, we use the fixest
+We use R (\citeproc{ref-ihaka1996r}{Ihaka and Gentleman, 1996}) and the
+tidyverse collection of packages (\citeproc{ref-tidyverse}{Wickham et
+al., 2019}). To estimate and display regression models, we use fixest
 (\citeproc{ref-fixest}{Bergé, 2018}) and modelsummary
-(\citeproc{ref-modelsummary}{Arel-Bundock, 2022}) packages.
+(\citeproc{ref-modelsummary}{Arel-Bundock, 2022}).
 
-The core model we estimate for the level of AI intensity is a two-way
-fixed-effects regression:
+\subsection{Table 1}\label{table-1}
 
-\[\text{AI Intensity}_{it} = \alpha_i + \alpha_t + \boldsymbol{\beta}' \mathbf{X}_{it-1} + \varepsilon_{it} \tag{3}\]
+The core model for the level of AI intensity is a two-way fixed-effects
+regression:
+
+\[
+AI_{it} = \alpha_i + \alpha_t + \boldsymbol{\beta}' \mathbf{X}_{it-1} + \varepsilon_{it} \tag{3}
+\]
 
 where \(\alpha_i\) and \(\alpha_t\) are county and year fixed effects,
 \(\mathbf{X}_{it-1}\) is a vector of standardized regressors lagged one
 year (including bachelor's share, labor market tightness, STEM degree
 share, patents per employee, AI patent share, manufacturing intensity,
 ICT intensity, turnover rate, and demographic controls), and
-\(\varepsilon_{it}\) is an error term clustered at the county level. For
-the growth outcome, we estimate the same specification without county
-and year fixed effects, replacing \(\text{AI Intensity}_{it}\) with the
-percentage point change in AI Intensity between 2017--2018 and
-2022--2023.
+\(\varepsilon_{it}\) is an error term clustered at the county level.
 
-We reproduce Table 1, Table 2, and Figure 1 from AKCLM. Nearly all
-coefficients and standard errors match the original results. However,
-the coefficient and standard error for bachelor's share are inconsistent
-with the results published in Table 2. We cannot reproduce the maps in
-Figure 1, in part because AKCLM's data does not include values for
-counties in Connecticut.
+We reproduce Table 1 from AKCLM. All coefficients and standard errors
+match the original results.
 
 \begin{table}[H]
 
@@ -505,16 +500,14 @@ Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
 Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
 &  &  & (0.0137) & (0.0137) & (0.0132) \\
 Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
-Observations & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,627} \\
-R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988} & {\hspace{0.5em}0.69826} & {\hspace{0.5em}0.71262} \\
+Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
+R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
 \bottomrule
 \end{talltblr}
 
 }
 
 \end{table}%
-
-\subsection{Table 1}\label{table-1}
 
 Table 1 presents parameter estimates for five models, each using AI
 intensity as the outcome. All regressors are standardized. Column 4 ---
@@ -525,20 +518,21 @@ column.
 Labor market tightness (0.28, p \textless{} 0.001) and bachelor's share
 (0.18, p \textless{} 0.001) are the two largest predictors of AI
 intensity. Tightness carries a coefficient 52\% larger than bachelor's
-share. A one-standard-deviation increase in tightness corresponds to
-0.095 percentage points --- 61\% of the sample mean of 0.45\% ---
-compared with 40\% for bachelor's share. Both coefficients are
+share. Two counties differing by one standard deviation in tightness are
+expected to differ by 0.095 percentage points in AI intensity --- 61\%
+of the sample mean of 0.45\% --- compared with 0.063 percentage points
+for bachelor's share (40\% of the mean). Both coefficients are
 significant at the 0.1\% level. Tightness thus exhibits both a larger
 point estimate and greater practical magnitude.
 
 Within the innovation variables, STEM degree share (0.048, p \textless{}
 0.05) carries a coefficient 62\% larger than patents per employee
-(0.029, p \textless{} 0.01). A one-standard-deviation difference in STEM
-degree share corresponds to 11\% of mean AI intensity, compared with 7\%
-for patents per employee. Statistical precision favors patents,
-significant at the 1\% level versus 5\% for STEM degree share. STEM
-degree share thus exhibits larger magnitude while patents per employee
-exhibits greater precision.
+(0.029, p \textless{} 0.01). Two counties differing by one standard
+deviation in STEM degree share are expected to differ by 11\% of mean AI
+intensity, compared with 7\% for patents per employee. Statistical
+precision favors patents, significant at the 1\% level versus 5\% for
+STEM degree share. STEM degree share thus exhibits larger magnitude
+while patents per employee exhibits greater precision.
 
 Among industry variables, ICT intensity (0.026, p = 0.058) and
 manufacturing intensity (−0.033, p \textless{} 0.01) exhibit similar
@@ -550,12 +544,35 @@ greater precision.
 
 Comparing education variables, bachelor's share (0.18, p \textless{}
 0.001) carries a coefficient 3.8 times larger than STEM degree share
-(0.048, p \textless{} 0.05). A one-standard-deviation difference in
-bachelor's share corresponds to 0.13 percentage points --- 40\% of mean
-AI intensity --- compared with 11\% for STEM degree share. Bachelor's
-share is also more precisely estimated, significant at the 0.1\% level
-versus 5\% for STEM degree share. Bachelor's share thus dominates on
-both magnitude and statistical precision.
+(0.048, p \textless{} 0.05). Two counties differing by one standard
+deviation in bachelor's share are expected to differ by 0.13 percentage
+points in AI intensity --- 40\% of the mean --- compared with 11\% for
+STEM degree share. Bachelor's share is also more precisely estimated,
+significant at the 0.1\% level versus 5\% for STEM degree share.
+Bachelor's share thus dominates on both magnitude and statistical
+precision.
+
+\subsection{Table 2}\label{table-2}
+
+For the growth outcome, we estimate a cross-sectional OLS regression
+with no fixed effects:
+
+\[
+\Delta AI_{i} = \boldsymbol{\beta}' \mathbf{X}_{i,2017} + \varepsilon_{i} \tag{4}
+\]
+
+where \(\Delta\text{AI Intensity}_{i}\) is the percentage point change
+in AI intensity between the 2017--2018 and 2022--2023 averages,
+\(\mathbf{X}_{i,2017}\) is a vector of standardized regressors measured
+in 2017, and \(\varepsilon_{i}\) is an error term clustered at the
+county level. Unlike the levels specification, this model does not
+include county or year fixed effects, as the outcome is already a first
+difference across counties.
+
+We reproduce Table 2 from AKCLM for all variables except bachelor's
+share, whose coefficient and standard error differ systematically across
+all five model specifications. The source of this discrepancy is
+unclear; the authors were contacted but did not respond.
 
 \begin{table}[H]
 
@@ -587,32 +604,30 @@ column{1}={}{halign=l,},
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
 Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
-& (0.0250) &  &  & (0.0292) & (0.0308) \\
+& (0.0250) &  &  & (0.0292) & (0.0263) \\
 Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
 & (0.0382) &  &  & (0.0391) & (0.0442) \\
 Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
-& (0.0215) &  &  & (0.0237) & (0.0273) \\
+& (0.0215) &  &  & (0.0237) & (0.0352) \\
 Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
-&  & (0.0151) &  & (0.0163) & (0.0164) \\
+&  & (0.0151) &  & (0.0163) & (0.0184) \\
 Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
-&  &  & (0.0183) & (0.0219) & (0.0238) \\
+&  &  & (0.0183) & (0.0219) & (0.0198) \\
 ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
-&  &  & (0.0153) & (0.0170) & (0.0170) \\
+&  &  & (0.0153) & (0.0170) & (0.0182) \\
 Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
-&  &  & (0.0166) & (0.0181) & (0.0195) \\
+&  &  & (0.0166) & (0.0181) & (0.0203) \\
 Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
-&  &  & (0.0222) & (0.0233) & (0.0249) \\
+&  &  & (0.0222) & (0.0233) & (0.0271) \\
 Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
-Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,472} \\
-R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0800} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
 \bottomrule
 \end{talltblr}
 
 }
 
 \end{table}%
-
-\subsection{Table 2}\label{table-2}
 
 Table 2 analyzes predictors of the growth of AI intensity between
 2017--2018 and 2022--2023. All regressors are standardized, with
@@ -621,31 +636,37 @@ control set and serves as the preferred specification; all subsequent
 discussion refers to this column.
 
 Labor market tightness (0.073, p \textless{} 0.01) carries a coefficient
-36\% larger than STEM degree share (0.054, p \textless{} 0.001). A
-one-standard-deviation increase in tightness corresponds to 0.019 more
-percentage points of growth than an equivalent shift in STEM degree
-share. Relative to median growth of 0.088 percentage points, tightness
-accounts for 83\% and STEM degree share for 61\%. Both coefficients are
-significant at the 1\% level. Tightness thus exhibits a larger point
-estimate, though the gap is considerably narrower than in the levels
-specification of Table 1.
+36\% larger than STEM degree share (0.054, p \textless{} 0.001). Two
+counties differing by one standard deviation in tightness are expected
+to differ by 0.073 percentage points in AI intensity growth, compared
+with 0.054 percentage points for STEM degree share. Relative to median
+growth of 0.088 percentage points, tightness accounts for 83\% and STEM
+degree share for 61\%. Both coefficients are significant at the 1\%
+level. Tightness thus exhibits a larger point estimate, though the gap
+is considerably narrower than in the levels specification of Table 1.
 
 Among labor market variables, turnover rate (−0.042, p = 0.072) carries
 a coefficient 2.7 times larger in magnitude than large establishment
-share (−0.016, p = 0.47). A one-standard-deviation difference in
-turnover rate corresponds to 48\% of median growth, compared with 18\%
-for large establishment share. Turnover rate approaches significance at
-the 10\% level, while large establishment share shows no statistical
-evidence. Turnover rate thus exhibits both larger magnitude and greater
-precision, though neither estimate is precisely measured.
+share (−0.016, p = 0.47). Two counties differing by one standard
+deviation in turnover rate are expected to differ by 0.042 percentage
+points in AI intensity growth --- 48\% of the median --- compared with
+0.016 percentage points for large establishment share (18\% of the
+median). Turnover rate approaches significance at the 10\% level, while
+large establishment share shows no statistical evidence. Turnover rate
+thus exhibits both larger magnitude and greater precision, though
+neither estimate is measured with high confidence.
 
 Among industry variables, manufacturing intensity (−0.013, p = 0.48) and
 ICT intensity (0.014, p = 0.42) show nearly identical effect sizes but
-opposite signs. Neither coefficient approaches statistical significance.
-This contrasts sharply with the levels specification of Table 1, where
-manufacturing intensity is significant at the 1\% level with a
-coefficient of −0.033. Both effect sizes and statistical precision
-collapse in the growth specification of Table 2.
+opposite signs. Two counties differing by one standard deviation in
+manufacturing intensity are expected to differ by only 0.013 percentage
+points in AI intensity growth --- 15\% of the median --- with ICT
+intensity showing a similarly small expected difference of 0.014
+percentage points. Neither coefficient approaches statistical
+significance. This contrasts sharply with the levels specification of
+Table 1, where manufacturing intensity is significant at the 1\% level
+with a coefficient of −0.033. Both effect sizes and statistical
+precision collapse in the growth specification of Table 2.
 
 \begin{figure}[H]
 
