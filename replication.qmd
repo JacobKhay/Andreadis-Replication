@@ -70,36 +70,27 @@ library(forcats)
 options(tigris_use_cache = TRUE)
 ```
 
-<!-- DK:  -->
+<!-- TODO:  -->
 
 <!-- DO NOT ASSUME OTHER PEOPLE ARE CORRECT! ASK AI! -->
 
-<!-- Quote or italicize or bold package names, like in "fixest (Bergé, 2018) and modelsummary (Arel-Bundock,2022)." I don't know. -->
+<!-- Understand what the code is doing. AI can help! Also, the code for your extensions, should be clean and understandable. For example, you only download data.csv once, even though they download it lots of times. -->
 
-<!-- Too many em (or is it en?) dashes. Looks like AI. Done -->
+<!-- Consider: "Most, but not all, of the associations persist." Is that reasonable? To examine, we first need the total number of significant coefficients with equal weights. Call it 15, perhaps only considering Model 4 for Tables 1 and 2. Then, of those 15, how many are still signficant? If that is 12, then sure, "Most, but not all" would be a reasonable description. But if only 7 do, then more than half are no longer significant. So, count them up and then we discuss. -->
 
-<!-- Explain why only certain variables are included in the tables. Done. -->
+<!-- Also, we need a sentence or two, maybe at the end of the Replication section, which describes this calculation, using the same sort of language as we do above. Actually, we should also have a sentence in the second to last paragraph of the introduction which covers this. Example: "Of the reported 15 significant regression coefficients in AKCLM's preferred models, only 8 remain signficant when the regressions are weighted by the log of county population." I the write up, this becomes a paragraph. "There is no single standard method for measuring how different two regression specifications are. AKCLM focus on their Model 4 for both dependendent variables: AI intensity and the change in AI intensity. With equal weighting, they estimate that the coefficients of &, *, *, ... are all statistically signficant. With log-weighted regressions, only . . .. " -->
 
-<!-- Don't say "We measure"! We didn't measure anything! Use AKCLM. Check all We's. Done-->
-
-<!-- Why is Unemployed italicized in the formula for showing the problem with labor market tightness. Probably wrong. Done.-->
-
-
-
-<!-- WHAT IS THE DISTRIBUTION OF AI INTENSITY AND CHANGE IN AI INTENSITY? Mean and the standard deviation. Add those numbers to the variable descriptions definitions.  -->
+<!-- Do not do this! "though effect sizes diminish when larger counties receive less weight." Instead of just saying log-weighted, as you should, you are coming up with different English words for no good reason. Maybe "though effect sizes diminish when we weight by the logaroithm of county population."-->
 
 <!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
 
-<!-- Is there a good reason why Tables 1 and 2 differ in the width? -->
-
-<!-- Understand what the code is doing. AI can help! Also, the code for your extensions, should be clean and understandable. For example, you only download data.csv once, even though they download it lots of times. -->
-
-<!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
-
 <!-- All write up in terms of comparing two groups, e.g., counties with average home price compared with counties with home price growth one standard deviation higher. The second group of counties has AI job percentage with is  1.5% (?) lower. Put in section 3. -->
 
+<!-- Is there a good reason why Tables 1 and 2 differ in the width? -->
 
+<!-- TO CONSIDER: -->
 
+<!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
 
 *JEL: J24, O33, R11*
@@ -111,7 +102,7 @@ options(tigris_use_cache = TRUE)
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables related to education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Only some of the associations persist. We critique the construction of a key variable and their unsupported causal claims. 
+We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables related to education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Most, but not all, of the associations persist. We critique the construction of a key variable and their unsupported causal claims. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -121,7 +112,7 @@ Declaration: There are no financial conflicts of interest to share.
 
 This paper replicates @andreadis2025, henceforth AKCLM, on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI intensity emerges and how it spreads matters for researchers and policymakers alike: AI has the potential to reshape regional economies [@acemoglu2024; @brynjolfsson2021], alter the demand for skills [@autor2015; @acemoglu2019], and shift patterns of innovation [@babina2024]. County-level variation offers a granular view of how these transformations unfold across the United States.
 
-<!-- DK: Either years desccribed explicitly in both or in neither. Should be both! And mention the US! -->
+<!-- DK: Either years described explicitly in both or in neither. Should be both! And mention the US! -->
 
 There are two outcome variables, both measures of AI intensity — the share of AI-related job postings in total job postings at the county-year level. The first is the level of AI intensity. The second is the percentage point change in AI intensity between 2017–2018 and 2022–2023. Together, these outcomes distinguish between where AI jobs are concentrated and where AI adoption is accelerating most rapidly. Tracking both provides insight into which regions gain early access to AI intensity and which experience the fastest growth.
 
