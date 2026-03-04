@@ -356,27 +356,29 @@ limits of what can be inferred from the design.
 AKCLM utilize multiple data sources to construct a comprehensive
 county-level dataset spanning 2014--2023:
 
-\emph{AI Job Employment Data}: Job posting data from Lightcast
-(\citeproc{ref-beckett2023}{Beckett, 2023}), which aggregates
-information from over 40,000 online job boards, newspapers, and employer
-websites. AI-related jobs are identified through skills and keywords
-associated with AI development and use
-(\citeproc{ref-acemoglu2022}{Acemoglu et al., 2022}). The first
-dependent variable, AI intensity \(AI_{it}\), is defined as:
+\emph{AI Job Employment Data}: Lightcast
+(\citeproc{ref-beckett2023}{Beckett, 2023}) aggregates job postings from
+over 40,000 online job boards, newspapers, and employer websites.
+AI-related jobs are identified through skills and keywords associated
+with AI development and use (\citeproc{ref-acemoglu2022}{Acemoglu et
+al., 2022}). The first dependent variable, AI intensity, is defined as:
 
 \[
 AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{1}
 \]
 
-AI intensity has a mean of 0.43 percentage points and a standard
-deviation of 1.10 percentage points across county-year observations.
+AI intensity has a mean of 0.4 percentage points and a standard
+deviation of 1.1 percentage points across county-year observations.
 
 The second dependent variable captures the percentage point change in AI
 intensity between the 2017-2018 average and the 2022-2023 average:
-\(\Delta AI_{it} = \overline{AI}_{i,2022-2023} - \overline{AI}_{i,2017-2018}\).
 
-The change in AI intensity has a mean of 0.34 percentage points and a
-standard deviation of 0.98 percentage points across counties.
+\[
+\Delta AI_{i} = \overline{AI}_{i,2022-2023} - \overline{AI}_{i,2017-2018} \tag{2}
+\]
+
+The change in AI intensity has a mean of 0.3 percentage points and a
+standard deviation of 1.0 percentage points across counties.
 
 \emph{Demographic Variables}: From the American Community Survey
 (\citeproc{ref-census_acs}{U.S. Census Bureau, 2024a}), we include
@@ -408,10 +410,11 @@ establishments share (percentage of employment in large firms).
 Housing Finance Agency (\citeproc{ref-bogin2019}{Bogin, Doerner, and
 Larson, 2019}).
 
-All explanatory variables are lagged by one year. A significant
-statistical issue arises from the construction of the variables. AI
-intensity is defined as AI job postings divided by total job postings.
-Labor market tightness, one of the key independent variables, is
+All explanatory variables are lagged by one year.
+
+A significant statistical issue arises from the construction of the
+variables. AI intensity is defined as AI job postings divided by total
+job postings. Labor market tightness, one of the key variables, is
 constructed as total job postings divided by unemployed workers. Thus,
 total job postings appears in the denominator of the dependent variable
 and in the numerator of one of the independent variables.
@@ -421,7 +424,7 @@ sides of the regression share the same underlying quantity, inducing a
 correlation that exists purely through algebraic construction.
 
 \[
-\frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} = \alpha + \beta \frac{\text{Total job postings}_{it}}{Unemployed_{it}} + X'_{it}\gamma + \varepsilon_{it} \tag{2}
+\frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} = \alpha + \beta \frac{\text{Total job postings}_{it}}{\text{Unemployed}_{it}} + X'_{it}\gamma + \varepsilon_{it} \tag{3}
 \]
 
 This can bias coefficient estimates and overstate statistical
@@ -430,7 +433,7 @@ where the shared \(Z\) induces correlation even when \(Y\) and \(X\) are
 actually independent. Kronmal (\citeproc{ref-kronmal1993spurious}{1993})
 shows that when the dependent variable is a ratio sharing a component
 with an independent variable, ``regression coefficient estimates for the
-other independent variables\ldots{} result in inappropriate
+other independent variables \ldots{} result in inappropriate
 conclusions.''
 
 \section{Replication}\label{replication}
@@ -447,15 +450,13 @@ The core model for the level of AI intensity is a two-way fixed-effects
 regression:
 
 \[
-AI_{it} = \alpha_i + \alpha_t + \boldsymbol{\beta}' \mathbf{X}_{it-1} + \varepsilon_{it} \tag{3}
+AI_{it} = \alpha_i + \alpha_t + \boldsymbol{\beta}' \mathbf{X}_{it-1} + \varepsilon_{it} \tag{4}
 \]
 
 where \(\alpha_i\) and \(\alpha_t\) are county and year fixed effects,
 \(\mathbf{X}_{it-1}\) is a vector of standardized regressors lagged one
-year (including bachelor's share, labor market tightness, STEM degree
-share, patents per employee, AI patent share, manufacturing intensity,
-ICT intensity, turnover rate, and demographic controls), and
-\(\varepsilon_{it}\) is an error term clustered at the county level.
+year, and \(\varepsilon_{it}\) is an error term clustered at the county
+level.
 
 We reproduce Table 1 from AKCLM. All coefficients and standard errors
 match the original results.
@@ -471,7 +472,7 @@ Jobs}
 \centering
 \begin{talltblr}[         %% tabularray outer open
 entry=none,label=none,
-note{}={This table replicates Table 1 from Andreadis et al. (2025). The dependent variable is AI intensity, defined as the share of AI-related job postings in total job postings in each county-year, multiplied by 100 to express in percentage terms. AI intensity has a mean of 0.43 percentage points and a standard deviation of 1.10 percentage points. All explanatory variables are standardized as z-scores. Coefficients represent the expected difference in AI intensity in percentage points between two counties differing by one standard deviation in the given predictor, holding all other variables constant. Models are estimated using OLS with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year.},
+note{}={This table replicates Table 1 from Andreadis et al. (2025). The dependent variable is AI intensity, defined as the share of AI-related job postings in total job postings in each county-year, multiplied by 100 to express in percentage terms. AI intensity has a mean of 0.4 percentage points and a standard deviation of 1.1 percentage points. All explanatory variables are standardized as z-scores. Coefficients represent the expected difference in AI intensity in percentage points between two counties differing by one standard deviation in the given predictor, holding all other variables constant. Models are estimated using OLS with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year.},
 ]                     %% tabularray outer close
 {                     %% tabularray inner open
 colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
@@ -506,8 +507,8 @@ Manufacturing &  &  & -0.0630 & -0.0333 & -0.0247 \\
 Turnover rate &  &  & 0.0345 & 0.0188 & 0.0154 \\
 &  &  & (0.0137) & (0.0137) & (0.0132) \\
 Fixed effects & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, Year} & {\hspace{0.5em}County, state-year} \\
-Observations & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,637} & {\hspace{0.5em}24,627} \\
-R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988} & {\hspace{0.5em}0.69826} & {\hspace{0.5em}0.71262} \\
+Observations & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} & {\hspace{0.5em}24,645} \\
+R² & {\hspace{0.5em}0.69739} & {\hspace{0.5em}0.68012} & {\hspace{0.5em}0.67989} & {\hspace{0.5em}0.69827} & {\hspace{0.5em}0.71558} \\
 \bottomrule
 \end{talltblr}
 
@@ -516,8 +517,8 @@ R² & {\hspace{0.5em}0.69737} & {\hspace{0.5em}0.68011} & {\hspace{0.5em}0.67988
 \end{table}%
 
 Table 1 presents parameter estimates for five models, each using AI
-intensity as the outcome, which has a mean of 0.43 percentage points and
-a standard deviation of 1.10 percentage points across county-year
+intensity as the outcome, which has a mean of 0.4 percentage points and
+a standard deviation of 1.1 percentage points across county-year
 observations. All regressors are standardized. Column 4 --- the
 preferred specification --- includes the full control set with county
 and year fixed effects; all subsequent discussion refers to this column.
@@ -566,7 +567,7 @@ For the growth outcome, we estimate a cross-sectional OLS regression
 with no fixed effects:
 
 \[
-\Delta AI_{i} = \beta_0 + \boldsymbol{\beta}' \mathbf{X}_{i,2017} + \varepsilon_{i} \tag{4}
+\Delta AI_{i} = \beta_0 + \boldsymbol{\beta}' \mathbf{X}_{i,2017} + \varepsilon_{i} \tag{5}
 \]
 
 where \(\Delta AI_{i}\) is the percentage point change in AI intensity
@@ -596,7 +597,7 @@ of AI Jobs}
 \centering
 \begin{talltblr}[         %% tabularray outer open
 entry=none,label=none,
-note{}={This table replicates Table 2 from AKCLM. The dependent variable is the change in AI intensity between the 2017–2018 and 2022–2023 averages, multiplied by 100 to express in percentage points. The change in AI intensity has a mean of 0.34 percentage points and a standard deviation of 0.98 percentage points. All explanatory variables are measured in 2017 and standardized as z-scores. Coefficients represent the expected difference in AI intensity growth in percentage points between two counties differing by one standard deviation in the given predictor, holding all other variables constant. Models are estimated using OLS with no fixed effects (columns 1–4) or state fixed effects (column 5). Standard errors are clustered at the county level. We reproduce all coefficients except bachelor's share, which differs systematically across all five model specifications from the published values. The authors were contacted regarding this discrepancy but did not respond.},
+note{}={This table replicates Table 2 from AKCLM. The dependent variable is the change in AI intensity between the 2017–2018 and 2022–2023 averages, multiplied by 100 to express in percentage points. The change in AI intensity has a mean of 0.3 percentage points and a standard deviation of 1.0 percentage points. All explanatory variables are measured in 2017 and standardized as z-scores. Coefficients represent the expected difference in AI intensity growth in percentage points between two counties differing by one standard deviation in the given predictor, holding all other variables constant. Models are estimated using OLS with no fixed effects (columns 1–4) or state fixed effects (column 5). Standard errors are clustered at the county level. We reproduce all coefficients except bachelor's share, which differs systematically across all five model specifications from the published values. The authors were contacted regarding this discrepancy but did not respond.},
 ]                     %% tabularray outer close
 {                     %% tabularray inner open
 colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
@@ -615,24 +616,24 @@ column{1}={}{halign=l,},
 \toprule
 & (1) & (2) & (3) & (4) & (5) \\ \midrule %% TinyTableHeader
 Bachelors Share & 0.0196 &  &  & -0.0322 & -0.0401 \\
-& (0.0250) &  &  & (0.0292) & (0.0308) \\
+& (0.0250) &  &  & (0.0292) & (0.0263) \\
 Income, Log & 0.0784 &  &  & 0.0695 & 0.0614 \\
 & (0.0382) &  &  & (0.0391) & (0.0442) \\
 Tightness & 0.0744 &  &  & 0.0732 & 0.0726 \\
-& (0.0215) &  &  & (0.0237) & (0.0273) \\
+& (0.0215) &  &  & (0.0237) & (0.0352) \\
 Stem Degrees' share &  & 0.0742 &  & 0.0539 & 0.0455 \\
-&  & (0.0151) &  & (0.0163) & (0.0164) \\
+&  & (0.0151) &  & (0.0163) & (0.0184) \\
 Large Firms &  &  & 0.0411 & -0.0158 & -0.0165 \\
-&  &  & (0.0183) & (0.0219) & (0.0238) \\
+&  &  & (0.0183) & (0.0219) & (0.0198) \\
 ICT sector Intensity &  &  & 0.0401 & 0.0137 & 0.0219 \\
-&  &  & (0.0153) & (0.0170) & (0.0170) \\
+&  &  & (0.0153) & (0.0170) & (0.0182) \\
 Manufacturing &  &  & -0.0447 & -0.0128 & 0.0001 \\
-&  &  & (0.0166) & (0.0181) & (0.0195) \\
+&  &  & (0.0166) & (0.0181) & (0.0203) \\
 Turnover Rate &  &  & -0.0556 & -0.0419 & -0.0389 \\
-&  &  & (0.0222) & (0.0233) & (0.0249) \\
+&  &  & (0.0222) & (0.0233) & (0.0271) \\
 Fixed effects & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}None} & {\hspace{0.5em}State} \\
-Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,472} \\
-R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0800} \\
+Observations & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} & {\hspace{0.5em}2,473} \\
+R² & {\hspace{0.5em}0.0213} & {\hspace{0.5em}0.0193} & {\hspace{0.5em}0.0155} & {\hspace{0.5em}0.0315} & {\hspace{0.5em}0.0817} \\
 \bottomrule
 \end{talltblr}
 
