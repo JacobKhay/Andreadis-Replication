@@ -76,11 +76,11 @@ options(tigris_use_cache = TRUE)
 
 <!-- Understand what the code is doing. AI can help! Also, the code for your extensions, should be clean and understandable. For example, you only download data.csv once, even though they download it lots of times. -->
 
-<!-- Consider: "Most, but not all, of the associations persist." Is that reasonable? To examine, we first need the total number of significant coefficients with equal weights. Call it 15, perhaps only considering Model 4 for Tables 1 and 2. Then, of those 15, how many are still signficant? If that is 12, then sure, "Most, but not all" would be a reasonable description. But if only 7 do, then more than half are no longer significant. So, count them up and then we discuss. -->
+<!-- Consider: "Most, but not all, of the associations persist." Is that reasonable? It is reasonable To examine, we first need the total number of significant coefficients with equal weights. Call it 15, perhaps only considering Model 4 for Tables 1 and 2. Then, of those 15, how many are still signficant? If that is 12, then sure, "Most, but not all" would be a reasonable description. But if only 7 do, then more than half are no longer significant. So, count them up and then we discuss. -->
 
 <!-- Also, we need a sentence or two, maybe at the end of the Replication section, which describes this calculation, using the same sort of language as we do above. Actually, we should also have a sentence in the second to last paragraph of the introduction which covers this. Example: "Of the reported 15 significant regression coefficients in AKCLM's preferred models, only 8 remain signficant when the regressions are weighted by the log of county population." I the write up, this becomes a paragraph. "There is no single standard method for measuring how different two regression specifications are. AKCLM focus on their Model 4 for both dependendent variables: AI intensity and the change in AI intensity. With equal weighting, they estimate that the coefficients of &, *, *, ... are all statistically signficant. With log-weighted regressions, only . . .. " -->
 
-<!-- Do not do this! "though effect sizes diminish when larger counties receive less weight." Instead of just saying log-weighted, as you should, you are coming up with different English words for no good reason. Maybe "though effect sizes diminish when we weight by the logaroithm of county population."-->
+<!-- Do not do this! "though effect sizes diminish when larger counties receive less weight." Instead of just saying log-weighted, as you should, you are coming up with different English words for no good reason. Maybe "though effect sizes diminish when we weight by the logaroithm of county population." Fixed-->
 
 <!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
 
@@ -122,7 +122,7 @@ AKCLM find that both the level and growth of AI intensity are associated with hi
 
 <!-- DK: More room to add stuff in this paragraph. Which variables? Which matter most? Added that here-->
 
-We reproduce these results and extend the analysis using log-population weights. Under this adjustment, the core associations persist for both outcomes but estimated magnitudes generally shrink. For the level of AI intensity, labor market tightness shows the most robust association across weighting schemes, while bachelor's share shows the largest magnitude decline. For the growth of AI intensity, STEM degree share and labor market tightness show the most consistent associations, though effect sizes diminish when larger counties receive less weight.
+We reproduce these results and extend the analysis using log-population weights. Under this adjustment, the core associations persist for both outcomes but estimated magnitudes generally shrink. For the level of AI intensity, labor market tightness shows the most robust association across weighting schemes, while bachelor's share shows the largest magnitude decline. For the growth of AI intensity, STEM degree share and labor market tightness show the most consistent associations, though effect sizes diminish when we weight by the logarithim of county population.
 
 
 Finally, AKCLM's causal interpretations are not supported by the observational nature of their data [@holland1986]. The associations documented do not establish that education, innovation, or industry factors directly cause higher AI intensity. Our replication underscores the value of the evidence while emphasizing the limits of what can be inferred from the design.
@@ -963,6 +963,7 @@ final_plot
 ### Figure 1
 Figure 1 displays the spatial distribution and evolution of AI intensity across U.S. counties from 2014 to 2023. Panel A shows that AI intensity is highly concentrated in a small number of coastal metropolitan counties, with most rural and inland counties falling in the 0–0.14% range. Panel B shows that the highest growth in AI intensity between 2018 and 2023 did not occur in established tech hubs, and that median growth of 0.088 percentage points masks substantial heterogeneity across counties.
 
+AKCLM focus on their Model 4 for both dependent variables: AI intensity and the change in AI intensity. With equal weighting, the coefficients of bachelor's share, labor market tightness, patents per employee, STEM degree share, and manufacturing intensity are statistically significant in the levels specification, and STEM degree share is significant in the growth specification. When regressions are instead weighted by the log of county population, tightness, patents per employee, and manufacturing intensity lose significance in the levels specification, while bachelor's share and turnover rate become newly significant. Three coefficients that were significant under equal weighting are no longer significant under log-population weighting, suggesting that AKCLM's results are partially sensitive to the implicit assumption that each county contributes equally to the estimation.
 
 ## Extension: Log-Population Weighting Analysis
 
