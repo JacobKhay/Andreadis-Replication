@@ -342,7 +342,8 @@ intensity, labor market tightness shows the most robust association
 across weighting schemes, while bachelor's share shows the largest
 magnitude decline. For the growth of AI intensity, STEM degree share and
 labor market tightness show the most consistent associations, though
-effect sizes diminish when larger counties receive less weight.
+effect sizes diminish when we weight by the logarithim of county
+population.
 
 Finally, AKCLM's causal interpretations are not supported by the
 observational nature of their data (\citeproc{ref-holland1986}{Holland,
@@ -715,6 +716,17 @@ range. Panel B shows that the highest growth in AI intensity between
 2018 and 2023 did not occur in established tech hubs, and that median
 growth of 0.088 percentage points masks substantial heterogeneity across
 counties.
+
+We assess robustness by re-estimating AKCLM's preferred specifications
+weighted by log county population. Of the 11 significant coefficients
+under equal weighting across both dependent variables, 8 remain
+significant under log-population weighting. The core findings are
+robust: bachelor's share, STEM degree share, and manufacturing intensity
+remain significant predictors of AI intensity levels, and STEM degree
+share remains significant for AI intensity growth. Labor market
+tightness, however, loses significance in the levels specification under
+population weighting, suggesting that its estimated effect is driven
+disproportionately by small counties.
 
 \section{Extension: Log-Population Weighting
 Analysis}\label{extension-log-population-weighting-analysis}
