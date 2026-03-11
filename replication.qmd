@@ -74,17 +74,21 @@ data_raw <- read_csv("data.csv")
 
 <!-- DO NOT ASSUME OTHER PEOPLE ARE CORRECT! ASK AI! Constantly Am.-->
 
-<!-- Understand what the code is doing. AI can help! Also, the code for your extensions, should be clean and understandable. For example, you only download data.csv once, even though they download it lots of times. Done -->
+<!-- Ask AI if formula 2 is reasonable. Do the math of taking an average explicitly. -->
 
-<!-- Rephrase this to mention 5% level: "Of the 5 statistically significant coefficients under " Fixed-->
+<!-- This is a bad sentence: "A significant statistical issue arises from the construction of the variables." Why not "an important issue." Also "the variables" should be "labor market tightness." Because that is the only variable which is a problem. Edit rest of paragraph. -->
 
-<!-- Make clear we drop labor market tightness in our re-estimation! First sentence in the extension section. Done-->
+<!-- READ CLOSELY! Example: "multiplied by 100 to express in percentage points." Express what? -->
 
-<!-- Stop inflicting garbage upon me. I wish I were smart enough to prevent you from doing so! Done-->
+<!-- Drop all later discussion of labor market tightness. -->
 
-<!-- Consider: "Most, but not all, of the associations persist." Is that reasonable? It is reasonable To examine, we first need the total number of significant coefficients with equal weights. Call it 15, perhaps only considering Model 4 for Tables 1 and 2. Then, of those 15, how many are still signficant? If that is 12, then sure, "Most, but not all" would be a reasonable description. But if only 7 do, then more than half are no longer significant. So, count them up and then we discuss. Done -->
+<!-- "Figure 1: This figure" seems wrong. Figure 1: is wrong whether or not these are the notes to Figure 1 or if they are the start of a paragraph 1.  -->
 
-<!-- Also, we need a sentence or two, maybe at the end of the Replication section, which describes this calculation, using the same sort of language as we do above. Actually, we should also have a sentence in the second to last paragraph of the introduction which covers this. Example: "Of the reported 15 significant regression coefficients in AKCLM's preferred models, only 8 remain signficant when the regressions are weighted by the log of county population." I the write up, this becomes a paragraph. "There is no single standard method for measuring how different two regression specifications are. AKCLM focus on their Model 4 for both dependendent variables: AI intensity and the change in AI intensity. With equal weighting, they estimate that the coefficients of &, *, *, ... are all statistically signficant. With log-weighted regressions, only . . .. " Done-->
+<!-- Shouldn't Figure 1 appear in the Figure 1 subsection, like with tables? -->
+
+<!-- "Notes:" seems wrong. We don't label the Notes section of our figures. I STAND CORRECTED! We need *Notes* for all tables and figures. -->
+
+<!-- I like the Results section phrasing/framing, but I think it is outdated. Exact percentages are not that interesting. Something like: "Of the 14 coefficients highlighted by AKCLM in their preferred model, 13 of them decrease in absolute value. With log-population weighting, almost all the associations are weaker." -->
 
 <!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
 
