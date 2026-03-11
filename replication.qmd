@@ -65,7 +65,6 @@ library(usmap)
 library(viridis)
 library(dplyr)
 library(forcats)
-
 # Set options
 options(tigris_use_cache = TRUE)
 ```
@@ -82,9 +81,9 @@ options(tigris_use_cache = TRUE)
 
 <!-- Stop inflicting garbage upon me. I wish I were smart enough to prevent you from doing so! -->
 
-<!-- Consider: "Most, but not all, of the associations persist." Is that reasonable? It is reasonable To examine, we first need the total number of significant coefficients with equal weights. Call it 15, perhaps only considering Model 4 for Tables 1 and 2. Then, of those 15, how many are still signficant? If that is 12, then sure, "Most, but not all" would be a reasonable description. But if only 7 do, then more than half are no longer significant. So, count them up and then we discuss. -->
+<!-- Consider: "Most, but not all, of the associations persist." Is that reasonable? It is reasonable To examine, we first need the total number of significant coefficients with equal weights. Call it 15, perhaps only considering Model 4 for Tables 1 and 2. Then, of those 15, how many are still signficant? If that is 12, then sure, "Most, but not all" would be a reasonable description. But if only 7 do, then more than half are no longer significant. So, count them up and then we discuss. Done -->
 
-<!-- Also, we need a sentence or two, maybe at the end of the Replication section, which describes this calculation, using the same sort of language as we do above. Actually, we should also have a sentence in the second to last paragraph of the introduction which covers this. Example: "Of the reported 15 significant regression coefficients in AKCLM's preferred models, only 8 remain signficant when the regressions are weighted by the log of county population." I the write up, this becomes a paragraph. "There is no single standard method for measuring how different two regression specifications are. AKCLM focus on their Model 4 for both dependendent variables: AI intensity and the change in AI intensity. With equal weighting, they estimate that the coefficients of &, *, *, ... are all statistically signficant. With log-weighted regressions, only . . .. " -->
+<!-- Also, we need a sentence or two, maybe at the end of the Replication section, which describes this calculation, using the same sort of language as we do above. Actually, we should also have a sentence in the second to last paragraph of the introduction which covers this. Example: "Of the reported 15 significant regression coefficients in AKCLM's preferred models, only 8 remain signficant when the regressions are weighted by the log of county population." I the write up, this becomes a paragraph. "There is no single standard method for measuring how different two regression specifications are. AKCLM focus on their Model 4 for both dependendent variables: AI intensity and the change in AI intensity. With equal weighting, they estimate that the coefficients of &, *, *, ... are all statistically signficant. With log-weighted regressions, only . . .. " Done-->
 
 <!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
 
@@ -965,6 +964,7 @@ final_plot
 ```
 
 ### Figure 1
+
 Figure 1 displays the spatial distribution and evolution of AI intensity across U.S. counties from 2014 to 2023. Panel A shows that AI intensity is highly concentrated in a small number of coastal metropolitan counties, with most rural and inland counties falling in the 0–0.14% range. Panel B shows that the highest growth in AI intensity between 2018 and 2023 did not occur in established tech hubs, and that median growth of 0.088 percentage points masks substantial heterogeneity across counties.
 
 We assess robustness by re-estimating AKCLM's preferred specifications weighted by the logarithm of county population. Of the 5 coefficients that are statistically significant at the 5% level under equal weighting across both dependent variables, only 3 remain significant under logarithm-of-population weighting. For the level of AI intensity, bachelor's share and STEM degree share remain significant, while patents per employee and manufacturing intensity lose significance. For the growth of AI intensity, STEM degree share remains significant under both weighting schemes. The loss of significance for patents per employee and manufacturing intensity suggests their estimated effects on the level of AI intensity are concentrated among smaller counties.
