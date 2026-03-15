@@ -72,23 +72,23 @@ data_raw <- read_csv("data.csv")
 
 <!-- TODO:  -->
 
+<!-- Look for garbage, obviously AI-generated, sentences. Delete them! Leaving this in will get us desk-rejected, especially in the Introduction and Conclusion. -->
+
+<!-- How is 'labor market tightness' still in this draft! -->
+
+<!-- Bad grammar: " the share of AI-related job postings in total job postings at the county-year level."!! You really mean:  "AI-related job postings divided by total job postings" -->
+
+<!-- This whole sentence isn't great: "There are two outcome variables, both measures of AI intensity — the share of AI-related job postings in total job postings at the county-year level."   How about: "AKCLM define "AI intensity" as AI-related job postings divided by total job postings. There are two outcome variables: the level of AI intensity and the growth of AI intensity between 2017-2018 and 2022-2023." -->
+
+<!-- Are these sentences doing something: "Together, these outcomes distinguish between where AI jobs are concentrated and where AI adoption is accelerating most rapidly. Tracking both provides insight into which regions gain early access to AI intensity and which experience the fastest growth." -->
+
+<!-- Are these sentences doing stuff for you? "Statistical precision favors patents, significant at the 1% level versus 5% for STEM degree share. STEM degree share thus exhibits larger magnitude while patents per employee exhibits greater precision." Delete these! -->
+
+<!-- We should only discuss Model 4, and explain that we are doing that. -->
+
 <!-- DO NOT ASSUME OTHER PEOPLE ARE CORRECT! ASK AI! Constantly Am.-->
 
-<!-- Ask AI if formula 2 is reasonable. Do the math of taking an average explicitly. Done.-->
-
-<!-- This is a bad sentence: "A significant statistical issue arises from the construction of the variables." Why not "an important issue." Also "the variables" should be "labor market tightness." Because that is the only variable which is a problem. Edit rest of paragraph. Fixed.-->
-
-<!-- READ CLOSELY! Example: "multiplied by 100 to express in percentage points." Express what? Fixed-->
-
-<!-- Drop all later discussion of labor market tightness. Fixed-->
-
-<!-- "Figure 1: This figure" seems wrong. Figure 1: is wrong whether or not these are the notes to Figure 1 or if they are the start of a paragraph 1. Fixed  -->
-
-<!-- Shouldn't Figure 1 appear in the Figure 1 subsection, like with tables? Yes, fixed. -->
-
-<!-- "Notes:" seems wrong. We don't label the Notes section of our figures. I STAND CORRECTED! We need *Notes* for all tables and figures. Fixed-->
-
-<!-- I like the Results section phrasing/framing, but I think it is outdated. Exact percentages are not that interesting. Something like: "Of the 14 coefficients highlighted by AKCLM in their preferred model, 13 of them decrease in absolute value. With log-population weighting, almost all the associations are weaker." -->
+<!-- I am suspicious of "logarithm-of-population". Why not just log-population everywhere. -->
 
 <!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
 
@@ -110,7 +110,7 @@ data_raw <- read_csv("data.csv")
 
 ## Abstract {.unnumbered}
 
-We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables related to education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Most, but not all, of the associations persist. We critique the construction of a key variable and their unsupported causal claims. 
+We partially replicate @andreadis2025 on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables related to education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Most, but not all, of the associations persist. We critique the construction of a key variable and the authors' unsupported causal claims. 
 
 Declaration: There are no financial conflicts of interest to share. 
 
@@ -133,7 +133,7 @@ AKCLM find that both the level and growth of AI intensity are associated with hi
 We reproduce these results and extend the analysis using log-population weights. Under this adjustment, the core associations persist for both outcomes but estimated magnitudes generally shrink. For the level of AI intensity, labor market tightness shows the most robust association across weighting schemes, while bachelor's share shows the largest magnitude decline. For the growth of AI intensity, STEM degree share and labor market tightness show the most consistent associations, though effect sizes diminish when we weight by the logarithim of county population.
 
 
-Finally, AKCLM's causal interpretations are not supported by the observational nature of their data [@holland1986]. The associations documented do not establish that education, innovation, or industry factors directly cause higher AI intensity. Our replication underscores the value of the evidence while emphasizing the limits of what can be inferred from the design.
+Finally, AKCLM's causal interpretations are not supported by the observational nature of their data [@holland1986]. The associations documented do not establish that education, innovation, or industry factors directly cause higher AI intensity. 
 
 ## Data
 
