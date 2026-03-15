@@ -92,13 +92,9 @@ data_raw <- read_csv("data.csv")
 
 <!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
 
-<!-- All write up in terms of comparing two groups, e.g., counties with average home price compared with counties with home price growth one standard deviation higher. The second group of counties has AI job percentage with is  1.5% (?) lower. Done -->
+
 
 <!-- Is there a good reason why Tables 1 and 2 differ in the width? The main reason is because there are fixed effects in table 1 which appear as longer words-->
-
-<!-- TO CONSIDER: -->
-
-<!-- Open issue: Is their method for getting down to 24,000 rows for the regressions sensible? How much do results change if we fix this process? Worth doing? -->
 
 
 *JEL: J24, O33, R11*
