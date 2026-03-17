@@ -72,29 +72,13 @@ data_raw <- read_csv("data.csv")
 
 <!-- TODO:  -->
 
-<!-- Look for garbage, obviously AI-generated, sentences. Delete them! Leaving this in will get us desk-rejected, especially in the Introduction and Conclusion. -->
+<!-- 1) Fix DK notes below. Delete them.  -->
 
-<!-- How is 'labor market tightness' still in this draft! Gone.-->
+<!-- 2) Send latest draft to AKCLM, mentioning in email how we note that they have failed to explain the discrepancies. cc me. -->
 
-<!-- Bad grammar: " the share of AI-related job postings in total job postings at the county-year level."!! You really mean:  "AI-related job postings divided by total job postings" Fixed. -->
+<!-- 3) Submit! (Note you need a version without our names.) Run once, save and rename replication.tex as akclm.tex. Remove our names. Run again, save replication.tex as akclm-no-names.tex. -->
 
-<!-- This whole sentence isn't great: "There are two outcome variables, both measures of AI intensity — the share of AI-related job postings in total job postings at the county-year level."   How about: "AKCLM define "AI intensity" as AI-related job postings divided by total job postings. There are two outcome variables: the level of AI intensity and the growth of AI intensity between 2017-2018 and 2022-2023." Fixed -->
-
-<!-- Are these sentences doing something: "Together, these outcomes distinguish between where AI jobs are concentrated and where AI adoption is accelerating most rapidly. Tracking both provides insight into which regions gain early access to AI intensity and which experience the fastest growth." Removed, along with several other garbage sentences-->
-
-<!-- Are these sentences doing stuff for you? "Statistical precision favors patents, significant at the 1% level versus 5% for STEM degree share. STEM degree share thus exhibits larger magnitude while patents per employee exhibits greater precision." Delete these! Deleted -->
-
-<!-- We should only discuss Model 4, and explain that we are doing that. Done. -->
-
-<!-- DO NOT ASSUME OTHER PEOPLE ARE CORRECT! ASK AI! Constantly Am.-->
-
-<!-- I am suspicious of "logarithm-of-population". Why not just log-population everywhere. Done-->
-
-<!-- Print out the paper and have a friends read it aloud to you. Or, at least, read it aloud yourself. WIP -->
-
-
-
-<!-- Is there a good reason why Tables 1 and 2 differ in the width? The main reason is because there are fixed effects in table 1 which appear as longer words-->
+<!-- DK: I dislike "For the growth outcome". Use our standard term, always. -->
 
 
 *JEL: J24, O33, R11*
@@ -116,15 +100,11 @@ Declaration: There are no financial conflicts of interest to share.
 
 This paper replicates @andreadis2025, henceforth AKCLM, on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI intensity emerges and how it spreads matters for researchers and policymakers alike: AI has the potential to reshape regional economies [@acemoglu2024; @brynjolfsson2021], alter the demand for skills [@autor2015; @acemoglu2019], and shift patterns of innovation [@babina2024]. 
 
-<!-- DK: Either years described explicitly in both or in neither. Should be both! And mention the US! -->
-
-AKCLM define "AI intensity" as AI-related job postings divided by total job postings. There are two outcome variables: the level of AI intensity and the growth of AI intensity between 2017-2018 and 2022-2023.
+AKCLM define "AI intensity" as AI-related job postings divided by total job postings in US counties. There are two outcome variables: the level of AI intensity for each county-year and the growth of AI intensity between 2017-2018 and 2022-2023 for each county.
 
 AKCLM link county-level AI intensity to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity [@giczy2022], and industry by the composition of employment across sectors. 
 
 AKCLM find that both the level and growth of AI intensity are associated with higher educational attainment, more innovation activity, and certain industry profiles. For the level of AI intensity, bachelor's degree share, and STEM degree share are positively associated, while manufacturing intensity is negatively associated. For the growth of AI intensity and STEM degree share remain significantly correlated, while turnover rate shows a negative association.
-
-<!-- DK: More room to add stuff in this paragraph. Which variables? Which matter most? Added that here-->
 
 We reproduce these results and extend the analysis using log-population weights. Under this adjustment, the core associations persist for both outcomes but estimated magnitudes generally shrink. For the level of AI intensity, patents per employee shows the most robust association across weighting schemes, while bachelor's share shows the largest magnitude decline. For the growth of AI intensity, STEM degree share show the most consistent associations, though effect sizes diminish when we weight by log-population.
 
@@ -178,7 +158,7 @@ This can bias coefficient estimates and overstate statistical significance. The 
 
 We use R [@ihaka1996r] and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we use fixest [@fixest] and modelsummary [@modelsummary].
 
-Following AKCLM, we report only variables that have statistically significant coefficients in at least one model specification; rows with insignificant coefficients are omitted for brevity.
+Following AKCLM, we report only variables that have statistically significant coefficients in at least one model specification.
 
 ### Table 1
 
@@ -330,12 +310,9 @@ labels <- c(
 table_notes <- paste(
   "\\textit{Notes:} This table replicates Table 1 from Andreadis et al. (2025).",
   "The dependent variable is AI intensity, defined as the share of AI-related job postings",
-  "in total job postings in each county-year, multiplied by 100 to express in percentage terms.",
+  "in total job postings in each county-year from 2014 through 2023, multiplied by 100 to express in percentage terms.",
   "AI intensity has a mean of 0.4 percentage points and a standard deviation of 1.1 percentage points.",
   "All explanatory variables are standardized as z-scores.",
-  "Coefficients represent the expected difference in AI intensity in percentage points",
-  "between two counties differing by one standard deviation in the given predictor,",
-  "holding all other variables constant.",
   "Models are estimated using OLS with county and year fixed effects (columns 1-4)",
   "or county and state-year fixed effects (column 5).",
   "Standard errors are clustered at the county level.",
@@ -361,7 +338,7 @@ Table 1 presents parameter estimates for five models, each using AI intensity as
 
 Bachelor's share (0.18, p < 0.001) is the largest demographic predictor of AI intensity. Two counties differing by one standard deviation in bachelor's share are expected to differ by 0.18 percentage points in AI intensity, which is 42% of the mean and 16% of the standard deviation.
 
-Within the innovation variables, STEM degree share (0.048, p < 0.05) carries a coefficient 62% larger than patents per employee (0.029, p < 0.01). Two counties differing by one standard deviation in STEM degree share are expected to differ by 0.048 percentage points in AI intensity (11% of the mean and 4% of the standard deviation), compared with 0.029 percentage points for patents per employee (7% of the mean, 3% of the standard deviation). 
+Among the innovation variables, STEM degree share (0.048, p < 0.05) carries a coefficient 62% larger than patents per employee (0.029, p < 0.01). Two counties differing by one standard deviation in STEM degree share are expected to differ by 0.048 percentage points in AI intensity (11% of the mean and 4% of the standard deviation), compared with 0.029 percentage points for patents per employee (7% of the mean, 3% of the standard deviation). 
 
 Among industry variables, ICT intensity (0.026, p = 0.058) and manufacturing intensity (−0.033, p < 0.01) exhibit similar effect sizes but opposite signs. Two counties differing by one standard deviation in manufacturing intensity are expected to differ by 0.033 percentage points (8% of the standard deviation), compared with 0.026 percentage points for ICT intensity (6% of the standard deviation). 
 
@@ -375,8 +352,7 @@ $$
 
 where $\Delta AI_{i}$ is the percentage point change in AI intensity between the 2017–2018 and 2022–2023 averages, $\beta_0$ is a constant term representing expected AI intensity growth when all predictors are at their mean, $\mathbf{X}_{i,2017}$ is a vector of standardized regressors measured in 2017, and $\varepsilon_{i}$ is an error term clustered at the county level. Unlike equation (3), there is no time subscript $t$ because the growth outcome is a single observation per county — the change between two pooled periods — rather than a panel. This model does not include county or year fixed effects, as the outcome is already a first difference across counties.
 
-We reproduce Table 2 from AKCLM for all variables except bachelor's share, whose coefficient and standard error differ systematically across all five model specifications. The source of this discrepancy is unclear; the authors were contacted but did not respond.
-
+We reproduce Table 2 from AKCLM. All our results match AKCLM's, except for coefficient and standard error for bachelor's share in all the models in which it appears. The source of this discrepancy is unclear; the authors were contacted but did not respond.
 
 ```{r}
 #| label: tbl-table2
@@ -550,13 +526,9 @@ table_notes <- paste(
   "multiplied by 100 to express the change in percentage points.",
   "The change in AI intensity has a mean of 0.3 percentage points and a standard deviation of 1.0 percentage points.",
   "All explanatory variables are measured in 2017 and standardized as z-scores.",
-  "Coefficients represent the expected difference in AI intensity growth in percentage points",
-  "between two counties differing by one standard deviation in the given predictor,",
-  "holding all other variables constant.",
   "Models are estimated using OLS with no fixed effects (columns 1–4) or state fixed effects (column 5).",
   "Standard errors are clustered at the county level.",
-  "We reproduce all coefficients except bachelor's share, which differs systematically across",
-  "all five model specifications from the published values.",
+  "Our replication matches AKCLM perfectly, except for the coefficient and standard error for bachelor's share for all the models in which it appears.",
   "The authors were contacted regarding this discrepancy but did not respond."
 )
 
@@ -1706,25 +1678,24 @@ final_t2_45
 
 In the fully specified Model 4, bachelor's share shows a small negative association with the growth of AI intensity under both weighting schemes, suggesting that counties with higher educational attainment in 2017 already had higher baseline AI intensity, leaving less room for growth. House price growth shows minimal independent effect. Among innovation variables, patents per employee declines from 0.06 percentage points under equal weights to 0.04 under log-population weights (a 33% reduction), while STEM degree share declines from 0.08 to 0.05 percentage points (a 38% reduction). Among industry variables, manufacturing intensity shows a negative association of approximately 0.03–0.04 percentage points, ICT intensity declines from 0.12 to 0.07 percentage points (a 42% reduction), and turnover rate declines from 0.17–0.18 to 0.11 percentage points (a 39% reduction). 
 
-### Results
-
 Of the coefficients highlighted by AKCLM in their preferred levels specification, most decrease in absolute value under log-population weighting. STEM degree share shows the most stability across weighting schemes, while bachelor's share, turnover rate, and manufacturing intensity all weaken under population weighting, suggesting these relationships are stronger in smaller counties. ICT intensity and patents per employee are exceptions, becoming slightly larger under population weighting. Overall, the direction of all associations is preserved, but the pattern of magnitude shifts suggests that AI intensity correlates more strongly with education and labor market structure in smaller counties.
 
-## Critical Assessment of Causal Language
-
-AKCLM employ language suggesting causal relationships despite using observational county-level data with fixed-effects regressions. The empirical strategy does not support causal inference [@holland1986], yet the paper uses terminology that implies causation rather than correlation. Causal nouns such as "drivers," "determinants," "effects," and "impact" appear throughout, alongside causal verbs such as "drive," "fostering," and "influence." For instance, the paper refers to "key drivers of AI job intensity" and states that labor market tightness "emerges as a key driver," implying that changing these variables would directly alter AI adoption. The conclusion states that findings "point to the role of place-based policies," making policy recommendations based on associations rather than identified causal effects. The fixed-effects specification controls for time-invariant county characteristics and common time trends, but cannot address reverse causality, omitted time-varying confounds, or selection processes [@holland1986].
+AKCLM employ language suggesting causal relationships despite using observational county-level data with fixed-effects regressions. The empirical strategy does not support causal inference [@holland1986], yet the paper uses terminology that implies causation rather than correlation. Causal nouns such as "drivers," "determinants," "effects," and "impact" appear throughout, alongside causal verbs such as "drive," "fostering," and "influence." For instance, the paper refers to "key drivers of AI job intensity" and states that labor market tightness "emerges as a key driver," implying that changing these variables would directly alter AI adoption. The conclusion states that findings "point to the role of place-based policies," making policy recommendations based on associations rather than identified causal effects.
 
 ## Conclusion
 
-This replication of AKCLM confirms that local labor market conditions, human capital, and innovation capacity are correlated with AI intensity across U.S. counties. Our analysis highlights three qualifications to their conclusions.
+<!-- DK: These variables are wrong. -->
 
-First, AKCLM employ causal language that overstates what the empirical design can support. Terms such as "drivers" and "determinants" suggest causal mechanisms, but fixed-effects regressions can only document conditional correlations. Without exogenous variation or quasi-experimental identification [@holland1986], these patterns likely reflect some combination of causal effects, reverse causality, and selection.
+This replication of AKCLM confirms that labor market conditions, human capital, and innovation capacity are correlated with AI intensity across U.S. counties. Our analysis highlights three qualifications to their conclusions.
 
-Second, several associations are sensitive to the weighting scheme. ICT intensity shows the largest magnitude shift, declining by approximately 42% under log-population weights, while patents per employee, STEM degree share, and turnover rate all decline by roughly 33–39%.
+First, AKCLM employ causal language that overstates what the empirical design can support. Terms such as "drivers" and "determinants" suggest causal mechanisms, but simple regressions can only document conditional correlations, in the absence of an explicit identification strategy [@holland1986], 
 
-Third, the direction of all associations is preserved across weighting schemes, indicating that the core findings of AKCLM are reproducible. However, the magnitudes shift enough to caution against treating point estimates from the equal-weighted specification as representative of all counties.
+Second (DK: Add discussion of bad labor market intensity.)
 
-More broadly, this replication underscores that modest changes in specification, such as alternative weighting schemes, can materially shift the interpretation of empirical results on technological change.
+Third, several associations are sensitive to the weighting scheme. ICT intensity shows the largest magnitude shift, declining by approximately 42% under log-population weights, while patents per employee, STEM degree share, and turnover rate all decline by roughly one-third.
+
+
+
 
 
 ## Bibliography {.unnumbered}
