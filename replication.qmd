@@ -70,17 +70,6 @@ options(tigris_use_cache = TRUE)
 data_raw <- read_csv("data.csv")
 ```
 
-<!-- TODO:  -->
-
-<!-- 1) Fix DK notes below. Delete them.  -->
-
-<!-- 2) Send latest draft to AKCLM, mentioning in email how we note that they have failed to explain the discrepancies. cc me. -->
-
-<!-- 3) Submit! (Note you need a version without our names.) Run once, save and rename replication.tex as akclm.tex. Remove our names. Run again, save replication.tex as akclm-no-names.tex. -->
-
-<!-- DK: I dislike "For the growth outcome". Use our standard term, always. -->
-
-
 *JEL: J24, O33, R11*
 
 *Keywords:* Artificial Intelligence, Regional Economics, Labor Markets
@@ -344,13 +333,13 @@ Among industry variables, ICT intensity (0.026, p = 0.058) and manufacturing int
 
 ### Table 2
 
-For the growth outcome, we estimate a cross-sectional OLS regression with no fixed effects:
+For the growth of AI intensity, we estimate a cross-sectional OLS regression with no fixed effects:
 
 $$
 \Delta AI_{i} = \beta_0 + \boldsymbol{\beta}' \mathbf{X}_{i,2017} + \varepsilon_{i} \tag{5}
 $$
 
-where $\Delta AI_{i}$ is the percentage point change in AI intensity between the 2017–2018 and 2022–2023 averages, $\beta_0$ is a constant term representing expected AI intensity growth when all predictors are at their mean, $\mathbf{X}_{i,2017}$ is a vector of standardized regressors measured in 2017, and $\varepsilon_{i}$ is an error term clustered at the county level. Unlike equation (3), there is no time subscript $t$ because the growth outcome is a single observation per county — the change between two pooled periods — rather than a panel. This model does not include county or year fixed effects, as the outcome is already a first difference across counties.
+where $\Delta AI_{i}$ is the percentage point change in AI intensity between the 2017–2018 and 2022–2023 averages, $\beta_0$ is a constant term representing expected AI intensity growth when all predictors are at their mean, $\mathbf{X}_{i,2017}$ is a vector of standardized regressors measured in 2017, and $\varepsilon_{i}$ is an error term clustered at the county level. Unlike equation (3), there is no time subscript $t$ because the growth of AI intensity is a single observation per county — the change between two pooled periods — rather than a panel. This model does not include county or year fixed effects, as the outcome is already a first difference across counties.
 
 We reproduce Table 2 from AKCLM. All our results match AKCLM's, except for coefficient and standard error for bachelor's share in all the models in which it appears. The source of this discrepancy is unclear; the authors were contacted but did not respond.
 
@@ -554,13 +543,11 @@ Among labor market variables, turnover rate (−0.042, p < 0.01) carries a coeff
 
 ### Figure 1
 
-
 ```{r}
-#| label: fig-map
+#| label: map-plot
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap-location: bottom
 #| fig-pos: "H"
 #| fig-width: 18
 #| fig-height: 9
@@ -784,11 +771,9 @@ final_plot
 ```
 *Notes:* Panel A shows average AI intensity from 2014 to 2023. Panel B shows the change in AI intensity between 2017--2018 and 2022--2023. Connecticut appears with N/A values because AKCLM's data does not include Connecticut counties. Hundreds of counties have different values in our replication, especially in Panel B. The authors were contacted regarding these discrepancies but did not respond.
 
-
 Figure 1 displays the spatial distribution and evolution of AI intensity across U.S. counties from 2014 to 2023. Panel A shows that AI intensity is highly concentrated in a small number of coastal metropolitan counties, with most rural and inland counties falling in the 0–0.14% range. Panel B shows that the highest growth in AI intensity between 2018 and 2023 (median: 0.088 percentage points) did not occur in established tech hubs.
 
 We assess robustness by re-estimating AKCLM's preferred specifications weighted by log-population. Of the 5 coefficients that are statistically significant at the 5% level under equal weighting across both dependent variables, only 3 remain significant under log-population weighting. For the level of AI intensity, bachelor's share and STEM degree share remain significant, while patents per employee and manufacturing intensity lose significance. For the growth of AI intensity, STEM degree share remains significant under both weighting schemes. 
-
 
 ## Extension: Log-Population Weighting Analysis
 
@@ -1029,7 +1014,6 @@ final <- plots_with_tags[[1]] / plots_with_tags[[2]] / plots_with_tags[[3]] +
 
 final
 ```
-
 *Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 1. These models examine AI intensity as the outcome variable. Model 1 (Demographics) includes bachelor's share, house price growth, and labor market tightness. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All models include county and year fixed effects. Labor market tightness is omitted from log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.
 
 ```{r}
@@ -1248,7 +1232,6 @@ final_45 <- plots_45_with_tags[[1]] / plots_45_with_tags[[2]] +
 
 final_45
 ```
-
 *Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 1. These models examine AI intensity as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with county and year fixed effects. Model 5 (All + State FE) replaces year fixed effects with state-year fixed effects. Both models include bachelor's share, house price growth, patents per employee, STEM degree share, ICT intensity, manufacturing intensity, and turnover rate. Labor market tightness is omitted from log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.
 
 In Model 4, coefficient estimates remain stable across weighting schemes. Bachelor's share is associated with approximately a 0.01 percentage point increase in AI intensity per standard deviation, while house price growth shows minimal independent effect. Among innovation variables, patents per employee shows approximately a 0.05 percentage point increase and STEM degree share shows roughly a 0.09 percentage point increase per standard deviation. Among industry variables, manufacturing intensity is associated with approximately a 0.03 percentage point decrease, ICT intensity with a 0.12 percentage point increase, and turnover rate with the largest effect of approximately 0.18 percentage points per standard deviation. 
@@ -1482,7 +1465,6 @@ final <- final &
 
 final
 ```
-
 *Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 1 (Demographics) includes bachelor's share, and house price growth. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor's share coefficient from AKCLM for comparison.
 
 ```{r}
@@ -1672,9 +1654,7 @@ final_t2_45 <- plots_t2_45_with_tags[[1]] / plots_t2_45_with_tags[[2]] +
 
 final_t2_45
 ```
-
 *Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with no fixed effects. Model 5 (All + State FE) adds state fixed effects to Model 4. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor's share coefficients from AKCLM for comparison.
-
 
 In the fully specified Model 4, bachelor's share shows a small negative association with the growth of AI intensity under both weighting schemes, suggesting that counties with higher educational attainment in 2017 already had higher baseline AI intensity, leaving less room for growth. House price growth shows minimal independent effect. Among innovation variables, patents per employee declines from 0.06 percentage points under equal weights to 0.04 under log-population weights (a 33% reduction), while STEM degree share declines from 0.08 to 0.05 percentage points (a 38% reduction). Among industry variables, manufacturing intensity shows a negative association of approximately 0.03–0.04 percentage points, ICT intensity declines from 0.12 to 0.07 percentage points (a 42% reduction), and turnover rate declines from 0.17–0.18 to 0.11 percentage points (a 39% reduction). 
 
@@ -1684,18 +1664,12 @@ AKCLM employ language suggesting causal relationships despite using observationa
 
 ## Conclusion
 
-<!-- DK: These variables are wrong. -->
-
-This replication of AKCLM confirms that labor market conditions, human capital, and innovation capacity are correlated with AI intensity across U.S. counties. Our analysis highlights three qualifications to their conclusions.
+This replication of AKCLM confirms that education, innovation, and industry factors are correlated with AI intensity across U.S. counties. Our analysis highlights three qualifications to their conclusions.
 
 First, AKCLM employ causal language that overstates what the empirical design can support. Terms such as "drivers" and "determinants" suggest causal mechanisms, but simple regressions can only document conditional correlations, in the absence of an explicit identification strategy [@holland1986], 
 
-Second (DK: Add discussion of bad labor market intensity.)
+Second, the construction of labor market tightness (total job postings divided by unemployed workers) introduces a mechanical correlation with AI intensity, which has total job postings in its denominator. Any change in total postings simultaneously raises tightness and lowers measured AI intensity, biasing the estimated coefficient. AKCLM do not acknowledge this issue.
 
 Third, several associations are sensitive to the weighting scheme. ICT intensity shows the largest magnitude shift, declining by approximately 42% under log-population weights, while patents per employee, STEM degree share, and turnover rate all decline by roughly one-third.
-
-
-
-
 
 ## Bibliography {.unnumbered}
