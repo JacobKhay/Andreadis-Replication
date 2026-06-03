@@ -1,12 +1,13 @@
----
+﻿---
 title: "Local Heterogeneity in Artificial Intelligence Jobs Over Time and Space"
 subtitle: "A Replication Study of Andreadis et al. (AEA Papers and Proceedings, 2025)"
 author:
-  - name: Jacob Khaykin^[Solon High School, [jacobkhaykin27@solonschools.net](mailto:jacobkhaykin27@solonschools.net)]
-  - name: David Kane^[New College of Florida, [dakane@ncf.edu](mailto:dakane@ncf.edu)]
+  - name: "Jacob Khaykin^[Solon High School, [jacobkhaykin27@solonschools.net](mailto:jacobkhaykin27@solonschools.net)]"
+  - name: "David Kane^[New College of Florida, [dakane@ncf.edu](mailto:dakane@ncf.edu)]"
 bibliography: references.bib
 csl: aea.csl
 link-citations: true
+citeproc: true
 nocite: '@*'
 format:
   pdf:
