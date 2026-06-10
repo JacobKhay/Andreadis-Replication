@@ -1,0 +1,62 @@
+Guide to links to download county-level covariates:
+
+Patents Data:
+AI patent classfication:
+https://data.uspto.gov/bulkdata/datasets/ECOPATAI
+PatentsView:
+https://patentsview.org/download/data-download-tables
+requires: 
+g_inventor_disambiguated.tsv
+g_location_disambiguated.tsv
+g_patent.tsv
+g_persistent_inventor.tsv
+
+For convenience patent  and inventor counts overall and AI specific for each county are provided here:
+https://github.com/mhatzikonstantinou/aicounty
+
+Download Local Unemployment Statistics from: https://www.bls.gov/lau/laucnty{yy}.xlsx
+ where  {yy} is the 2-digit year, eg 22
+
+Download: https://fhfa.gov/hpi/download/annually/hpi_at_bdl_county.xlsx,"FHFA House Price Index  Datasets
+
+Download QWI files from here: 
+https://lehd.ces.census.gov/data/qwi/latest_release/
+You need to download files that have the following names:
+qwi_{state}_se_fa_gc_ns_op_u.csv.gz
+gc: implies data are at the county level
+ns: at the sectoral level
+ use replication code to create:
+Files named:
+qwi_management
+qwi_manuf
+qwi_information 
+qwi_research 
+qwi_totals
+
+Download QCEW files from here: 
+https://www.bls.gov/cew/downloadable-data-files.htm
+QCEW NAICS-Based Data Files by Area contain county level information, save in a folder and use replication code to create:
+Files named:
+
+qcew_management: "qcew_{year}_management.csv"
+qcew_manuf: "~/Downloads/qcew_{year}_manuf.csv"
+qcew_information: "~/Downloads/qcew_{year}_information.csv"
+qcew_research: "~/Downloads/qcew_{year}_research.csv"
+qcew_totals: "~/Downloads/qcew_{year}.csv"
+ where {yyyy} is the 4-digit year eg 2022 
+
+Download County Business Patterns from here:
+https://www2.census.gov/programs-surveys/cbp/datasets/{yyyy}/cbp{yy}co.zip
+ where {yyyy} is the 4-digit year eg 2022 and {yy} is the 2-digit year, eg 22
+Then 1.  filter for each year rows that are either starting with "-" and combine/save in a single file named cbpco.csv
+and 2.  filter for each year rows that are  starting with [0-9] and have 3rd character "-"(2-digit industries)
+and combine/save in a single file named cbpco_naics2.csv
+
+ACS 5-year county summaries provide estimates for demographic variables at the county level, we obtain those 
+from https://mcdc.missouri.edu
+
+Using this link: https://apps.bea.gov/regional/zip/CAGDP9.zip, you can download BEA county GDP estimates:
+The code uses the following file: CAGDP9__ALL_AREAS_2001_2023.csv
+
+For convenience, a lot of the files are also available here:
+https://drive.google.com/drive/folders/1E3Qw5waGgylLtGnroziyZxMleCRglVNb?usp=share_link

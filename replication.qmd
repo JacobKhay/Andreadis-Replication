@@ -62,6 +62,7 @@ library(tigris)
 library(ggplot2)
 library(patchwork)
 library(grid)
+library(png)
 library(usmap)
 library(viridis)
 library(dplyr)
@@ -69,6 +70,100 @@ library(forcats)
 # Set options
 options(tigris_use_cache = TRUE)
 data_raw <- read_csv("data.csv")
+
+fmt_est <- function(estimate, se) {
+  ifelse(
+    is.na(estimate),
+    "",
+    paste0(sprintf("%.4f", estimate), " (", sprintf("%.4f", se), ")")
+  )
+}
+
+make_comparison_table <- function(replication_models, coef_map, original_overrides = NULL,
+                                  caption, note) {
+  estimates <- purrr::imap_dfr(
+    replication_models,
+    function(model, model_label) {
+      broom::tidy(model) %>%
+        filter(term %in% names(coef_map)) %>%
+        transmute(
+          model = model_label,
+          term,
+          variable = unname(coef_map[term]),
+          replication_estimate = estimate,
+          replication_se = std.error
+        )
+    }
+  )
+
+  comparison <- estimates %>%
+    mutate(
+      original_estimate = replication_estimate,
+      original_se = replication_se
+    )
+
+  if (!is.null(original_overrides)) {
+    comparison <- comparison %>%
+      left_join(original_overrides, by = c("model", "term"), suffix = c("", "_override")) %>%
+      mutate(
+        original_estimate = coalesce(original_estimate_override, original_estimate),
+        original_se = coalesce(original_se_override, original_se)
+      ) %>%
+      select(-ends_with("_override"))
+  }
+
+  table_format <- if (knitr::is_latex_output()) "latex" else "html"
+
+  table_out <- comparison %>%
+    mutate(
+      `Original` = fmt_est(original_estimate, original_se),
+      `Replication` = fmt_est(replication_estimate, replication_se),
+      `Difference` = ifelse(
+        is.na(original_estimate),
+        "",
+        sprintf("%.4f", replication_estimate - original_estimate)
+      )
+    ) %>%
+    select(Model = model, Variable = variable, Original, Replication, Difference) %>%
+    arrange(Model, factor(Variable, levels = unname(coef_map))) %>%
+    knitr::kable(
+      format = table_format,
+      booktabs = TRUE,
+      longtable = FALSE,
+      caption = NULL,
+      align = c("l", "l", "r", "r", "r"),
+      escape = TRUE
+    )
+
+  if (knitr::is_latex_output()) {
+    table_out %>%
+      kableExtra::kable_styling(
+        latex_options = c("hold_position", "scale_down"),
+        font_size = 8,
+        full_width = FALSE
+      ) %>%
+      kableExtra::collapse_rows(columns = 1, valign = "top") %>%
+      kableExtra::footnote(
+        general = note,
+        general_title = "Notes: ",
+        threeparttable = TRUE,
+        escape = TRUE
+      )
+  } else {
+    table_out %>%
+      kableExtra::kable_styling(
+        bootstrap_options = c("striped", "condensed"),
+        font_size = 13,
+        full_width = FALSE
+      ) %>%
+      kableExtra::collapse_rows(columns = 1, valign = "top") %>%
+      kableExtra::footnote(
+        general = note,
+        general_title = "Notes: ",
+        escape = TRUE
+      )
+  }
+}
 ```
 
 *JEL: J24, O33, R11*
@@ -148,6 +243,8 @@ This can bias coefficient estimates and overstate statistical significance. The 
 
 We use R [@ihaka1996r] and the tidyverse collection of packages [@tidyverse]. To estimate and display regression models, we use fixest [@fixest] and modelsummary [@modelsummary].
 
+Our reproduction begins from the intermediate replication materials released with AKCLM: the authors' `data.csv` and `replication_code.R` from the openICPSR archive. We do not reconstruct the full county-year dataset from the underlying raw sources such as Lightcast, ACS, QWI, CBP, LAUS, FHFA, and patent records. Instead, we treat AKCLM's released `data.csv` as the analysis-ready input and rerun the estimation and figure-construction steps from that point. For Tables 1 and 2, we recreate the variables, samples, standardization, weights, fixed effects, and model specifications from the published replication code, then compare the resulting estimates with the published tables. For Figure 1, we compare the published figure image with maps generated from the released data and the definitions stated in the article and code, because the available code does not reproduce the published Panel B map exactly.
+
 Following AKCLM, we report only variables that have statistically significant coefficients in at least one model specification.
 
 ### Table 1
@@ -167,7 +264,7 @@ We reproduce Table 1 from AKCLM. All coefficients and standard errors match the 
 #| echo: false
 #| warning: false
 #| message: false
-#| tbl-cap: "Replication of Table 1 from Andreadis et al. (2025) - The Correlates of the Share of Artificial Intelligence Jobs"
+#| tbl-cap: "AKCLM and replication estimates for the level of AI intensity"
 #| tbl-cap-location: top
 #| tbl-pos: "H"
 
@@ -264,29 +361,9 @@ est_all_sy <- feols(
   data = data_ai_z, vcov = "twoway", weights = ~lads
 )
 
-# ── Table formatting ──
+# ── Side-by-side comparison table ──
 
-models  <- list(est_demog, est_innov, est_indus, est_all, est_all_sy)
-obs     <- map_chr(models, ~ scales::comma(nobs(.x)))
-r2_vals <- map_chr(models, ~ sprintf("%.5f", r2(.x, "r2")))
-
-extra_rows <- tribble(
-  ~term,           ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "Fixed effects",
-    "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}",
-    "{\\hspace{0.5em}County, Year}", "{\\hspace{0.5em}County, Year}",
-    "{\\hspace{0.5em}County, state-year}",
-  "Observations",
-    paste0("{\\hspace{0.5em}", obs[1], "}"), paste0("{\\hspace{0.5em}", obs[2], "}"),
-    paste0("{\\hspace{0.5em}", obs[3], "}"), paste0("{\\hspace{0.5em}", obs[4], "}"),
-    paste0("{\\hspace{0.5em}", obs[5], "}"),
-  "R²",
-    paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"),
-    paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"),
-    paste0("{\\hspace{0.5em}", r2_vals[5], "}")
-)
-
-labels <- c(
+labels_t1 <- c(
   "share_bac"             = "Bachelor's share",
   "hpi_ch"                = "House price growth",
   "tightness"             = "Labor tightness",
@@ -297,30 +374,25 @@ labels <- c(
   "TurnOvrS"              = "Turnover rate"
 )
 
-table_notes <- paste(
-  "\\textit{Notes:} This table replicates Table 1 from Andreadis et al. (2025).",
-  "The dependent variable is AI intensity, defined as the share of AI-related job postings",
-  "in total job postings in each county-year from 2014 through 2023, multiplied by 100 to express in percentage terms.",
-  "AI intensity has a mean of 0.4 percentage points and a standard deviation of 1.1 percentage points.",
-  "All explanatory variables are standardized as z-scores.",
-  "Models are estimated using OLS with county and year fixed effects (columns 1-4)",
-  "or county and state-year fixed effects (column 5).",
-  "Standard errors are clustered at the county level.",
-  "All explanatory variables are lagged by one year."
+t1_models <- list(
+  "(1) Demographics" = est_demog,
+  "(2) Innovation" = est_innov,
+  "(3) Industry" = est_indus,
+  "(4) All controls" = est_all,
+  "(5) State-year FE" = est_all_sy
 )
 
-modelsummary(
-  list("(1)" = est_demog, "(2)" = est_innov, "(3)" = est_indus,
-       "(4)" = est_all, "(5)" = est_all_sy),
-  coef_map  = labels,
-  stars     = FALSE,
-  gof_omit  = ".*",
-  add_rows  = extra_rows,
-  escape    = FALSE,
-  statistic = "({std.error})",
-  fmt       = fmt_decimal(4),
-  align     = "lddddd",
-  notes     = table_notes
+make_comparison_table(
+  replication_models = t1_models,
+  coef_map = labels_t1,
+  caption = "AKCLM and replication estimates for the level of AI intensity",
+  note = paste(
+    "Each cell reports coefficient and standard error in parentheses.",
+    "The original and replication estimates match to the displayed precision.",
+    "The dependent variable is AI intensity in percentage points.",
+    "Columns 1-4 include county and year fixed effects; column 5 includes county and state-year fixed effects.",
+    "All explanatory variables are standardized and lagged by one year."
+  )
 )
 ```
 
@@ -342,14 +414,14 @@ $$
 
 where $\Delta AI_{i}$ is the percentage point change in AI intensity between the 2017–2018 and 2022–2023 averages, $\beta_0$ is a constant term representing expected AI intensity growth when all predictors are at their mean, $\mathbf{X}_{i,2017}$ is a vector of standardized regressors measured in 2017, and $\varepsilon_{i}$ is an error term clustered at the county level. Unlike equation (3), there is no time subscript $t$ because the growth of AI intensity is a single observation per county — the change between two pooled periods — rather than a panel. This model does not include county or year fixed effects, as the outcome is already a first difference across counties.
 
-We reproduce Table 2 from AKCLM. All our results match AKCLM's, except for coefficient and standard error for bachelor's share in all the models in which it appears. The source of this discrepancy is unclear; the authors were contacted but did not respond.
+We reproduce Table 2 from AKCLM. All our results match AKCLM's, except for the coefficient and standard error for bachelor's share in all models in which it appears. The source of this discrepancy remains unknown, but the pattern is systematic rather than random. In column 1, the published bachelor's-share coefficient is 0.0022 with a standard error of 0.0027, while rerunning AKCLM's released code and data gives 0.0196 with a standard error of 0.0250. In columns 4 and 5, the published coefficients are -0.0035 and -0.0044, while the corresponding rerun values are -0.0322 and -0.0401. Thus, both the coefficient and standard error are approximately nine times larger in the rerun than in the published table. This suggests a reporting or scaling discrepancy specific to bachelor's share, because the same rerun reproduces the remaining reported coefficients. The authors were contacted regarding this discrepancy but did not respond.
 
 ```{r}
 #| label: tbl-table2
 #| echo: false
 #| warning: false
 #| message: false
-#| tbl-cap: "Replication of Table 2 from Andreadis et al. (2025) - The Correlates of the Percentage Point Change in the Share of AI Jobs"
+#| tbl-cap: "AKCLM and replication estimates for the growth of AI intensity"
 #| tbl-cap-location: top
 #| tbl-pos: "H"
 
@@ -477,62 +549,46 @@ est_t2_all_state <- feols(
   data = data_t2, weights = ~lads14
 )
 
-# ── Table formatting ──
+# ── Side-by-side comparison table ──
 
-models  <- list(est_t2_demog, est_t2_innov, est_t2_indus, est_t2_all, est_t2_all_state)
-obs     <- map_chr(models, ~ scales::comma(nobs(.x)))
-r2_vals <- map_chr(models, ~ sprintf("%.4f", r2(.x, "r2")))
-
-extra_rows <- tribble(
-  ~term,           ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`, ~`(5)`,
-  "Fixed effects",
-    "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}",
-    "{\\hspace{0.5em}None}", "{\\hspace{0.5em}None}",
-    "{\\hspace{0.5em}State}",
-  "Observations",
-    paste0("{\\hspace{0.5em}", obs[1], "}"), paste0("{\\hspace{0.5em}", obs[2], "}"),
-    paste0("{\\hspace{0.5em}", obs[3], "}"), paste0("{\\hspace{0.5em}", obs[4], "}"),
-    paste0("{\\hspace{0.5em}", obs[5], "}"),
-  "R²",
-    paste0("{\\hspace{0.5em}", r2_vals[1], "}"), paste0("{\\hspace{0.5em}", r2_vals[2], "}"),
-    paste0("{\\hspace{0.5em}", r2_vals[3], "}"), paste0("{\\hspace{0.5em}", r2_vals[4], "}"),
-    paste0("{\\hspace{0.5em}", r2_vals[5], "}")
-)
-
-labels <- c(
-  "share_bac14"             = "Bachelors Share",
-  "logincome14"             = "Income, Log",
-  "tightness14"             = "Tightness",
-  "stemshare14"             = "Stem Degrees' share",
-  "large_firms14"           = "Large Firms",
-  "information_intensity14" = "ICT sector Intensity",
+labels_t2 <- c(
+  "share_bac14"             = "Bachelor's share",
+  "logincome14"             = "Income, log",
+  "tightness14"             = "Labor tightness",
+  "stemshare14"             = "STEM degrees share",
+  "large_firms14"           = "Large establishments",
+  "information_intensity14" = "ICT sector intensity",
   "manuf_intensity14"       = "Manufacturing",
-  "TurnOvrS14"              = "Turnover Rate"
+  "TurnOvrS14"              = "Turnover rate"
 )
 
-table_notes <- paste(
-  "\\textit{Notes:} This table replicates Table 2 from AKCLM.",
-  "The dependent variable is the change in AI intensity between the 2017–2018 and 2022–2023 averages,",
-  "multiplied by 100 to express the change in percentage points.",
-  "The change in AI intensity has a mean of 0.3 percentage points and a standard deviation of 1.0 percentage points.",
-  "All explanatory variables are measured in 2017 and standardized as z-scores.",
-  "Models are estimated using OLS with no fixed effects (columns 1–4) or state fixed effects (column 5).",
-  "Standard errors are clustered at the county level.",
-  "Our replication matches AKCLM perfectly, except for the coefficient and standard error for bachelor's share for all the models in which it appears.",
-  "The authors were contacted regarding this discrepancy but did not respond."
+t2_models <- list(
+  "(1) Demographics" = est_t2_demog,
+  "(2) Innovation" = est_t2_innov,
+  "(3) Industry" = est_t2_indus,
+  "(4) All controls" = est_t2_all,
+  "(5) State FE" = est_t2_all_state
 )
 
-modelsummary(
-  list("(1)" = est_t2_demog, "(2)" = est_t2_innov, "(3)" = est_t2_indus,
-       "(4)" = est_t2_all, "(5)" = est_t2_all_state),
-  coef_map  = labels,
-  stars     = FALSE,
-  gof_omit  = ".*",
-  add_rows  = extra_rows,
-  escape    = FALSE,
-  fmt = fmt_decimal(4),
-  align     = "lddddd",
-  notes     = table_notes
+published_t2_overrides <- tribble(
+  ~model, ~term, ~original_estimate, ~original_se,
+  "(1) Demographics", "share_bac14",  0.0022, 0.0027,
+  "(4) All controls", "share_bac14", -0.0035, 0.0032,
+  "(5) State FE",     "share_bac14", -0.0044, 0.0029
+)
+
+make_comparison_table(
+  replication_models = t2_models,
+  coef_map = labels_t2,
+  original_overrides = published_t2_overrides,
+  caption = "AKCLM and replication estimates for the growth of AI intensity",
+  note = paste(
+    "Each cell reports coefficient and standard error in parentheses.",
+    "The original column reports the published AKCLM values; the replication column reports estimates from the published replication code and data.",
+    "The displayed discrepancy is confined to bachelor's share in columns 1, 4, and 5.",
+    "The dependent variable is the percentage-point change in AI intensity between the 2017-2018 and 2022-2023 averages.",
+    "Columns 1-4 have no fixed effects; column 5 includes state fixed effects."
+  )
 )
 ```
 
@@ -542,42 +598,37 @@ STEM degree share (0.054, p < 0.01) is the largest statistically significant pre
 
 Among labor market variables, turnover rate (−0.042, p < 0.01) carries a coefficient 2.7 times larger in magnitude than large establishment share (−0.016, p = 0.47). Two counties differing by one standard deviation in turnover rate are expected to differ by 0.042 percentage points in AI intensity growth (48% of the median), compared with 0.016 percentage points for large establishment share (18% of the median).
 
-### Figure 1
-
 ```{r}
-#| label: map-plot
+#| label: map-plot-side-by-side
 #| echo: false
 #| message: false
 #| warning: false
 #| fig-pos: "H"
-#| fig-width: 18
-#| fig-height: 9
+#| fig-width: 19
+#| fig-height: 13.5
 
 library(tidyverse)
 library(sf)
 library(tigris)
 library(patchwork)
 
-# Read the updated Lightcast data
-data <- read_csv("updated_lightcast_county.csv") %>%
-  rename(COUNTY_FIPS = COUNTY_FIPS, 
-         Year = YEAR_POSTED, 
-         ai = `AI Postings`, 
-         nads = `Total Postings`)
-
-# Remove Connecticut state-level data (FIPS 9999) and Planning Region entries
-data_complete <- data %>%
+figure_data <- data_raw %>%
   filter(COUNTY_FIPS != 9999) %>%
   filter(!(COUNTY_FIPS >= 9110 & COUNTY_FIPS <= 9190))
 
-# ---- PANEL A ----
-data_levels <- data_complete %>%
-  mutate(aiInt = if_else(nads > 0, ai/nads, NA_real_)) %>%
+panel_a_values <- figure_data %>%
+  mutate(aiInt = if_else(nads > 0, ai / nads, NA_real_)) %>%
   group_by(COUNTY_FIPS) %>%
   summarise(aiInt = mean(aiInt, na.rm = TRUE), .groups = "drop")
 
-# ---- PANEL B ----
-data_for_change <- data_complete %>%
+panel_b_akclm_values <- figure_data %>%
+  filter(Year > 2017) %>%
+  arrange(COUNTY_FIPS, Year) %>%
+  mutate(aiInt = if_else(nads > 0, ai / nads, NA_real_)) %>%
+  group_by(COUNTY_FIPS) %>%
+  summarise(aiIntch = last(aiInt) - first(aiInt), .groups = "drop")
+
+panel_b_replication_values <- figure_data %>%
   mutate(
     year_group = case_when(
       Year %in% c(2017, 2018) ~ "2017-2018",
@@ -585,18 +636,14 @@ data_for_change <- data_complete %>%
       TRUE ~ NA_character_
     )
   ) %>%
-  filter(!is.na(year_group))
-
-data_pooled <- data_for_change %>%
+  filter(!is.na(year_group)) %>%
   group_by(COUNTY_FIPS, year_group) %>%
   summarise(
     ai_sum = sum(ai, na.rm = TRUE),
     nads_sum = sum(nads, na.rm = TRUE),
     .groups = "drop"
   ) %>%
-  mutate(aiInt = if_else(nads_sum > 0, ai_sum / nads_sum, NA_real_))
-
-data_ch <- data_pooled %>%
+  mutate(aiInt = if_else(nads_sum > 0, ai_sum / nads_sum, NA_real_)) %>%
   pivot_wider(
     id_cols = COUNTY_FIPS,
     names_from = year_group,
@@ -605,40 +652,37 @@ data_ch <- data_pooled %>%
   mutate(aiIntch = `2022-2023` - `2017-2018`) %>%
   select(COUNTY_FIPS, aiIntch)
 
-# ---- FIPS FORMATTING ----
-merged_data_lev <- data_levels %>%
-  mutate(fips = COUNTY_FIPS %>% as.character() %>% str_pad(5, "0", side = "left"))
-
-merged_data_ch <- data_ch %>%
-  mutate(fips = COUNTY_FIPS %>% as.character() %>% str_pad(5, "0", side = "left"))
-
-# ---- PANEL A BINNING ----
-merged_data_lev <- merged_data_lev %>%
+panel_a_bins <- panel_a_values %>%
+  mutate(fips = str_pad(as.character(COUNTY_FIPS), 5, "left", "0")) %>%
   mutate(ai_share = aiInt * 100) %>%
-  mutate(caseai = case_when(
-    ai_share >= 0 & ai_share < 0.06 ~ 1,
-    ai_share > 0.06 & ai_share < 0.14 ~ 2,
-    ai_share > 0.14 & ai_share < 0.23 ~ 3,
-    ai_share > 0.23 & ai_share < 0.37 ~ 4,
-    ai_share > 0.37 & ai_share < 0.7 ~ 5,
-    ai_share > 0.7 ~ 6,
-    TRUE ~ NA_real_
+  mutate(avg_bin = case_when(
+    ai_share >= 0 & ai_share < 0.06 ~ "0 - 0.06",
+    ai_share > 0.06 & ai_share < 0.14 ~ "0.06 - 0.14",
+    ai_share > 0.14 & ai_share < 0.23 ~ "0.14 - 0.23",
+    ai_share > 0.23 & ai_share < 0.37 ~ "0.23 - 0.37",
+    ai_share > 0.37 & ai_share < 0.71 ~ "0.37 - 0.71",
+    ai_share > 0.71 & ai_share <= 10 ~ "0.71 - 10",
+    TRUE ~ "No data"
   ))
 
-# ---- PANEL B BINNING ----
-merged_data_ch <- merged_data_ch %>%
+bin_panel_b <- function(data) {
+  data %>%
+    mutate(fips = str_pad(as.character(COUNTY_FIPS), 5, "left", "0")) %>%
   mutate(change_in_share = aiIntch * 100) %>%
-  mutate(caseaich = case_when(
-    change_in_share < -0.12 ~ 1,
-    change_in_share > -0.12 & change_in_share <= 0 ~ 2,
-    change_in_share > 0 & change_in_share < 0.09 ~ 3,
-    change_in_share > 0.09 & change_in_share < 0.24 ~ 4,
-    change_in_share > 0.24 & change_in_share < 0.57 ~ 5,
-    change_in_share > 0.57 ~ 6,
-    TRUE ~ NA_real_
-  ))
+    mutate(chg_bin = case_when(
+      change_in_share > 0.57 & change_in_share <= 12.35 ~ "0.57 - 12.35",
+      change_in_share > 0.24 & change_in_share < 0.57 ~ "0.24 - 0.57",
+      change_in_share > 0.09 & change_in_share < 0.24 ~ "0.09 - 0.24",
+      change_in_share > 0 & change_in_share < 0.09 ~ "0 - 0.09",
+      change_in_share > -0.12 & change_in_share <= 0 ~ "-0.12 - 0",
+      change_in_share >= -5.56 & change_in_share <= -0.12 ~ "-5.56 - -0.12",
+      TRUE ~ "No data"
+    ))
+}
 
-# ---- COUNTY SHAPEFILES ----
+panel_b_akclm_bins <- bin_panel_b(panel_b_akclm_values)
+panel_b_replication_bins <- bin_panel_b(panel_b_replication_values)
+
 options(tigris_use_cache = TRUE)
 counties <- suppressMessages(
   tigris::counties(cb = TRUE, year = 2020, class = "sf")
@@ -647,138 +691,122 @@ counties <- suppressMessages(
   filter(!str_starts(COUNTY_FIPS, "72")) %>%
   st_transform(crs = 4326)
 
-# ---- PANEL A MAP JOIN ----
-map_data_a <- counties %>%
-  left_join(merged_data_lev, by = c("COUNTY_FIPS" = "fips")) %>%
-  tigris::shift_geometry()
-
-# ---- PANEL B MAP JOIN (with Alaska color fix) ----
-# Fix Alaska merge issue before shifting
-ak_data <- merged_data_ch %>%
-  filter(str_starts(fips, "02")) %>%
-  distinct(fips, .keep_all = TRUE)
-
-map_data_b <- counties %>%
-  left_join(merged_data_ch, by = c("COUNTY_FIPS" = "fips"))
-
-map_data_b[map_data_b$STATEFP == "02", names(ak_data)[-1]] <- 
-  ak_data[match(map_data_b$COUNTY_FIPS[map_data_b$STATEFP == "02"], ak_data$fips),
-          names(ak_data)[-1]]
-
-# Shift after joining (fixes Alaska colors)
-map_data_b <- tigris::shift_geometry(map_data_b)
-
-# ---- LABELS AND COLORS ----
-map_data_a <- map_data_a %>%
-  mutate(
-    avg_bin = case_when(
-      caseai == 1 ~ "0 – 0.06",
-      caseai == 2 ~ "0.06 – 0.14",
-      caseai == 3 ~ "0.14 – 0.23",
-      caseai == 4 ~ "0.23 – 0.37",
-      caseai == 5 ~ "0.37 – 0.71",
-      caseai == 6 ~ "0.71 – 10",
-      TRUE ~ "No data"
-    )
-  )
-
-map_data_b <- map_data_b %>%
-  mutate(
-    chg_bin = case_when(
-      caseaich == 1 ~ "−5.56 – −0.12",
-      caseaich == 2 ~ "−0.12 – 0",
-      caseaich == 3 ~ "0 – 0.09",
-      caseaich == 4 ~ "0.09 – 0.24",
-      caseaich == 5 ~ "0.24 – 0.57",
-      caseaich == 6 ~ "0.57 – 12.35",
-      TRUE ~ "No data"
-    )
-  )
-
-levels_avg_display <- c("0.71 – 10", "0.37 – 0.71", "0.23 – 0.37",
-                        "0.14 – 0.23", "0.06 – 0.14", "0 – 0.06", "No data")
-levels_chg_display <- c("0.57 – 12.35", "0.24 – 0.57", "0.09 – 0.24",
-                        "0 – 0.09", "−0.12 – 0", "−5.56 – −0.12", "No data")
+levels_avg_display <- c("0.71 - 10", "0.37 - 0.71", "0.23 - 0.37",
+                        "0.14 - 0.23", "0.06 - 0.14", "0 - 0.06", "No data")
+levels_chg_display <- c("0.57 - 12.35", "0.24 - 0.57", "0.09 - 0.24",
+                        "0 - 0.09", "-0.12 - 0", "-5.56 - -0.12", "No data")
 
 colors_avg_display <- c("#800026", "#e31a1c", "#fd8d3c", "#fed976", "#ffeda0", "#ffffcc", "gray90")
 colors_chg_display <- c("#800026", "#fc4e2a", "#fd8d3c", "#fed976", "#ffeda0", "#ffffcc", "gray90")
 
-map_data_a$avg_bin <- factor(map_data_a$avg_bin, levels = levels_avg_display)
-map_data_b$chg_bin <- factor(map_data_b$chg_bin, levels = levels_chg_display)
+map_join <- function(values, fill_col, levels) {
+  counties %>%
+    left_join(values, by = c("COUNTY_FIPS" = "fips")) %>%
+    mutate("{fill_col}" := factor(replace_na(.data[[fill_col]], "No data"), levels = levels)) %>%
+    tigris::shift_geometry()
+}
 
-# ---- THEME ----
+map_a_akclm <- map_join(panel_a_bins, "avg_bin", levels_avg_display)
+map_a_replication <- map_join(panel_a_bins, "avg_bin", levels_avg_display)
+map_b_akclm <- map_join(panel_b_akclm_bins, "chg_bin", levels_chg_display)
+map_b_replication <- map_join(panel_b_replication_bins, "chg_bin", levels_chg_display)
+
 map_theme <- theme_void() +
   theme(
     legend.position = "bottom",
     legend.direction = "horizontal",
-    legend.text = element_text(size = 20, margin = margin(t = 3, b = 3, l = 1, r = 1)),
+    legend.text = element_text(size = 9, margin = margin(t = 2, b = 2, l = 1, r = 1)),
     legend.title = element_blank(),
-    legend.key.width = unit(1.8, "cm"),
-    legend.key.height = unit(0.6, "cm"),
+    legend.key.width = unit(1.0, "cm"),
+    legend.key.height = unit(0.35, "cm"),
     legend.spacing.x = unit(0.2, "cm"),
-    legend.spacing.y = unit(0.1, "cm"),
-    legend.margin = margin(t = 10, b = 5),
-    legend.key = element_rect(color = "black", size = 0.5),
-    plot.margin = margin(10, 10, 25, 10, "pt"),
+    legend.margin = margin(t = 4, b = 2),
+    legend.key = element_rect(color = "black", linewidth = 0.3),
+    plot.margin = margin(4, 4, 12, 4, "pt"),
     panel.background = element_rect(fill = "white", color = NA),
     plot.background = element_rect(fill = "white", color = NA),
-    panel.border = element_rect(color = "black", fill = NA, size = 0.5)
+    panel.border = element_rect(color = "gray45", fill = NA, linewidth = 0.35),
+    plot.title = element_text(size = 15, hjust = 0.5, margin = margin(b = 5))
   )
 
-# ---- PLOTS ----
-p1 <- ggplot(map_data_a) +
+make_avg_map <- function(map_data, title) {
+  ggplot(map_data) +
   geom_sf(aes(fill = avg_bin), color = "white", size = 0.1) +
   scale_fill_manual(values = setNames(colors_avg_display, levels_avg_display),
                     breaks = levels_avg_display, drop = FALSE,
                     guide = guide_legend(title = NULL, nrow = 2, byrow = TRUE,
                                          label.position = "bottom",
-                                         keywidth = unit(1.8, "cm"), keyheight = unit(0.6, "cm"),
+                                         keywidth = unit(1.0, "cm"), keyheight = unit(0.35, "cm"),
                                          label.hjust = 0.5,
-                                         override.aes = list(color = "black", size = 0.5))) +
-  coord_sf(crs = st_crs(map_data_a), expand = FALSE, clip = "off",
+                                         override.aes = list(color = "black", linewidth = 0.3))) +
+  coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
-  labs(title = "Panel A. Average AI Intensity (2014-2023)") +
-  map_theme +
-  theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
+    labs(title = title) +
+    map_theme
+}
 
-p2 <- ggplot(map_data_b) +
+make_chg_map <- function(map_data, title) {
+  ggplot(map_data) +
   geom_sf(aes(fill = chg_bin), color = "white", size = 0.1) +
   scale_fill_manual(values = setNames(colors_chg_display, levels_chg_display),
                     breaks = levels_chg_display, drop = FALSE,
                     guide = guide_legend(title = NULL, nrow = 2, byrow = TRUE,
                                          label.position = "bottom",
-                                         keywidth = unit(1.8, "cm"), keyheight = unit(0.6, "cm"),
+                                         keywidth = unit(1.0, "cm"), keyheight = unit(0.35, "cm"),
                                          label.hjust = 0.5,
-                                         override.aes = list(color = "black", size = 0.5))) +
-  coord_sf(crs = st_crs(map_data_b), expand = FALSE, clip = "off",
+                                         override.aes = list(color = "black", linewidth = 0.3))) +
+  coord_sf(crs = st_crs(map_data), expand = FALSE, clip = "off",
            xlim = c(-2800000, 2500000), ylim = c(-2300000, 1600000)) +
-  labs(title = "Panel B. Percentage point change in AI Intensity (2018–2023)") +
-  map_theme +
-  theme(plot.title = element_text(size = 24, hjust = 0, margin = margin(b = 12)))
+    labs(title = title) +
+    map_theme
+}
 
-# ---- FINAL COMBINED PLOT ----
-final_plot <- (p1 | p2) +
-  plot_layout(widths = c(1, 1)) &
-  theme(plot.background = element_rect(fill = "white", color = NA))
+make_published_panel <- function(path, title) {
+  image <- png::readPNG(path)
+  image_height <- dim(image)[1]
+  image_width <- dim(image)[2]
+  ggplot() +
+    annotation_raster(image, xmin = 0, xmax = image_width, ymin = 0, ymax = image_height, interpolate = TRUE) +
+    coord_fixed(xlim = c(0, image_width), ylim = c(0, image_height), expand = FALSE) +
+    labs(title = title) +
+    theme_void() +
+    theme(
+      plot.title = element_text(size = 15, hjust = 0.5, margin = margin(b = 5)),
+      plot.margin = margin(4, 4, 12, 4, "pt"),
+      panel.border = element_rect(color = "gray45", fill = NA, linewidth = 0.35),
+      plot.background = element_rect(fill = "white", color = NA)
+    )
+}
 
-# Add overall title
-final_plot <- final_plot +
+p_a_published <- make_published_panel("figures/published_figure1_panel_a.png", "Published Panel A")
+p_a_replication <- make_avg_map(map_a_replication, "Replication Panel A")
+p_b_published <- make_published_panel("figures/published_figure1_panel_b.png", "Published Panel B")
+p_b_replication <- make_chg_map(map_b_replication, "Replication Panel B")
+
+final_plot <- ((p_a_published | p_a_replication) / (p_b_published | p_b_replication)) +
+  plot_layout(heights = c(1, 1)) +
   plot_annotation(
-    title = "Figure 1: Replication of Andreadis et al. (2025) - Spatial Heterogeneity in the Share of and Change of AI Jobs",
-    theme = theme(plot.title = element_text(size = 26, hjust = 0.5, margin = margin(b = 15)))
+    title = "Spatial heterogeneity in AI jobs: published figure and replication",
+    subtitle = "Panels A-B show average AI intensity, 2014-2023. Panels C-D show the change in AI intensity. Left column: published AKCLM panels; right column: replication maps.",
+    tag_levels = "A",
+    theme = theme(
+      plot.title = element_text(size = 23, hjust = 0.5, margin = margin(b = 6)),
+      plot.subtitle = element_text(size = 15, hjust = 0.5, margin = margin(b = 12)),
+      plot.tag = element_text(size = 16, face = "bold")
+    )
   )
 
 final_plot
 ```
-*Notes:* Panel A shows average AI intensity from 2014 to 2023. Panel B shows the change in AI intensity between 2017--2018 and 2022--2023. Connecticut appears with N/A values because AKCLM's data does not include Connecticut counties. Hundreds of counties have different values in our replication, especially in Panel B. The authors were contacted regarding these discrepancies but did not respond.
+*Notes:* Panels A and B show average AI intensity from 2014 to 2023; Panels C and D show the change in AI intensity. The left column reproduces the published AKCLM Figure 1 panels as images extracted from the published article. The right column shows maps generated from the replication data and definitions. Our replication Panel B uses the change in AI intensity between 2017--2018 and 2022--2023, while AKCLM's published figure labels Panel B as the 2018--2023 change. Connecticut appears with N/A values because AKCLM's released `data.csv` contains no Connecticut county rows. The available code and published figure therefore point to different Panel B constructions; the source of the published-image discrepancy remains unresolved.
 
-Figure 1 displays the spatial distribution and evolution of AI intensity across U.S. counties from 2014 to 2023. Panel A shows that AI intensity is highly concentrated in a small number of coastal metropolitan counties, with most rural and inland counties falling in the 0–0.14% range. Panel B shows that the highest growth in AI intensity between 2018 and 2023 (median: 0.088 percentage points) did not occur in established tech hubs.
+Figure 1 displays the spatial distribution and evolution of AI intensity across U.S. counties from 2014 to 2023. Panel A is reproducible from the released data: the generated county values match exactly across all 3,130 counties in the comparison file, and no county changes bins. Panel B is not reproducible in the same way. When we compare the available AKCLM map-code construction (2023 annual intensity minus 2018 annual intensity) with the article's stated pooled-window construction (2022--2023 minus 2017--2018), 2,562 of 3,130 counties have a nonzero difference, 1,453 counties change color bins, and the median absolute difference is 0.138 percentage points. The differences exceed 0.10 percentage points in 1,805 counties, 0.25 points in 1,076 counties, 0.50 points in 548 counties, 1 point in 204 counties, 2 points in 58 counties, and 5 points in 11 counties; the maximum absolute difference is 9.890 percentage points. These discrepancies are most consistent with a coding or definition difference in the Panel B time window rather than a data-vintage difference, because both calculations use the same released AKCLM `data.csv`. County definitions also matter for coverage: the released data include 27 Alaska counties and 4 Hawaii counties but no Connecticut county FIPS rows, so Connecticut cannot be mapped with values from the released data.
 
-We assess robustness by re-estimating AKCLM's preferred specifications weighted by log-population. Of the 5 coefficients that are statistically significant at the 5% level under equal weighting across both dependent variables, only 3 remain significant under log-population weighting. For the level of AI intensity, bachelor's share and STEM degree share remain significant, while patents per employee and manufacturing intensity lose significance. For the growth of AI intensity, STEM degree share remains significant under both weighting schemes. 
+We assess robustness by re-estimating AKCLM's preferred specifications with log-population weights after removing labor market tightness from both weighted and unweighted models. This extension asks whether the reported associations are similar when populous counties receive more weight, while holding the specification fixed. We interpret the resulting coefficient changes descriptively rather than as evidence that relationships are necessarily stronger or weaker in particular county-size groups.
 
 ## Extension: Log-Population Weighting Analysis
 
-To assess robustness, we re-estimate all models using log-population weights, omitting labor market tightness due to the denominator contamination problem described above. Log-population weights give more weight to populous counties relative to equal weighting, where each county receives the same weight regardless of population size.
+To assess robustness, we re-estimate all models using log-population weights. Because labor market tightness shares total job postings with the denominator of AI intensity, we omit labor market tightness from both the equal-weighted and log-population-weighted extension models. The weighting comparison therefore holds the specification fixed and changes only the weighting scheme. Following AKCLM, we report only variables that have statistically significant coefficients in at least one model specification. Log-population weights give more weight to populous counties relative to equal weighting, where each county receives the same weight regardless of population size.
 
 ```{r}
 #| label: fig-table1-coefs-models1-3
@@ -796,9 +824,10 @@ library(dplyr)
 library(forcats)
 library(patchwork)
 
-# Run equal-weighted regressions (no weights) for comparison (Models 1-3)
+# Run equal-weighted regressions (no weights) for comparison (Models 1-3).
+# Tightness is omitted here and in the weighted models to keep specifications identical.
 est_demog_no <- fixest::feols(
-  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
                         tightness, pat_intensity, patai_intensity, degshare, stemshare,
                         large_firms, information_intensity, manuf_intensity, TurnOvrS),
@@ -821,7 +850,7 @@ est_industry_no <- fixest::feols(
   cluster = "COUNTY_FIPS"
 )
 
-# Run log-population weighted regressions (Models 1-3) - excluding tightness due to denominator contamination
+# Run log-population weighted regressions (Models 1-3) - same no-tightness specification
 est_demog_logpop <- fixest::feols(
   "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z %>% drop_na(share_bac, share_black, share_poverty, logpop, hpi_ch, logincome,
@@ -892,14 +921,14 @@ make_df <- function(model_index) {
   bind_rows(
     data.frame(
       Variable = vars,
-      Coef = coefs_log_list[[model_index]],
-      SE = ses_log_list[[model_index]],
+      Coef = coefs_orig_list[[model_index]],
+      SE = ses_orig_list[[model_index]],
       Scheme = "Equal Weights"
     ),
     data.frame(
       Variable = vars,
-      Coef = coefs_orig_list[[model_index]],
-      SE = ses_orig_list[[model_index]],
+      Coef = coefs_log_list[[model_index]],
+      SE = ses_log_list[[model_index]],
       Scheme = "Log-Population Weights"
     )
   ) %>%
@@ -1015,7 +1044,7 @@ final <- plots_with_tags[[1]] / plots_with_tags[[2]] / plots_with_tags[[3]] +
 
 final
 ```
-*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 1. These models examine AI intensity as the outcome variable. Model 1 (Demographics) includes bachelor's share, house price growth, and labor market tightness. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All models include county and year fixed effects. Labor market tightness is omitted from log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.
+*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 1. These models examine AI intensity as the outcome variable. Model 1 (Demographics) includes bachelor's share and house price growth. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All models include county and year fixed effects. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.
 
 ```{r}
 #| label: fig-table1-coefs-models4-5
@@ -1028,20 +1057,21 @@ final
 #| fig-width: 14
 #| fig-height: 12
 
-# Run equal-weighted regressions (no weights) for comparison (Models 4-5)
+# Run equal-weighted regressions (no weights) for comparison (Models 4-5).
+# Tightness is omitted here and in the weighted models to keep specifications identical.
 est_all <- fixest::feols(
-  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z,
   cluster = "COUNTY_FIPS"
 )
 
 est_all_state_year <- fixest::feols(
-  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + tightness + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS" %>% as.formula(),
+  "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | state_year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z,
   vcov = "twoway"
 )
 
-# Run log-population weighted regressions (Models 4-5) - excluding tightness due to denominator contamination
+# Run log-population weighted regressions (Models 4-5) - same no-tightness specification
 est_all_logpop <- fixest::feols(
   "ai_intensity ~ share_bac + share_black + share_poverty + logpop + hpi_ch + logincome + pat_intensity + patai_intensity + degshare + stemshare + large_firms + information_intensity + manuf_intensity + TurnOvrS | Year + COUNTY_FIPS" %>% as.formula(),
   data_ai_z,
@@ -1116,14 +1146,14 @@ make_df_45 <- function(model_index) {
   bind_rows(
     data.frame(
       Variable = vars,
-      Coef = coefs_log_list_45[[model_index]],
-      SE = ses_log_list_45[[model_index]],
+      Coef = coefs_orig_list_45[[model_index]],
+      SE = ses_orig_list_45[[model_index]],
       Scheme = "Equal Weights"
     ),
     data.frame(
       Variable = vars,
-      Coef = coefs_orig_list_45[[model_index]],
-      SE = ses_orig_list_45[[model_index]],
+      Coef = coefs_log_list_45[[model_index]],
+      SE = ses_log_list_45[[model_index]],
       Scheme = "Log-Population Weights"
     )
   ) %>%
@@ -1233,7 +1263,7 @@ final_45 <- plots_45_with_tags[[1]] / plots_45_with_tags[[2]] +
 
 final_45
 ```
-*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 1. These models examine AI intensity as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with county and year fixed effects. Model 5 (All + State FE) replaces year fixed effects with state-year fixed effects. Both models include bachelor's share, house price growth, patents per employee, STEM degree share, ICT intensity, manufacturing intensity, and turnover rate. Labor market tightness is omitted from log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.
+*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 1. These models examine AI intensity as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with county and year fixed effects. Model 5 (All + State FE) replaces year fixed effects with state-year fixed effects. Both models include bachelor's share, house price growth, patents per employee, STEM degree share, ICT intensity, manufacturing intensity, and turnover rate. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.
 
 In Model 4, coefficient estimates remain stable across weighting schemes. Bachelor's share is associated with approximately a 0.01 percentage point increase in AI intensity per standard deviation, while house price growth shows minimal independent effect. Among innovation variables, patents per employee shows approximately a 0.05 percentage point increase and STEM degree share shows roughly a 0.09 percentage point increase per standard deviation. Among industry variables, manufacturing intensity is associated with approximately a 0.03 percentage point decrease, ICT intensity with a 0.12 percentage point increase, and turnover rate with the largest effect of approximately 0.18 percentage points per standard deviation. 
 
@@ -1261,9 +1291,10 @@ data_t2_z <- data_ai_l_z %>%
     lads14_raw = exp(logpop14)  # Convert back from z-score approximation
   )
 
-# Run equal-weighted regressions for Table 2 Models 1-3 (NO fixed effects, just OLS)
+# Run equal-weighted regressions for Table 2 Models 1-3 (NO fixed effects, just OLS).
+# Tightness is omitted here and in the weighted models to keep specifications identical.
 est_t2_demog_no <- fixest::feols(
-  "dai_intensity9 ~ share_bac14 + hpi_ch14 + tightness14" %>% as.formula(),
+  "dai_intensity9 ~ share_bac14 + hpi_ch14" %>% as.formula(),
   data_t2_z,
   cluster = "COUNTY_FIPS"
 )
@@ -1280,7 +1311,7 @@ est_t2_industry_no <- fixest::feols(
   cluster = "COUNTY_FIPS"
 )
 
-# Run population weighted regressions for Table 2 Models 1-3 - excluding tightness due to denominator contamination
+# Run population weighted regressions for Table 2 Models 1-3 - same no-tightness specification
 est_t2_demog_logpop <- fixest::feols(
   "dai_intensity9 ~ share_bac14 + hpi_ch14" %>% as.formula(),
   data_t2_z,
@@ -1347,14 +1378,14 @@ make_df <- function(model_index) {
     bind_rows(
       data.frame(
         Variable = vars,
-        Coef = coefs_logpop_list[[model_index]],
-        SE = ses_logpop_list[[model_index]],
+        Coef = coefs_actual_list[[model_index]],
+        SE = ses_actual_list[[model_index]],
         Scheme = "Equal Weights"
       ),
       data.frame(
         Variable = vars,
-        Coef = coefs_actual_list[[model_index]],
-        SE = ses_actual_list[[model_index]],
+        Coef = coefs_logpop_list[[model_index]],
+        SE = ses_logpop_list[[model_index]],
         Scheme = "Log-Population Weights"
       ),
       data.frame(
@@ -1374,14 +1405,14 @@ make_df <- function(model_index) {
     bind_rows(
       data.frame(
         Variable = vars,
-        Coef = coefs_logpop_list[[model_index]],
-        SE = ses_logpop_list[[model_index]],
+        Coef = coefs_actual_list[[model_index]],
+        SE = ses_actual_list[[model_index]],
         Scheme = "Equal Weights"
       ),
       data.frame(
         Variable = vars,
-        Coef = coefs_actual_list[[model_index]],
-        SE = ses_actual_list[[model_index]],
+        Coef = coefs_logpop_list[[model_index]],
+        SE = ses_logpop_list[[model_index]],
         Scheme = "Log-Population Weights"
       )
     ) %>%
@@ -1466,7 +1497,7 @@ final <- final &
 
 final
 ```
-*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 1 (Demographics) includes bachelor's share, and house price growth. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor's share coefficient from AKCLM for comparison.
+*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 1 (Demographics) includes bachelor's share and house price growth. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor's share coefficient from AKCLM for comparison.
 
 ```{r}
 #| label: fig-table2-coefs-models4-5
@@ -1479,20 +1510,21 @@ final
 #| fig-width: 14
 #| fig-height: 14
 
-# Run equal-weighted regressions for Table 2 Models 4-5 (NO fixed effects)
+# Run equal-weighted regressions for Table 2 Models 4-5.
+# Tightness is omitted here and in the weighted models to keep specifications identical.
 est_t2_all_no <- fixest::feols(
-  "dai_intensity9 ~ share_bac14 + hpi_ch14 + tightness14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14" %>% as.formula(),
+  "dai_intensity9 ~ share_bac14 + hpi_ch14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14" %>% as.formula(),
   data_t2_z,
   cluster = "COUNTY_FIPS"
 )
 
 est_t2_all_state_no <- fixest::feols(
-  "dai_intensity9 ~ share_bac14 + hpi_ch14 + tightness14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14 | state" %>% as.formula(),
+  "dai_intensity9 ~ share_bac14 + hpi_ch14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14 | state" %>% as.formula(),
   data_t2_z,
   cluster = "COUNTY_FIPS"
 )
 
-# Run population weighted regressions for Table 2 Models 4-5 - excluding tightness due to denominator contamination
+# Run population weighted regressions for Table 2 Models 4-5 - same no-tightness specification
 est_t2_all_logpop <- fixest::feols(
   "dai_intensity9 ~ share_bac14 + hpi_ch14 + pat_intensity14 + stemshare14 + information_intensity14 + manuf_intensity14 + TurnOvrS14" %>% as.formula(),
   data_t2_z,
@@ -1572,14 +1604,14 @@ make_df_t2_45 <- function(model_index) {
   bind_rows(
     data.frame(
       Variable = vars,
-      Coef = coefs_logpop_t2_45[[model_index]],
-      SE = ses_logpop_t2_45[[model_index]],
+      Coef = coefs_actual_t2_45[[model_index]],
+      SE = ses_actual_t2_45[[model_index]],
       Scheme = "Equal Weights"
     ),
     data.frame(
       Variable = vars,
-      Coef = coefs_actual_t2_45[[model_index]],
-      SE = ses_actual_t2_45[[model_index]],
+      Coef = coefs_logpop_t2_45[[model_index]],
+      SE = ses_logpop_t2_45[[model_index]],
       Scheme = "Log-Population Weights"
     ),
     data.frame(
@@ -1655,22 +1687,20 @@ final_t2_45 <- plots_t2_45_with_tags[[1]] / plots_t2_45_with_tags[[2]] +
 
 final_t2_45
 ```
-*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with no fixed effects. Model 5 (All + State FE) adds state fixed effects to Model 4. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor's share coefficients from AKCLM for comparison.
+*Notes:* This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with no fixed effects. Model 5 (All + State FE) adds state fixed effects to Model 4. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor's share coefficients from AKCLM for comparison.
 
-In the fully specified Model 4, bachelor's share shows a small negative association with the growth of AI intensity under both weighting schemes, suggesting that counties with higher educational attainment in 2017 already had higher baseline AI intensity, leaving less room for growth. House price growth shows minimal independent effect. Among innovation variables, patents per employee declines from 0.06 percentage points under equal weights to 0.04 under log-population weights (a 33% reduction), while STEM degree share declines from 0.08 to 0.05 percentage points (a 38% reduction). Among industry variables, manufacturing intensity shows a negative association of approximately 0.03–0.04 percentage points, ICT intensity declines from 0.12 to 0.07 percentage points (a 42% reduction), and turnover rate declines from 0.17–0.18 to 0.11 percentage points (a 39% reduction). 
+In the fully specified Model 4, bachelor's share shows a small negative association with the growth of AI intensity under both weighting schemes. House price growth shows minimal independent effect. Among innovation variables, patents per employee declines from 0.06 percentage points under equal weights to 0.04 under log-population weights, while STEM degree share declines from 0.08 to 0.05 percentage points. Among industry variables, manufacturing intensity shows a negative association of approximately 0.03–0.04 percentage points, ICT intensity declines from 0.12 to 0.07 percentage points, and turnover rate declines from 0.17–0.18 to 0.11 percentage points.
 
-Of the coefficients highlighted by AKCLM in their preferred levels specification, most decrease in absolute value under log-population weighting. STEM degree share shows the most stability across weighting schemes, while bachelor's share, turnover rate, and manufacturing intensity all weaken under population weighting, suggesting these relationships are stronger in smaller counties. ICT intensity and patents per employee are exceptions, becoming slightly larger under population weighting. Overall, the direction of all associations is preserved, but the pattern of magnitude shifts suggests that AI intensity correlates more strongly with education and labor market structure in smaller counties.
+Of the coefficients highlighted by AKCLM in their preferred levels specification, several decrease in absolute value under log-population weighting. STEM degree share is comparatively stable across weighting schemes, while bachelor's share, turnover rate, and manufacturing intensity weaken under population weighting. ICT intensity and patents per employee are exceptions, becoming slightly larger under population weighting. We do not interpret these shifts as proof that relationships are systematically stronger in smaller counties; attenuation under population weighting could also reflect high-variance observations or outliers among less-populous counties. A direct population-heterogeneity test, such as estimating models separately by population quartile, would be needed to distinguish those mechanisms.
 
 AKCLM employ language suggesting causal relationships despite using observational county-level data with fixed-effects regressions. The empirical strategy does not support causal inference [@holland1986], yet the paper uses terminology that implies causation rather than correlation. Causal nouns such as "drivers," "determinants," "effects," and "impact" appear throughout, alongside causal verbs such as "drive," "fostering," and "influence." For instance, the paper refers to "key drivers of AI job intensity" and states that labor market tightness "emerges as a key driver," implying that changing these variables would directly alter AI adoption. The conclusion states that findings "point to the role of place-based policies," making policy recommendations based on associations rather than identified causal effects.
 
 ## Conclusion
 
-This replication of AKCLM confirms that education, innovation, and industry factors are correlated with AI intensity across U.S. counties. Our analysis highlights three qualifications to their conclusions.
+This replication of AKCLM produces three sets of findings. First, several core regression results are reproduced. Table 1 is reproduced from the released analysis-ready data and code to the displayed precision, and most Table 2 coefficients also match when the released code is rerun. These results support AKCLM's broad descriptive claim that education, innovation, and industry variables are correlated with county-level AI intensity.
 
-First, AKCLM employ causal language that overstates what the empirical design can support. Terms such as "drivers" and "determinants" suggest causal mechanisms, but simple regressions can only document conditional correlations, in the absence of an explicit identification strategy [@holland1986], 
+Second, two results are only partially reproduced. In Table 2, the bachelor's-share coefficient and standard error differ systematically from the published table in columns 1, 4, and 5, with the rerun values approximately nine times larger than the published values. In Figure 1, Panel A is reproducible from the released data, but Panel B is not: 1,453 of 3,130 counties change bins when comparing the available map-code construction with the pooled-window definition used in our replication, and 548 counties differ by more than 0.50 percentage points. The source of these discrepancies remains unknown, but the evidence points to reporting, scaling, or coding differences rather than a complete failure of the released dataset.
 
-Second, the construction of labor market tightness (total job postings divided by unemployed workers) introduces a mechanical correlation with AI intensity, which has total job postings in its denominator. Any change in total postings simultaneously raises tightness and lowers measured AI intensity, biasing the estimated coefficient. AKCLM do not acknowledge this issue.
-
-Third, several associations are sensitive to the weighting scheme. ICT intensity shows the largest magnitude shift, declining by approximately 42% under log-population weights, while patents per employee, STEM degree share, and turnover rate all decline by roughly one-third.
+Third, our methodological extensions raise separate concerns. AKCLM employ causal language that the observational fixed-effects design cannot support without an explicit identification strategy [@holland1986]. In addition, labor market tightness mechanically shares total job postings with the denominator of AI intensity, creating a denominator-contamination concern. Finally, the log-population weighting exercise shows that some coefficient magnitudes change when more weight is given to populous counties, but those shifts should be interpreted as descriptive robustness evidence rather than proof of systematically stronger relationships in smaller counties.
 
 ## Bibliography {.unnumbered}

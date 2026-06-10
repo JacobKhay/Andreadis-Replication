@@ -22,7 +22,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="replication_files/libs/clipboard/clipboard.min.js"></script>
@@ -36,6 +56,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="replication_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="replication_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="replication_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="replication_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="replication_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -107,23 +131,23 @@ window.Quarto = {
 <p><em>Data Availability:</em> The R code and data to reproduce this replication are available in this repository: https://github.com/JacobKhay/Andreadis-Replication.</p>
 <section id="abstract" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="abstract">Abstract</h2>
-<p>We partially replicate <span class="citation" data-cites="andreadis2025">@andreadis2025</span> on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables related to education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Most, but not all, of the associations persist. We critique the construction of a key variable and the authors’ unsupported causal claims.</p>
+<p>We partially replicate <span class="citation" data-cites="andreadis2025">Andreadis et al. (<a href="#ref-andreadis2025" role="doc-biblioref">2025</a>)</span> on the correlation between the level and growth of artificial intelligence employment across U.S. counties from 2014 to 2023 and a collection of variables related to education, innovation, and industry. We successfully reproduce most of their results and, to assess robustness, extend their analysis by using log-population weights. Most, but not all, of the associations persist. We critique the construction of a key variable and the authors’ unsupported causal claims.</p>
 <p>Declaration: There are no financial conflicts of interest to share.</p>
 <div style="page-break-after: always;"></div>
 </section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This paper replicates <span class="citation" data-cites="andreadis2025">@andreadis2025</span>, henceforth AKCLM, on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI intensity emerges and how it spreads matters for researchers and policymakers alike: AI has the potential to reshape regional economies <span class="citation" data-cites="acemoglu2024 brynjolfsson2021">[@acemoglu2024; @brynjolfsson2021]</span>, alter the demand for skills <span class="citation" data-cites="autor2015 acemoglu2019">[@autor2015; @acemoglu2019]</span>, and shift patterns of innovation <span class="citation" data-cites="babina2024">[@babina2024]</span>.</p>
+<p>This paper replicates <span class="citation" data-cites="andreadis2025">Andreadis et al. (<a href="#ref-andreadis2025" role="doc-biblioref">2025</a>)</span>, henceforth AKCLM, on the correlation between the level and growth of artificial intelligence employment and education, innovation, and industry factors across U.S. counties from 2014 to 2023. Understanding where AI intensity emerges and how it spreads matters for researchers and policymakers alike: AI has the potential to reshape regional economies <span class="citation" data-cites="acemoglu2024 brynjolfsson2021">(<a href="#ref-acemoglu2024" role="doc-biblioref">Acemoglu, 2024</a>; <a href="#ref-brynjolfsson2021" role="doc-biblioref">Brynjolfsson, Rock, and Syverson, 2021</a>)</span>, alter the demand for skills <span class="citation" data-cites="autor2015 acemoglu2019">(<a href="#ref-acemoglu2019" role="doc-biblioref">Acemoglu and Restrepo, 2019</a>; <a href="#ref-autor2015" role="doc-biblioref">Autor, 2015</a>)</span>, and shift patterns of innovation <span class="citation" data-cites="babina2024">(<a href="#ref-babina2024" role="doc-biblioref">Babina et al., 2024</a>)</span>.</p>
 <p>AKCLM define “AI intensity” as AI-related job postings divided by total job postings in US counties. There are two outcome variables: the level of AI intensity for each county-year and the growth of AI intensity between 2017-2018 and 2022-2023 for each county.</p>
-<p>AKCLM link county-level AI intensity to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity <span class="citation" data-cites="giczy2022">[@giczy2022]</span>, and industry by the composition of employment across sectors.</p>
+<p>AKCLM link county-level AI intensity to several explanatory factors. Education is captured by the share of adults with a college degree, innovation by local patenting activity <span class="citation" data-cites="giczy2022">(<a href="#ref-giczy2022" role="doc-biblioref">Giczy, Pairolero, and Toole, 2022</a>)</span>, and industry by the composition of employment across sectors.</p>
 <p>AKCLM find that both the level and growth of AI intensity are associated with higher educational attainment, more innovation activity, and certain industry profiles. For the level of AI intensity, bachelor’s degree share, and STEM degree share are positively associated, while manufacturing intensity is negatively associated. For the growth of AI intensity and STEM degree share remain significantly correlated, while turnover rate shows a negative association.</p>
 <p>We reproduce these results and extend the analysis using log-population weights. Under this adjustment, the core associations persist for both outcomes but estimated magnitudes generally shrink. For the level of AI intensity, patents per employee shows the most robust association across weighting schemes, while bachelor’s share shows the largest magnitude decline. For the growth of AI intensity, STEM degree share show the most consistent associations, though effect sizes diminish when we weight by log-population.</p>
-<p>Finally, AKCLM’s causal interpretations are not supported by the observational nature of their data <span class="citation" data-cites="holland1986">[@holland1986]</span>.</p>
+<p>Finally, AKCLM’s causal interpretations are not supported by the observational nature of their data <span class="citation" data-cites="holland1986">(<a href="#ref-holland1986" role="doc-biblioref">Holland, 1986</a>)</span>.</p>
 </section>
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>AKCLM utilize multiple data sources to construct a comprehensive county-level dataset spanning 2014–2023:</p>
-<p><em>AI Job Employment Data</em>: Lightcast <span class="citation" data-cites="beckett2023">[@beckett2023]</span> aggregates job postings from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use <span class="citation" data-cites="acemoglu2022">[@acemoglu2022]</span>. The first dependent variable, AI intensity, is defined as:</p>
+<p><em>AI Job Employment Data</em>: Lightcast <span class="citation" data-cites="beckett2023">(<a href="#ref-beckett2023" role="doc-biblioref">Beckett, 2023</a>)</span> aggregates job postings from over 40,000 online job boards, newspapers, and employer websites. AI-related jobs are identified through skills and keywords associated with AI development and use <span class="citation" data-cites="acemoglu2022">(<a href="#ref-acemoglu2022" role="doc-biblioref">Acemoglu et al., 2022</a>)</span>. The first dependent variable, AI intensity, is defined as:</p>
 <p><span class="math display">\[
 AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \times 100 \tag{1}
 \]</span></p>
@@ -133,21 +157,22 @@ AI_{it} = \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} \ti
 \Delta AI_{i} = \frac{\sum_{t \in \{2022,2023\}} \text{AI}_{it}}{\sum_{t \in \{2022,2023\}} \text{Total}_{it}} - \frac{\sum_{t \in \{2017,2018\}} \text{AI}_{it}}{\sum_{t \in \{2017,2018\}} \text{Total}_{it}} \tag{2}
 \]</span></p>
 <p>The change in AI intensity has a mean of 0.3 percentage points and a standard deviation of 1.0 percentage points across counties.</p>
-<p><em>Demographic Variables</em>: From the American Community Survey <span class="citation" data-cites="census_acs">[@census_acs]</span>, AKCLM construct several county-level demographic measures, including bachelor’s share (percentage of workforce with bachelor’s degree or higher), black population share (percentage of county population identifying as Black), poverty share (percentage of population below federal poverty line), log-population (natural logarithm of county population), and log median income (natural logarithm of median household income).</p>
-<p><em>Innovation Indicators</em>: AKCLM construct several innovation measures, including patents per employee (USPTO patent counts normalized by employment), AI patents share (percentage of patents classified as AI-related) <span class="citation" data-cites="giczy2022">[@giczy2022]</span>, STEM degrees share (percentage of awarded degrees in STEM fields), and degrees per capita (total degrees awarded per capita).</p>
-<p><em>Industry and Labor Market Variables</em>: AKCLM construct several industry and labor market measures, including labor market tightness (ratio of job postings to unemployed workers) <span class="citation" data-cites="bls_laus">[@bls_laus]</span>, manufacturing intensity (employment share in manufacturing sector) <span class="citation" data-cites="census_cbp">[@census_cbp]</span>, ICT intensity (employment share in information and communication technology), turnover rate (worker separation rate from Quarterly Workforce Indicators) <span class="citation" data-cites="census_qwi">[@census_qwi]</span>, and large establishments share (percentage of employment in large firms). Housing Market: AKCLM include house price growth from the Federal Housing Finance Agency <span class="citation" data-cites="bogin2019">[@bogin2019]</span>.</p>
-<p><em>Housing Market</em>: We include house price growth from Federal Housing Finance Agency <span class="citation" data-cites="bogin2019">[@bogin2019]</span>.</p>
+<p><em>Demographic Variables</em>: From the American Community Survey <span class="citation" data-cites="census_acs">(<a href="#ref-census_acs" role="doc-biblioref">U.S. Census Bureau, 2024a</a>)</span>, AKCLM construct several county-level demographic measures, including bachelor’s share (percentage of workforce with bachelor’s degree or higher), black population share (percentage of county population identifying as Black), poverty share (percentage of population below federal poverty line), log-population (natural logarithm of county population), and log median income (natural logarithm of median household income).</p>
+<p><em>Innovation Indicators</em>: AKCLM construct several innovation measures, including patents per employee (USPTO patent counts normalized by employment), AI patents share (percentage of patents classified as AI-related) <span class="citation" data-cites="giczy2022">(<a href="#ref-giczy2022" role="doc-biblioref">Giczy, Pairolero, and Toole, 2022</a>)</span>, STEM degrees share (percentage of awarded degrees in STEM fields), and degrees per capita (total degrees awarded per capita).</p>
+<p><em>Industry and Labor Market Variables</em>: AKCLM construct several industry and labor market measures, including labor market tightness (ratio of job postings to unemployed workers) <span class="citation" data-cites="bls_laus">(<a href="#ref-bls_laus" role="doc-biblioref">U.S. Bureau of Labor Statistics, 2024</a>)</span>, manufacturing intensity (employment share in manufacturing sector) <span class="citation" data-cites="census_cbp">(<a href="#ref-census_cbp" role="doc-biblioref">U.S. Census Bureau, 2024b</a>)</span>, ICT intensity (employment share in information and communication technology), turnover rate (worker separation rate from Quarterly Workforce Indicators) <span class="citation" data-cites="census_qwi">(<a href="#ref-census_qwi" role="doc-biblioref">U.S. Census Bureau, 2024c</a>)</span>, and large establishments share (percentage of employment in large firms). Housing Market: AKCLM include house price growth from the Federal Housing Finance Agency <span class="citation" data-cites="bogin2019">(<a href="#ref-bogin2019" role="doc-biblioref">Bogin, Doerner, and Larson, 2019</a>)</span>.</p>
+<p><em>Housing Market</em>: We include house price growth from Federal Housing Finance Agency <span class="citation" data-cites="bogin2019">(<a href="#ref-bogin2019" role="doc-biblioref">Bogin, Doerner, and Larson, 2019</a>)</span>.</p>
 <p>All explanatory variables are lagged by one year.</p>
 <p>An important statistical issue arises from the construction of labor market tightness. AI intensity is defined as AI job postings divided by total job postings, while labor market tightness is constructed as total job postings divided by unemployed workers. Total job postings thus appears in the denominator of the dependent variable and in the numerator of a key regressor.</p>
 <p>This creates denominator contamination, or mechanical endogeneity: both sides of the regression share the same underlying quantity, inducing a correlation that exists purely through algebraic construction.</p>
 <p><span class="math display">\[
 \frac{\text{AI job postings}_{it}}{\text{Total job postings}_{it}} = \alpha + \beta \frac{\text{Total job postings}_{it}}{\text{Unemployed}_{it}} + X'_{it}\gamma + \varepsilon_{it} \tag{3}
 \]</span></p>
-<p>This can bias coefficient estimates and overstate statistical significance. The issue is analogous to regressing <span class="math inline">\(Y/Z\)</span> on <span class="math inline">\(Z/X\)</span> where the shared <span class="math inline">\(Z\)</span> induces correlation even when <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span> are actually independent. Kronmal <span class="citation" data-cites="kronmal1993spurious">[-@kronmal1993spurious]</span> shows that when the dependent variable is a ratio sharing a component with an independent variable, “regression coefficient estimates for the other independent variables … result in inappropriate conclusions.”</p>
+<p>This can bias coefficient estimates and overstate statistical significance. The issue is analogous to regressing <span class="math inline">\(Y/Z\)</span> on <span class="math inline">\(Z/X\)</span> where the shared <span class="math inline">\(Z\)</span> induces correlation even when <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span> are actually independent. Kronmal <span class="citation" data-cites="kronmal1993spurious">(<a href="#ref-kronmal1993spurious" role="doc-biblioref">1993</a>)</span> shows that when the dependent variable is a ratio sharing a component with an independent variable, “regression coefficient estimates for the other independent variables … result in inappropriate conclusions.”</p>
 </section>
 <section id="replication" class="level2">
 <h2 class="anchored" data-anchor-id="replication">Replication</h2>
-<p>We use R <span class="citation" data-cites="ihaka1996r">[@ihaka1996r]</span> and the tidyverse collection of packages <span class="citation" data-cites="tidyverse">[@tidyverse]</span>. To estimate and display regression models, we use fixest <span class="citation" data-cites="fixest">[@fixest]</span> and modelsummary <span class="citation" data-cites="modelsummary">[@modelsummary]</span>.</p>
+<p>We use R <span class="citation" data-cites="ihaka1996r">(<a href="#ref-ihaka1996r" role="doc-biblioref">Ihaka and Gentleman, 1996</a>)</span> and the tidyverse collection of packages <span class="citation" data-cites="tidyverse">(<a href="#ref-tidyverse" role="doc-biblioref">Wickham et al., 2019</a>)</span>. To estimate and display regression models, we use fixest <span class="citation" data-cites="fixest">(<a href="#ref-fixest" role="doc-biblioref">Bergé, 2018</a>)</span> and modelsummary <span class="citation" data-cites="modelsummary">(<a href="#ref-modelsummary" role="doc-biblioref">Arel-Bundock, 2022</a>)</span>.</p>
+<p>Our reproduction begins from the intermediate replication materials released with AKCLM: the authors’ <code>data.csv</code> and <code>replication_code.R</code> from the openICPSR archive. We do not reconstruct the full county-year dataset from the underlying raw sources such as Lightcast, ACS, QWI, CBP, LAUS, FHFA, and patent records. Instead, we treat AKCLM’s released <code>data.csv</code> as the analysis-ready input and rerun the estimation and figure-construction steps from that point. For Tables 1 and 2, we recreate the variables, samples, standardization, weights, fixed effects, and model specifications from the published replication code, then compare the resulting estimates with the published tables. For Figure 1, we compare the published figure image with maps generated from the released data and the definitions stated in the article and code, because the available code does not reproduce the published Panel B map exactly.</p>
 <p>Following AKCLM, we report only variables that have statistically significant coefficients in at least one model specification.</p>
 <section id="table-1" class="level3">
 <h3 class="anchored" data-anchor-id="table-1">Table 1</h3>
@@ -161,266 +186,188 @@ AI_{it} = \alpha_i + \alpha_t + \boldsymbol{\beta}' \mathbf{X}_{it-1} + \varepsi
 <div id="tbl-table1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-pos="H" data-tbl-cap-location="top">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Replication of Table 1 from Andreadis et al.&nbsp;(2025) - The Correlates of the Share of Artificial Intelligence Jobs
+Table&nbsp;1: AKCLM and replication estimates for the level of AI intensity
 </figcaption>
 <div aria-describedby="tbl-table1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<!-- preamble start -->
+<table class="table table-striped table-condensed do-not-create-environment cell caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Original</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Replication</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">(1) Demographics</td>
+<td style="text-align: left;">Bachelor's share</td>
+<td style="text-align: right;">0.1906 (0.0513)</td>
+<td style="text-align: right;">0.1906 (0.0513)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">House price growth</td>
+<td style="text-align: right;">-0.0144 (0.0080)</td>
+<td style="text-align: right;">-0.0144 (0.0080)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Labor tightness</td>
+<td style="text-align: right;">0.2780 (0.0583)</td>
+<td style="text-align: right;">0.2780 (0.0583)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td rowspan="2" style="text-align: left; vertical-align: top !important;">(2) Innovation</td>
+<td style="text-align: left;">Patents per employee</td>
+<td style="text-align: right;">0.0232 (0.0091)</td>
+<td style="text-align: right;">0.0232 (0.0091)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STEM degrees share</td>
+<td style="text-align: right;">0.0686 (0.0238)</td>
+<td style="text-align: right;">0.0686 (0.0238)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">(3) Industry</td>
+<td style="text-align: left;">ICT sector intensity</td>
+<td style="text-align: right;">0.0121 (0.0144)</td>
+<td style="text-align: right;">0.0121 (0.0144)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manufacturing</td>
+<td style="text-align: right;">-0.0630 (0.0113)</td>
+<td style="text-align: right;">-0.0630 (0.0113)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turnover rate</td>
+<td style="text-align: right;">0.0345 (0.0137)</td>
+<td style="text-align: right;">0.0345 (0.0137)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td rowspan="8" style="text-align: left; vertical-align: top !important;">(4) All controls</td>
+<td style="text-align: left;">Bachelor's share</td>
+<td style="text-align: right;">0.1817 (0.0505)</td>
+<td style="text-align: right;">0.1817 (0.0505)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">House price growth</td>
+<td style="text-align: right;">-0.0142 (0.0079)</td>
+<td style="text-align: right;">-0.0142 (0.0079)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Labor tightness</td>
+<td style="text-align: right;">0.2765 (0.0585)</td>
+<td style="text-align: right;">0.2765 (0.0585)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Patents per employee</td>
+<td style="text-align: right;">0.0295 (0.0113)</td>
+<td style="text-align: right;">0.0295 (0.0113)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STEM degrees share</td>
+<td style="text-align: right;">0.0475 (0.0205)</td>
+<td style="text-align: right;">0.0475 (0.0205)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICT sector intensity</td>
+<td style="text-align: right;">0.0258 (0.0135)</td>
+<td style="text-align: right;">0.0258 (0.0135)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manufacturing</td>
+<td style="text-align: right;">-0.0333 (0.0108)</td>
+<td style="text-align: right;">-0.0333 (0.0108)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turnover rate</td>
+<td style="text-align: right;">0.0188 (0.0137)</td>
+<td style="text-align: right;">0.0188 (0.0137)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td rowspan="8" style="text-align: left; vertical-align: top !important;">(5) State-year FE</td>
+<td style="text-align: left;">Bachelor's share</td>
+<td style="text-align: right;">0.1035 (0.0459)</td>
+<td style="text-align: right;">0.1035 (0.0459)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">House price growth</td>
+<td style="text-align: right;">-0.0156 (0.0074)</td>
+<td style="text-align: right;">-0.0156 (0.0074)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Labor tightness</td>
+<td style="text-align: right;">0.3156 (0.0643)</td>
+<td style="text-align: right;">0.3156 (0.0643)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Patents per employee</td>
+<td style="text-align: right;">0.0312 (0.0138)</td>
+<td style="text-align: right;">0.0312 (0.0138)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STEM degrees share</td>
+<td style="text-align: right;">0.0375 (0.0184)</td>
+<td style="text-align: right;">0.0375 (0.0184)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICT sector intensity</td>
+<td style="text-align: right;">0.0280 (0.0136)</td>
+<td style="text-align: right;">0.0280 (0.0136)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manufacturing</td>
+<td style="text-align: right;">-0.0247 (0.0111)</td>
+<td style="text-align: right;">-0.0247 (0.0111)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turnover rate</td>
+<td style="text-align: right;">0.0154 (0.0132)</td>
+<td style="text-align: right;">0.0154 (0.0132)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><span style="font-style: italic;">Notes: </span></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup></sup> Each cell reports coefficient and standard error in parentheses. The original and replication estimates match to the displayed precision. The dependent variable is AI intensity in percentage points. Columns 1-4 include county and year fixed effects; column 5 includes county and state-year fixed effects. All explanatory variables are standardized and lagged by one year.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
 
-    <script>
-
-      function styleCell_u4yytep9ixk0lmjeew0t(i, j, css_id) {
-          var table = document.getElementById("tinytable_u4yytep9ixk0lmjeew0t");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_u4yytep9ixk0lmjeew0t');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_u4yytep9ixk0lmjeew0t(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_u4yytep9ixk0lmjeew0t");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '19', j: 2 }, { i: '19', j: 4 }, { i: '19', j: 1 }, { i: '19', j: 3 }, { i: '19', j: 5 },  ], css_id: 'tinytable_css_fb3jar8o82jbtnvafydu',}, 
-          { positions: [ { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '12', j: 2 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '5', j: 3 }, { i: '13', j: 2 }, { i: '1', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '12', j: 3 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '18', j: 3 }, { i: '6', j: 3 }, { i: '14', j: 2 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '5', j: 4 }, { i: '13', j: 3 }, { i: '1', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '7', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '18', j: 4 }, { i: '6', j: 4 }, { i: '14', j: 3 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '7', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '17', j: 5 }, { i: '18', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 },  ], css_id: 'tinytable_css_rnbnd0wmck51qdqrqy51',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 3 }, { i: '0', j: 5 }, { i: '0', j: 2 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_s3hwsztr9kzv2fo097de',}, 
-          { positions: [ { i: '19', j: 0 },  ], css_id: 'tinytable_css_z413r8f828129nfj2ud0',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '4', j: 0 }, { i: '5', j: 0 }, { i: '6', j: 0 }, { i: '7', j: 0 }, { i: '8', j: 0 }, { i: '9', j: 0 }, { i: '10', j: 0 }, { i: '11', j: 0 }, { i: '12', j: 0 }, { i: '13', j: 0 }, { i: '14', j: 0 }, { i: '15', j: 0 }, { i: '16', j: 0 }, { i: '17', j: 0 }, { i: '18', j: 0 },  ], css_id: 'tinytable_css_6i1slid9wz6y5zmwbb37',}, 
-          { positions: [ { i: '0', j: 0 },  ], css_id: 'tinytable_css_gcfwif84ovbaeak2t4dz',}, 
-          ];
-
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  styleCell_u4yytep9ixk0lmjeew0t(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
-    </script>
-
-    <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_fb3jar8o82jbtnvafydu, .table th.tinytable_css_fb3jar8o82jbtnvafydu { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_rnbnd0wmck51qdqrqy51, .table th.tinytable_css_rnbnd0wmck51qdqrqy51 { text-align: center; }
-      .table td.tinytable_css_s3hwsztr9kzv2fo097de, .table th.tinytable_css_s3hwsztr9kzv2fo097de { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_z413r8f828129nfj2ud0, .table th.tinytable_css_z413r8f828129nfj2ud0 { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_6i1slid9wz6y5zmwbb37, .table th.tinytable_css_6i1slid9wz6y5zmwbb37 { text-align: left; }
-      .table td.tinytable_css_gcfwif84ovbaeak2t4dz, .table th.tinytable_css_gcfwif84ovbaeak2t4dz { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-    </style>
-    <div class="container">
-      <table class="table table-borderless" id="tinytable_u4yytep9ixk0lmjeew0t" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-        
-              <tr>
-                <th scope="col" data-row="0" data-col="0"> </th>
-                <th scope="col" data-row="0" data-col="1">(1)</th>
-                <th scope="col" data-row="0" data-col="2">(2)</th>
-                <th scope="col" data-row="0" data-col="3">(3)</th>
-                <th scope="col" data-row="0" data-col="4">(4)</th>
-                <th scope="col" data-row="0" data-col="5">(5)</th>
-              </tr>
-        </thead>
-        <tfoot><tr><td colspan="6">\textit{Notes:} This table replicates Table 1 from Andreadis et al. (2025). The dependent variable is AI intensity, defined as the share of AI-related job postings in total job postings in each county-year from 2014 through 2023, multiplied by 100 to express in percentage terms. AI intensity has a mean of 0.4 percentage points and a standard deviation of 1.1 percentage points. All explanatory variables are standardized as z-scores. Models are estimated using OLS with county and year fixed effects (columns 1-4) or county and state-year fixed effects (column 5). Standard errors are clustered at the county level. All explanatory variables are lagged by one year.</td></tr></tfoot>
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="0">Bachelor's share</td>
-                  <td data-row="1" data-col="1">0.1906</td>
-                  <td data-row="1" data-col="2"></td>
-                  <td data-row="1" data-col="3"></td>
-                  <td data-row="1" data-col="4">0.1817</td>
-                  <td data-row="1" data-col="5">0.1035</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="0"></td>
-                  <td data-row="2" data-col="1">(0.0513)</td>
-                  <td data-row="2" data-col="2"></td>
-                  <td data-row="2" data-col="3"></td>
-                  <td data-row="2" data-col="4">(0.0505)</td>
-                  <td data-row="2" data-col="5">(0.0459)</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="0">House price growth</td>
-                  <td data-row="3" data-col="1">-0.0144</td>
-                  <td data-row="3" data-col="2"></td>
-                  <td data-row="3" data-col="3"></td>
-                  <td data-row="3" data-col="4">-0.0142</td>
-                  <td data-row="3" data-col="5">-0.0156</td>
-                </tr>
-                <tr>
-                  <td data-row="4" data-col="0"></td>
-                  <td data-row="4" data-col="1">(0.0080)</td>
-                  <td data-row="4" data-col="2"></td>
-                  <td data-row="4" data-col="3"></td>
-                  <td data-row="4" data-col="4">(0.0079)</td>
-                  <td data-row="4" data-col="5">(0.0074)</td>
-                </tr>
-                <tr>
-                  <td data-row="5" data-col="0">Labor tightness</td>
-                  <td data-row="5" data-col="1">0.2780</td>
-                  <td data-row="5" data-col="2"></td>
-                  <td data-row="5" data-col="3"></td>
-                  <td data-row="5" data-col="4">0.2765</td>
-                  <td data-row="5" data-col="5">0.3156</td>
-                </tr>
-                <tr>
-                  <td data-row="6" data-col="0"></td>
-                  <td data-row="6" data-col="1">(0.0583)</td>
-                  <td data-row="6" data-col="2"></td>
-                  <td data-row="6" data-col="3"></td>
-                  <td data-row="6" data-col="4">(0.0585)</td>
-                  <td data-row="6" data-col="5">(0.0643)</td>
-                </tr>
-                <tr>
-                  <td data-row="7" data-col="0">Patents per employee</td>
-                  <td data-row="7" data-col="1"></td>
-                  <td data-row="7" data-col="2">0.0232</td>
-                  <td data-row="7" data-col="3"></td>
-                  <td data-row="7" data-col="4">0.0295</td>
-                  <td data-row="7" data-col="5">0.0312</td>
-                </tr>
-                <tr>
-                  <td data-row="8" data-col="0"></td>
-                  <td data-row="8" data-col="1"></td>
-                  <td data-row="8" data-col="2">(0.0091)</td>
-                  <td data-row="8" data-col="3"></td>
-                  <td data-row="8" data-col="4">(0.0113)</td>
-                  <td data-row="8" data-col="5">(0.0138)</td>
-                </tr>
-                <tr>
-                  <td data-row="9" data-col="0">STEM degrees share</td>
-                  <td data-row="9" data-col="1"></td>
-                  <td data-row="9" data-col="2">0.0686</td>
-                  <td data-row="9" data-col="3"></td>
-                  <td data-row="9" data-col="4">0.0475</td>
-                  <td data-row="9" data-col="5">0.0375</td>
-                </tr>
-                <tr>
-                  <td data-row="10" data-col="0"></td>
-                  <td data-row="10" data-col="1"></td>
-                  <td data-row="10" data-col="2">(0.0238)</td>
-                  <td data-row="10" data-col="3"></td>
-                  <td data-row="10" data-col="4">(0.0205)</td>
-                  <td data-row="10" data-col="5">(0.0184)</td>
-                </tr>
-                <tr>
-                  <td data-row="11" data-col="0">ICT sector intensity</td>
-                  <td data-row="11" data-col="1"></td>
-                  <td data-row="11" data-col="2"></td>
-                  <td data-row="11" data-col="3">0.0121</td>
-                  <td data-row="11" data-col="4">0.0258</td>
-                  <td data-row="11" data-col="5">0.0280</td>
-                </tr>
-                <tr>
-                  <td data-row="12" data-col="0"></td>
-                  <td data-row="12" data-col="1"></td>
-                  <td data-row="12" data-col="2"></td>
-                  <td data-row="12" data-col="3">(0.0144)</td>
-                  <td data-row="12" data-col="4">(0.0135)</td>
-                  <td data-row="12" data-col="5">(0.0136)</td>
-                </tr>
-                <tr>
-                  <td data-row="13" data-col="0">Manufacturing</td>
-                  <td data-row="13" data-col="1"></td>
-                  <td data-row="13" data-col="2"></td>
-                  <td data-row="13" data-col="3">-0.0630</td>
-                  <td data-row="13" data-col="4">-0.0333</td>
-                  <td data-row="13" data-col="5">-0.0247</td>
-                </tr>
-                <tr>
-                  <td data-row="14" data-col="0"></td>
-                  <td data-row="14" data-col="1"></td>
-                  <td data-row="14" data-col="2"></td>
-                  <td data-row="14" data-col="3">(0.0113)</td>
-                  <td data-row="14" data-col="4">(0.0108)</td>
-                  <td data-row="14" data-col="5">(0.0111)</td>
-                </tr>
-                <tr>
-                  <td data-row="15" data-col="0">Turnover rate</td>
-                  <td data-row="15" data-col="1"></td>
-                  <td data-row="15" data-col="2"></td>
-                  <td data-row="15" data-col="3">0.0345</td>
-                  <td data-row="15" data-col="4">0.0188</td>
-                  <td data-row="15" data-col="5">0.0154</td>
-                </tr>
-                <tr>
-                  <td data-row="16" data-col="0"></td>
-                  <td data-row="16" data-col="1"></td>
-                  <td data-row="16" data-col="2"></td>
-                  <td data-row="16" data-col="3">(0.0137)</td>
-                  <td data-row="16" data-col="4">(0.0137)</td>
-                  <td data-row="16" data-col="5">(0.0132)</td>
-                </tr>
-                <tr>
-                  <td data-row="17" data-col="0">Fixed effects</td>
-                  <td data-row="17" data-col="1">{\hspace{0.5em}County, Year}</td>
-                  <td data-row="17" data-col="2">{\hspace{0.5em}County, Year}</td>
-                  <td data-row="17" data-col="3">{\hspace{0.5em}County, Year}</td>
-                  <td data-row="17" data-col="4">{\hspace{0.5em}County, Year}</td>
-                  <td data-row="17" data-col="5">{\hspace{0.5em}County, state-year}</td>
-                </tr>
-                <tr>
-                  <td data-row="18" data-col="0">Observations</td>
-                  <td data-row="18" data-col="1">{\hspace{0.5em}24,645}</td>
-                  <td data-row="18" data-col="2">{\hspace{0.5em}24,645}</td>
-                  <td data-row="18" data-col="3">{\hspace{0.5em}24,645}</td>
-                  <td data-row="18" data-col="4">{\hspace{0.5em}24,645}</td>
-                  <td data-row="18" data-col="5">{\hspace{0.5em}24,645}</td>
-                </tr>
-                <tr>
-                  <td data-row="19" data-col="0">R²</td>
-                  <td data-row="19" data-col="1">{\hspace{0.5em}0.69739}</td>
-                  <td data-row="19" data-col="2">{\hspace{0.5em}0.68012}</td>
-                  <td data-row="19" data-col="3">{\hspace{0.5em}0.67989}</td>
-                  <td data-row="19" data-col="4">{\hspace{0.5em}0.69827}</td>
-                  <td data-row="19" data-col="5">{\hspace{0.5em}0.71558}</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+</table>
 </div>
 </div>
 </figure>
@@ -438,271 +385,193 @@ Table&nbsp;1: Replication of Table 1 from Andreadis et al.&nbsp;(2025) - The Cor
 \Delta AI_{i} = \beta_0 + \boldsymbol{\beta}' \mathbf{X}_{i,2017} + \varepsilon_{i} \tag{5}
 \]</span></p>
 <p>where <span class="math inline">\(\Delta AI_{i}\)</span> is the percentage point change in AI intensity between the 2017–2018 and 2022–2023 averages, <span class="math inline">\(\beta_0\)</span> is a constant term representing expected AI intensity growth when all predictors are at their mean, <span class="math inline">\(\mathbf{X}_{i,2017}\)</span> is a vector of standardized regressors measured in 2017, and <span class="math inline">\(\varepsilon_{i}\)</span> is an error term clustered at the county level. Unlike equation (3), there is no time subscript <span class="math inline">\(t\)</span> because the growth of AI intensity is a single observation per county — the change between two pooled periods — rather than a panel. This model does not include county or year fixed effects, as the outcome is already a first difference across counties.</p>
-<p>We reproduce Table 2 from AKCLM. All our results match AKCLM’s, except for coefficient and standard error for bachelor’s share in all the models in which it appears. The source of this discrepancy is unclear; the authors were contacted but did not respond.</p>
+<p>We reproduce Table 2 from AKCLM. All our results match AKCLM’s, except for the coefficient and standard error for bachelor’s share in all models in which it appears. The source of this discrepancy remains unknown, but the pattern is systematic rather than random. In column 1, the published bachelor’s-share coefficient is 0.0022 with a standard error of 0.0027, while rerunning AKCLM’s released code and data gives 0.0196 with a standard error of 0.0250. In columns 4 and 5, the published coefficients are -0.0035 and -0.0044, while the corresponding rerun values are -0.0322 and -0.0401. Thus, both the coefficient and standard error are approximately nine times larger in the rerun than in the published table. This suggests a reporting or scaling discrepancy specific to bachelor’s share, because the same rerun reproduces the remaining reported coefficients. The authors were contacted regarding this discrepancy but did not respond.</p>
 <div class="cell" data-tbl-pos="H" data-tbl-cap-location="top">
 <div id="tbl-table2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-pos="H" data-tbl-cap-location="top">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Replication of Table 2 from Andreadis et al.&nbsp;(2025) - The Correlates of the Percentage Point Change in the Share of AI Jobs
+Table&nbsp;2: AKCLM and replication estimates for the growth of AI intensity
 </figcaption>
 <div aria-describedby="tbl-table2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<!-- preamble start -->
+<table class="table table-striped table-condensed do-not-create-environment cell caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Model</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Original</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Replication</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="3" style="text-align: left; vertical-align: top !important;">(1) Demographics</td>
+<td style="text-align: left;">Bachelor's share</td>
+<td style="text-align: right;">0.0022 (0.0027)</td>
+<td style="text-align: right;">0.0196 (0.0250)</td>
+<td style="text-align: right;">0.0174</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Income, log</td>
+<td style="text-align: right;">0.0784 (0.0382)</td>
+<td style="text-align: right;">0.0784 (0.0382)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Labor tightness</td>
+<td style="text-align: right;">0.0744 (0.0215)</td>
+<td style="text-align: right;">0.0744 (0.0215)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">(2) Innovation</td>
+<td style="text-align: left;">STEM degrees share</td>
+<td style="text-align: right;">0.0742 (0.0151)</td>
+<td style="text-align: right;">0.0742 (0.0151)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td rowspan="4" style="text-align: left; vertical-align: top !important;">(3) Industry</td>
+<td style="text-align: left;">Large establishments</td>
+<td style="text-align: right;">0.0411 (0.0183)</td>
+<td style="text-align: right;">0.0411 (0.0183)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICT sector intensity</td>
+<td style="text-align: right;">0.0401 (0.0153)</td>
+<td style="text-align: right;">0.0401 (0.0153)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manufacturing</td>
+<td style="text-align: right;">-0.0447 (0.0166)</td>
+<td style="text-align: right;">-0.0447 (0.0166)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turnover rate</td>
+<td style="text-align: right;">-0.0556 (0.0222)</td>
+<td style="text-align: right;">-0.0556 (0.0222)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td rowspan="8" style="text-align: left; vertical-align: top !important;">(4) All controls</td>
+<td style="text-align: left;">Bachelor's share</td>
+<td style="text-align: right;">-0.0035 (0.0032)</td>
+<td style="text-align: right;">-0.0322 (0.0292)</td>
+<td style="text-align: right;">-0.0287</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Income, log</td>
+<td style="text-align: right;">0.0695 (0.0391)</td>
+<td style="text-align: right;">0.0695 (0.0391)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Labor tightness</td>
+<td style="text-align: right;">0.0732 (0.0237)</td>
+<td style="text-align: right;">0.0732 (0.0237)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STEM degrees share</td>
+<td style="text-align: right;">0.0539 (0.0163)</td>
+<td style="text-align: right;">0.0539 (0.0163)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Large establishments</td>
+<td style="text-align: right;">-0.0158 (0.0219)</td>
+<td style="text-align: right;">-0.0158 (0.0219)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICT sector intensity</td>
+<td style="text-align: right;">0.0137 (0.0170)</td>
+<td style="text-align: right;">0.0137 (0.0170)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manufacturing</td>
+<td style="text-align: right;">-0.0128 (0.0181)</td>
+<td style="text-align: right;">-0.0128 (0.0181)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turnover rate</td>
+<td style="text-align: right;">-0.0419 (0.0233)</td>
+<td style="text-align: right;">-0.0419 (0.0233)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td rowspan="8" style="text-align: left; vertical-align: top !important;">(5) State FE</td>
+<td style="text-align: left;">Bachelor's share</td>
+<td style="text-align: right;">-0.0044 (0.0029)</td>
+<td style="text-align: right;">-0.0401 (0.0263)</td>
+<td style="text-align: right;">-0.0357</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Income, log</td>
+<td style="text-align: right;">0.0614 (0.0442)</td>
+<td style="text-align: right;">0.0614 (0.0442)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Labor tightness</td>
+<td style="text-align: right;">0.0726 (0.0352)</td>
+<td style="text-align: right;">0.0726 (0.0352)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STEM degrees share</td>
+<td style="text-align: right;">0.0455 (0.0184)</td>
+<td style="text-align: right;">0.0455 (0.0184)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Large establishments</td>
+<td style="text-align: right;">-0.0165 (0.0198)</td>
+<td style="text-align: right;">-0.0165 (0.0198)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICT sector intensity</td>
+<td style="text-align: right;">0.0219 (0.0182)</td>
+<td style="text-align: right;">0.0219 (0.0182)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manufacturing</td>
+<td style="text-align: right;">0.0001 (0.0203)</td>
+<td style="text-align: right;">0.0001 (0.0203)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turnover rate</td>
+<td style="text-align: right;">-0.0389 (0.0271)</td>
+<td style="text-align: right;">-0.0389 (0.0271)</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><span style="font-style: italic;">Notes: </span></td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup></sup> Each cell reports coefficient and standard error in parentheses. The original column reports the published AKCLM values; the replication column reports estimates from the published replication code and data. The displayed discrepancy is confined to bachelor's share in columns 1, 4, and 5. The dependent variable is the percentage-point change in AI intensity between the 2017-2018 and 2022-2023 averages. Columns 1-4 have no fixed effects; column 5 includes state fixed effects.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
 
-    <script>
-
-      function styleCell_pgs2w783z8d7e1hl7o6n(i, j, css_id) {
-          var table = document.getElementById("tinytable_pgs2w783z8d7e1hl7o6n");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_pgs2w783z8d7e1hl7o6n');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_pgs2w783z8d7e1hl7o6n(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_pgs2w783z8d7e1hl7o6n");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '19', j: 2 }, { i: '19', j: 4 }, { i: '19', j: 1 }, { i: '19', j: 3 }, { i: '19', j: 5 },  ], css_id: 'tinytable_css_314usk9tbhlrnqk49tyw',}, 
-          { positions: [ { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '12', j: 2 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '5', j: 3 }, { i: '13', j: 2 }, { i: '1', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '12', j: 3 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '18', j: 3 }, { i: '6', j: 3 }, { i: '14', j: 2 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '5', j: 4 }, { i: '13', j: 3 }, { i: '1', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '7', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '18', j: 4 }, { i: '6', j: 4 }, { i: '14', j: 3 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '7', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '17', j: 5 }, { i: '18', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 },  ], css_id: 'tinytable_css_kih137uqrrxt6kkleif7',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 3 }, { i: '0', j: 5 }, { i: '0', j: 2 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_yjfqku7omsojyfmb7wc1',}, 
-          { positions: [ { i: '19', j: 0 },  ], css_id: 'tinytable_css_7z5b47vzosau28gs58xb',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '4', j: 0 }, { i: '5', j: 0 }, { i: '6', j: 0 }, { i: '7', j: 0 }, { i: '8', j: 0 }, { i: '9', j: 0 }, { i: '10', j: 0 }, { i: '11', j: 0 }, { i: '12', j: 0 }, { i: '13', j: 0 }, { i: '14', j: 0 }, { i: '15', j: 0 }, { i: '16', j: 0 }, { i: '17', j: 0 }, { i: '18', j: 0 },  ], css_id: 'tinytable_css_wb2gkphp9tkmd0x7aomb',}, 
-          { positions: [ { i: '0', j: 0 },  ], css_id: 'tinytable_css_7cy1hx3krthdws8hm0a3',}, 
-          ];
-
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  styleCell_pgs2w783z8d7e1hl7o6n(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
-    </script>
-
-    <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_314usk9tbhlrnqk49tyw, .table th.tinytable_css_314usk9tbhlrnqk49tyw { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_kih137uqrrxt6kkleif7, .table th.tinytable_css_kih137uqrrxt6kkleif7 { text-align: center; }
-      .table td.tinytable_css_yjfqku7omsojyfmb7wc1, .table th.tinytable_css_yjfqku7omsojyfmb7wc1 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_7z5b47vzosau28gs58xb, .table th.tinytable_css_7z5b47vzosau28gs58xb { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_wb2gkphp9tkmd0x7aomb, .table th.tinytable_css_wb2gkphp9tkmd0x7aomb { text-align: left; }
-      .table td.tinytable_css_7cy1hx3krthdws8hm0a3, .table th.tinytable_css_7cy1hx3krthdws8hm0a3 { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-    </style>
-    <div class="container">
-      <table class="table table-borderless" id="tinytable_pgs2w783z8d7e1hl7o6n" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-        
-              <tr>
-                <th scope="col" data-row="0" data-col="0"> </th>
-                <th scope="col" data-row="0" data-col="1">(1)</th>
-                <th scope="col" data-row="0" data-col="2">(2)</th>
-                <th scope="col" data-row="0" data-col="3">(3)</th>
-                <th scope="col" data-row="0" data-col="4">(4)</th>
-                <th scope="col" data-row="0" data-col="5">(5)</th>
-              </tr>
-        </thead>
-        <tfoot><tr><td colspan="6">\textit{Notes:} This table replicates Table 2 from AKCLM. The dependent variable is the change in AI intensity between the 2017–2018 and 2022–2023 averages, multiplied by 100 to express the change in percentage points. The change in AI intensity has a mean of 0.3 percentage points and a standard deviation of 1.0 percentage points. All explanatory variables are measured in 2017 and standardized as z-scores. Models are estimated using OLS with no fixed effects (columns 1–4) or state fixed effects (column 5). Standard errors are clustered at the county level. Our replication matches AKCLM perfectly, except for the coefficient and standard error for bachelor's share for all the models in which it appears. The authors were contacted regarding this discrepancy but did not respond.</td></tr></tfoot>
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="0">Bachelors Share</td>
-                  <td data-row="1" data-col="1">0.0196</td>
-                  <td data-row="1" data-col="2"></td>
-                  <td data-row="1" data-col="3"></td>
-                  <td data-row="1" data-col="4">-0.0322</td>
-                  <td data-row="1" data-col="5">-0.0401</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="0"></td>
-                  <td data-row="2" data-col="1">(0.0250)</td>
-                  <td data-row="2" data-col="2"></td>
-                  <td data-row="2" data-col="3"></td>
-                  <td data-row="2" data-col="4">(0.0292)</td>
-                  <td data-row="2" data-col="5">(0.0263)</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="0">Income, Log</td>
-                  <td data-row="3" data-col="1">0.0784</td>
-                  <td data-row="3" data-col="2"></td>
-                  <td data-row="3" data-col="3"></td>
-                  <td data-row="3" data-col="4">0.0695</td>
-                  <td data-row="3" data-col="5">0.0614</td>
-                </tr>
-                <tr>
-                  <td data-row="4" data-col="0"></td>
-                  <td data-row="4" data-col="1">(0.0382)</td>
-                  <td data-row="4" data-col="2"></td>
-                  <td data-row="4" data-col="3"></td>
-                  <td data-row="4" data-col="4">(0.0391)</td>
-                  <td data-row="4" data-col="5">(0.0442)</td>
-                </tr>
-                <tr>
-                  <td data-row="5" data-col="0">Tightness</td>
-                  <td data-row="5" data-col="1">0.0744</td>
-                  <td data-row="5" data-col="2"></td>
-                  <td data-row="5" data-col="3"></td>
-                  <td data-row="5" data-col="4">0.0732</td>
-                  <td data-row="5" data-col="5">0.0726</td>
-                </tr>
-                <tr>
-                  <td data-row="6" data-col="0"></td>
-                  <td data-row="6" data-col="1">(0.0215)</td>
-                  <td data-row="6" data-col="2"></td>
-                  <td data-row="6" data-col="3"></td>
-                  <td data-row="6" data-col="4">(0.0237)</td>
-                  <td data-row="6" data-col="5">(0.0352)</td>
-                </tr>
-                <tr>
-                  <td data-row="7" data-col="0">Stem Degrees' share</td>
-                  <td data-row="7" data-col="1"></td>
-                  <td data-row="7" data-col="2">0.0742</td>
-                  <td data-row="7" data-col="3"></td>
-                  <td data-row="7" data-col="4">0.0539</td>
-                  <td data-row="7" data-col="5">0.0455</td>
-                </tr>
-                <tr>
-                  <td data-row="8" data-col="0"></td>
-                  <td data-row="8" data-col="1"></td>
-                  <td data-row="8" data-col="2">(0.0151)</td>
-                  <td data-row="8" data-col="3"></td>
-                  <td data-row="8" data-col="4">(0.0163)</td>
-                  <td data-row="8" data-col="5">(0.0184)</td>
-                </tr>
-                <tr>
-                  <td data-row="9" data-col="0">Large Firms</td>
-                  <td data-row="9" data-col="1"></td>
-                  <td data-row="9" data-col="2"></td>
-                  <td data-row="9" data-col="3">0.0411</td>
-                  <td data-row="9" data-col="4">-0.0158</td>
-                  <td data-row="9" data-col="5">-0.0165</td>
-                </tr>
-                <tr>
-                  <td data-row="10" data-col="0"></td>
-                  <td data-row="10" data-col="1"></td>
-                  <td data-row="10" data-col="2"></td>
-                  <td data-row="10" data-col="3">(0.0183)</td>
-                  <td data-row="10" data-col="4">(0.0219)</td>
-                  <td data-row="10" data-col="5">(0.0198)</td>
-                </tr>
-                <tr>
-                  <td data-row="11" data-col="0">ICT sector Intensity</td>
-                  <td data-row="11" data-col="1"></td>
-                  <td data-row="11" data-col="2"></td>
-                  <td data-row="11" data-col="3">0.0401</td>
-                  <td data-row="11" data-col="4">0.0137</td>
-                  <td data-row="11" data-col="5">0.0219</td>
-                </tr>
-                <tr>
-                  <td data-row="12" data-col="0"></td>
-                  <td data-row="12" data-col="1"></td>
-                  <td data-row="12" data-col="2"></td>
-                  <td data-row="12" data-col="3">(0.0153)</td>
-                  <td data-row="12" data-col="4">(0.0170)</td>
-                  <td data-row="12" data-col="5">(0.0182)</td>
-                </tr>
-                <tr>
-                  <td data-row="13" data-col="0">Manufacturing</td>
-                  <td data-row="13" data-col="1"></td>
-                  <td data-row="13" data-col="2"></td>
-                  <td data-row="13" data-col="3">-0.0447</td>
-                  <td data-row="13" data-col="4">-0.0128</td>
-                  <td data-row="13" data-col="5">0.0001</td>
-                </tr>
-                <tr>
-                  <td data-row="14" data-col="0"></td>
-                  <td data-row="14" data-col="1"></td>
-                  <td data-row="14" data-col="2"></td>
-                  <td data-row="14" data-col="3">(0.0166)</td>
-                  <td data-row="14" data-col="4">(0.0181)</td>
-                  <td data-row="14" data-col="5">(0.0203)</td>
-                </tr>
-                <tr>
-                  <td data-row="15" data-col="0">Turnover Rate</td>
-                  <td data-row="15" data-col="1"></td>
-                  <td data-row="15" data-col="2"></td>
-                  <td data-row="15" data-col="3">-0.0556</td>
-                  <td data-row="15" data-col="4">-0.0419</td>
-                  <td data-row="15" data-col="5">-0.0389</td>
-                </tr>
-                <tr>
-                  <td data-row="16" data-col="0"></td>
-                  <td data-row="16" data-col="1"></td>
-                  <td data-row="16" data-col="2"></td>
-                  <td data-row="16" data-col="3">(0.0222)</td>
-                  <td data-row="16" data-col="4">(0.0233)</td>
-                  <td data-row="16" data-col="5">(0.0271)</td>
-                </tr>
-                <tr>
-                  <td data-row="17" data-col="0">Fixed effects</td>
-                  <td data-row="17" data-col="1">{\hspace{0.5em}None}</td>
-                  <td data-row="17" data-col="2">{\hspace{0.5em}None}</td>
-                  <td data-row="17" data-col="3">{\hspace{0.5em}None}</td>
-                  <td data-row="17" data-col="4">{\hspace{0.5em}None}</td>
-                  <td data-row="17" data-col="5">{\hspace{0.5em}State}</td>
-                </tr>
-                <tr>
-                  <td data-row="18" data-col="0">Observations</td>
-                  <td data-row="18" data-col="1">{\hspace{0.5em}2,473}</td>
-                  <td data-row="18" data-col="2">{\hspace{0.5em}2,473}</td>
-                  <td data-row="18" data-col="3">{\hspace{0.5em}2,473}</td>
-                  <td data-row="18" data-col="4">{\hspace{0.5em}2,473}</td>
-                  <td data-row="18" data-col="5">{\hspace{0.5em}2,473}</td>
-                </tr>
-                <tr>
-                  <td data-row="19" data-col="0">R²</td>
-                  <td data-row="19" data-col="1">{\hspace{0.5em}0.0213}</td>
-                  <td data-row="19" data-col="2">{\hspace{0.5em}0.0193}</td>
-                  <td data-row="19" data-col="3">{\hspace{0.5em}0.0155}</td>
-                  <td data-row="19" data-col="4">{\hspace{0.5em}0.0315}</td>
-                  <td data-row="19" data-col="5">{\hspace{0.5em}0.0817}</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+</table>
 </div>
 </div>
 </figure>
@@ -711,29 +580,26 @@ Table&nbsp;2: Replication of Table 2 from Andreadis et al.&nbsp;(2025) - The Cor
 <p>Table 2 analyzes predictors of the growth of AI intensity between 2017–2018 and 2022–2023. All regressors are standardized, with explanatory variables measured in 2017. Column 4 includes the full control set and serves as the preferred specification; all subsequent discussion refers to this column.</p>
 <p>STEM degree share (0.054, p &lt; 0.01) is the largest statistically significant predictor of AI intensity growth in the preferred specification. Two counties differing by one standard deviation in STEM degree share are expected to differ by 0.054 percentage points in AI intensity growth, equivalent to 61% of the median of 0.088 percentage points.</p>
 <p>Among labor market variables, turnover rate (−0.042, p &lt; 0.01) carries a coefficient 2.7 times larger in magnitude than large establishment share (−0.016, p = 0.47). Two counties differing by one standard deviation in turnover rate are expected to differ by 0.042 percentage points in AI intensity growth (48% of the median), compared with 0.016 percentage points for large establishment share (18% of the median).</p>
-</section>
-<section id="figure-1" class="level3">
-<h3 class="anchored" data-anchor-id="figure-1">Figure 1</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="replication_files/figure-html/map-plot-1.png" class="img-fluid figure-img" data-fig-pos="H" width="1728"></p>
+<p><img src="replication_files/figure-html/map-plot-side-by-side-1.png" class="img-fluid figure-img" data-fig-pos="H" width="1824"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Notes:</em> Panel A shows average AI intensity from 2014 to 2023. Panel B shows the change in AI intensity between 2017–2018 and 2022–2023. Connecticut appears with N/A values because AKCLM’s data does not include Connecticut counties. Hundreds of counties have different values in our replication, especially in Panel B. The authors were contacted regarding these discrepancies but did not respond.</p>
-<p>Figure 1 displays the spatial distribution and evolution of AI intensity across U.S. counties from 2014 to 2023. Panel A shows that AI intensity is highly concentrated in a small number of coastal metropolitan counties, with most rural and inland counties falling in the 0–0.14% range. Panel B shows that the highest growth in AI intensity between 2018 and 2023 (median: 0.088 percentage points) did not occur in established tech hubs.</p>
-<p>We assess robustness by re-estimating AKCLM’s preferred specifications weighted by log-population. Of the 5 coefficients that are statistically significant at the 5% level under equal weighting across both dependent variables, only 3 remain significant under log-population weighting. For the level of AI intensity, bachelor’s share and STEM degree share remain significant, while patents per employee and manufacturing intensity lose significance. For the growth of AI intensity, STEM degree share remains significant under both weighting schemes.</p>
+<p><em>Notes:</em> Panels A and B show average AI intensity from 2014 to 2023; Panels C and D show the change in AI intensity. The left column reproduces the published AKCLM Figure 1 panels as images extracted from the published article. The right column shows maps generated from the replication data and definitions. Our replication Panel B uses the change in AI intensity between 2017–2018 and 2022–2023, while AKCLM’s published figure labels Panel B as the 2018–2023 change. Connecticut appears with N/A values because AKCLM’s released <code>data.csv</code> contains no Connecticut county rows. The available code and published figure therefore point to different Panel B constructions; the source of the published-image discrepancy remains unresolved.</p>
+<p>Figure 1 displays the spatial distribution and evolution of AI intensity across U.S. counties from 2014 to 2023. Panel A is reproducible from the released data: the generated county values match exactly across all 3,130 counties in the comparison file, and no county changes bins. Panel B is not reproducible in the same way. When we compare the available AKCLM map-code construction (2023 annual intensity minus 2018 annual intensity) with the article’s stated pooled-window construction (2022–2023 minus 2017–2018), 2,562 of 3,130 counties have a nonzero difference, 1,453 counties change color bins, and the median absolute difference is 0.138 percentage points. The differences exceed 0.10 percentage points in 1,805 counties, 0.25 points in 1,076 counties, 0.50 points in 548 counties, 1 point in 204 counties, 2 points in 58 counties, and 5 points in 11 counties; the maximum absolute difference is 9.890 percentage points. These discrepancies are most consistent with a coding or definition difference in the Panel B time window rather than a data-vintage difference, because both calculations use the same released AKCLM <code>data.csv</code>. County definitions also matter for coverage: the released data include 27 Alaska counties and 4 Hawaii counties but no Connecticut county FIPS rows, so Connecticut cannot be mapped with values from the released data.</p>
+<p>We assess robustness by re-estimating AKCLM’s preferred specifications with log-population weights after removing labor market tightness from both weighted and unweighted models. This extension asks whether the reported associations are similar when populous counties receive more weight, while holding the specification fixed. We interpret the resulting coefficient changes descriptively rather than as evidence that relationships are necessarily stronger or weaker in particular county-size groups.</p>
 </section>
 </section>
 <section id="extension-log-population-weighting-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="extension-log-population-weighting-analysis">Extension: Log-Population Weighting Analysis</h2>
-<p>To assess robustness, we re-estimate all models using log-population weights, omitting labor market tightness due to the denominator contamination problem described above. Log-population weights give more weight to populous counties relative to equal weighting, where each county receives the same weight regardless of population size.</p>
+<p>To assess robustness, we re-estimate all models using log-population weights. Because labor market tightness shares total job postings with the denominator of AI intensity, we omit labor market tightness from both the equal-weighted and log-population-weighted extension models. The weighting comparison therefore holds the specification fixed and changes only the weighting scheme. Following AKCLM, we report only variables that have statistically significant coefficients in at least one model specification. Log-population weights give more weight to populous counties relative to equal weighting, where each county receives the same weight regardless of population size.</p>
 <div class="cell fig-cap-location-top">
 <div class="cell-output-display">
-<div id="fig-table1-coefs-models1-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-pos="H">
+<div id="fig-table1-coefs-models1-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-table1-coefs-models1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Extension of Table 1 from Andreadis et al.&nbsp;(2025) — Coefficients under Equal weights vs Log-Population weights (Models 1-3)
@@ -745,10 +611,10 @@ Figure&nbsp;1: Extension of Table 1 from Andreadis et al.&nbsp;(2025) — Coeffi
 </div>
 </div>
 </div>
-<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 1. These models examine AI intensity as the outcome variable. Model 1 (Demographics) includes bachelor’s share, house price growth, and labor market tightness. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All models include county and year fixed effects. Labor market tightness is omitted from log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.</p>
+<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 1. These models examine AI intensity as the outcome variable. Model 1 (Demographics) includes bachelor’s share and house price growth. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All models include county and year fixed effects. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.</p>
 <div class="cell fig-cap-location-top">
 <div class="cell-output-display">
-<div id="fig-table1-coefs-models4-5" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-pos="H">
+<div id="fig-table1-coefs-models4-5" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-table1-coefs-models4-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Extension of Table 1 from Andreadis et al.&nbsp;(2025) — Coefficients under Equal weights vs Log-Population weights (Models 4-5)
@@ -760,11 +626,11 @@ Figure&nbsp;2: Extension of Table 1 from Andreadis et al.&nbsp;(2025) — Coeffi
 </div>
 </div>
 </div>
-<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 1. These models examine AI intensity as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with county and year fixed effects. Model 5 (All + State FE) replaces year fixed effects with state-year fixed effects. Both models include bachelor’s share, house price growth, patents per employee, STEM degree share, ICT intensity, manufacturing intensity, and turnover rate. Labor market tightness is omitted from log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.</p>
+<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 1. These models examine AI intensity as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with county and year fixed effects. Model 5 (All + State FE) replaces year fixed effects with state-year fixed effects. Both models include bachelor’s share, house price growth, patents per employee, STEM degree share, ICT intensity, manufacturing intensity, and turnover rate. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All variables are standardized, so coefficients represent the change in AI intensity in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates and red points indicate log-population-weighted estimates.</p>
 <p>In Model 4, coefficient estimates remain stable across weighting schemes. Bachelor’s share is associated with approximately a 0.01 percentage point increase in AI intensity per standard deviation, while house price growth shows minimal independent effect. Among innovation variables, patents per employee shows approximately a 0.05 percentage point increase and STEM degree share shows roughly a 0.09 percentage point increase per standard deviation. Among industry variables, manufacturing intensity is associated with approximately a 0.03 percentage point decrease, ICT intensity with a 0.12 percentage point increase, and turnover rate with the largest effect of approximately 0.18 percentage points per standard deviation.</p>
 <div class="cell fig-cap-location-top">
 <div class="cell-output-display">
-<div id="fig-table2-coefs-models1-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-pos="H">
+<div id="fig-table2-coefs-models1-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-table2-coefs-models1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Extension of Table 2 from Andreadis et al.&nbsp;(2025) — Change in AI share under Equal weights vs Log-Population weights (Models 1-3)
@@ -776,10 +642,10 @@ Figure&nbsp;3: Extension of Table 2 from Andreadis et al.&nbsp;(2025) — Change
 </div>
 </div>
 </div>
-<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 1 (Demographics) includes bachelor’s share, and house price growth. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor’s share coefficient from AKCLM for comparison.</p>
+<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 1–3 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 1 (Demographics) includes bachelor’s share and house price growth. Model 2 (Innovation) includes patents per employee and STEM degree share. Model 3 (Industry) includes manufacturing intensity, ICT intensity, and turnover rate. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor’s share coefficient from AKCLM for comparison.</p>
 <div class="cell fig-cap-location-top">
 <div class="cell-output-display">
-<div id="fig-table2-coefs-models4-5" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-pos="H">
+<div id="fig-table2-coefs-models4-5" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-table2-coefs-models4-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Extension of Table 2 from Andreadis et al.&nbsp;(2025) — Change in AI share under Equal weights vs Log-Population weights (Models 4-5)
@@ -791,24 +657,121 @@ Figure&nbsp;4: Extension of Table 2 from Andreadis et al.&nbsp;(2025) — Change
 </div>
 </div>
 </div>
-<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with no fixed effects. Model 5 (All + State FE) adds state fixed effects to Model 4. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor’s share coefficients from AKCLM for comparison.</p>
-<p>In the fully specified Model 4, bachelor’s share shows a small negative association with the growth of AI intensity under both weighting schemes, suggesting that counties with higher educational attainment in 2017 already had higher baseline AI intensity, leaving less room for growth. House price growth shows minimal independent effect. Among innovation variables, patents per employee declines from 0.06 percentage points under equal weights to 0.04 under log-population weights (a 33% reduction), while STEM degree share declines from 0.08 to 0.05 percentage points (a 38% reduction). Among industry variables, manufacturing intensity shows a negative association of approximately 0.03–0.04 percentage points, ICT intensity declines from 0.12 to 0.07 percentage points (a 42% reduction), and turnover rate declines from 0.17–0.18 to 0.11 percentage points (a 39% reduction).</p>
-<p>Of the coefficients highlighted by AKCLM in their preferred levels specification, most decrease in absolute value under log-population weighting. STEM degree share shows the most stability across weighting schemes, while bachelor’s share, turnover rate, and manufacturing intensity all weaken under population weighting, suggesting these relationships are stronger in smaller counties. ICT intensity and patents per employee are exceptions, becoming slightly larger under population weighting. Overall, the direction of all associations is preserved, but the pattern of magnitude shifts suggests that AI intensity correlates more strongly with education and labor market structure in smaller counties.</p>
-<p>AKCLM employ language suggesting causal relationships despite using observational county-level data with fixed-effects regressions. The empirical strategy does not support causal inference <span class="citation" data-cites="holland1986">[@holland1986]</span>, yet the paper uses terminology that implies causation rather than correlation. Causal nouns such as “drivers,” “determinants,” “effects,” and “impact” appear throughout, alongside causal verbs such as “drive,” “fostering,” and “influence.” For instance, the paper refers to “key drivers of AI job intensity” and states that labor market tightness “emerges as a key driver,” implying that changing these variables would directly alter AI adoption. The conclusion states that findings “point to the role of place-based policies,” making policy recommendations based on associations rather than identified causal effects.</p>
+<p><em>Notes:</em> This figure compares coefficient estimates from equal-weighted regressions versus log-population-weighted regressions for Models 4–5 of Table 2. These models examine the change in AI intensity between 2017–2018 and 2022–2023 as the outcome variable. Model 4 (All Controls) includes all demographic, innovation, and industry variables with no fixed effects. Model 5 (All + State FE) adds state fixed effects to Model 4. Labor market tightness is omitted from both equal-weighted and log-population-weighted models due to denominator contamination. All predictors are measured in 2017, the base period before the growth window. All variables are standardized, so coefficients represent the change in AI intensity growth in percentage points associated with a one-standard-deviation increase in each predictor, holding all other variables constant. Confidence intervals represent 95% levels. Green points indicate equal-weighted estimates, red points indicate log-population-weighted estimates, and blue points show the published bachelor’s share coefficients from AKCLM for comparison.</p>
+<p>In the fully specified Model 4, bachelor’s share shows a small negative association with the growth of AI intensity under both weighting schemes. House price growth shows minimal independent effect. Among innovation variables, patents per employee declines from 0.06 percentage points under equal weights to 0.04 under log-population weights, while STEM degree share declines from 0.08 to 0.05 percentage points. Among industry variables, manufacturing intensity shows a negative association of approximately 0.03–0.04 percentage points, ICT intensity declines from 0.12 to 0.07 percentage points, and turnover rate declines from 0.17–0.18 to 0.11 percentage points.</p>
+<p>Of the coefficients highlighted by AKCLM in their preferred levels specification, several decrease in absolute value under log-population weighting. STEM degree share is comparatively stable across weighting schemes, while bachelor’s share, turnover rate, and manufacturing intensity weaken under population weighting. ICT intensity and patents per employee are exceptions, becoming slightly larger under population weighting. We do not interpret these shifts as proof that relationships are systematically stronger in smaller counties; attenuation under population weighting could also reflect high-variance observations or outliers among less-populous counties. A direct population-heterogeneity test, such as estimating models separately by population quartile, would be needed to distinguish those mechanisms.</p>
+<p>AKCLM employ language suggesting causal relationships despite using observational county-level data with fixed-effects regressions. The empirical strategy does not support causal inference <span class="citation" data-cites="holland1986">(<a href="#ref-holland1986" role="doc-biblioref">Holland, 1986</a>)</span>, yet the paper uses terminology that implies causation rather than correlation. Causal nouns such as “drivers,” “determinants,” “effects,” and “impact” appear throughout, alongside causal verbs such as “drive,” “fostering,” and “influence.” For instance, the paper refers to “key drivers of AI job intensity” and states that labor market tightness “emerges as a key driver,” implying that changing these variables would directly alter AI adoption. The conclusion states that findings “point to the role of place-based policies,” making policy recommendations based on associations rather than identified causal effects.</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>This replication of AKCLM confirms that education, innovation, and industry factors are correlated with AI intensity across U.S. counties. Our analysis highlights three qualifications to their conclusions.</p>
-<p>First, AKCLM employ causal language that overstates what the empirical design can support. Terms such as “drivers” and “determinants” suggest causal mechanisms, but simple regressions can only document conditional correlations, in the absence of an explicit identification strategy <span class="citation" data-cites="holland1986">[@holland1986]</span>,</p>
-<p>Second, the construction of labor market tightness (total job postings divided by unemployed workers) introduces a mechanical correlation with AI intensity, which has total job postings in its denominator. Any change in total postings simultaneously raises tightness and lowers measured AI intensity, biasing the estimated coefficient. AKCLM do not acknowledge this issue.</p>
-<p>Third, several associations are sensitive to the weighting scheme. ICT intensity shows the largest magnitude shift, declining by approximately 42% under log-population weights, while patents per employee, STEM degree share, and turnover rate all decline by roughly one-third.</p>
+<p>This replication of AKCLM produces three sets of findings. First, several core regression results are reproduced. Table 1 is reproduced from the released analysis-ready data and code to the displayed precision, and most Table 2 coefficients also match when the released code is rerun. These results support AKCLM’s broad descriptive claim that education, innovation, and industry variables are correlated with county-level AI intensity.</p>
+<p>Second, two results are only partially reproduced. In Table 2, the bachelor’s-share coefficient and standard error differ systematically from the published table in columns 1, 4, and 5, with the rerun values approximately nine times larger than the published values. In Figure 1, Panel A is reproducible from the released data, but Panel B is not: 1,453 of 3,130 counties change bins when comparing the available map-code construction with the pooled-window definition used in our replication, and 548 counties differ by more than 0.50 percentage points. The source of these discrepancies remains unknown, but the evidence points to reporting, scaling, or coding differences rather than a complete failure of the released dataset.</p>
+<p>Third, our methodological extensions raise separate concerns. AKCLM employ causal language that the observational fixed-effects design cannot support without an explicit identification strategy <span class="citation" data-cites="holland1986">(<a href="#ref-holland1986" role="doc-biblioref">Holland, 1986</a>)</span>. In addition, labor market tightness mechanically shares total job postings with the denominator of AI intensity, creating a denominator-contamination concern. Finally, the log-population weighting exercise shows that some coefficient magnitudes change when more weight is given to populous counties, but those shifts should be interpreted as descriptive robustness evidence rather than proof of systematically stronger relationships in smaller counties.</p>
 </section>
 <section id="bibliography" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="bibliography">Bibliography</h2>
+
+
 </section>
 
 
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Bibliography</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-acemoglu2024" class="csl-entry" role="listitem">
+<strong>Acemoglu, D.</strong> 2024. <span>“The simple macroeconomics of <span>AI</span>.”</span> Working Paper. 32487. National Bureau of Economic Research DOI: <a href="https://doi.org/10.3386/w32487">10.3386/w32487</a>.
+</div>
+<div id="ref-acemoglu2022" class="csl-entry" role="listitem">
+<strong>Acemoglu, D.</strong>, <strong>D. Autor</strong>, <strong>J. Hazell</strong>, <strong>P. Restrepo</strong>. 2022. <span>“Artificial intelligence and jobs: Evidence from online vacancies.”</span> <em>Journal of Labor Economics</em> 40(S1): S293–S340. DOI: <a href="https://doi.org/10.1086/718327">10.1086/718327</a>.
+</div>
+<div id="ref-acemoglu2019" class="csl-entry" role="listitem">
+<strong>Acemoglu, D.</strong>, <strong>P. Restrepo</strong>. 2019. <span>“Automation and new tasks: How technology displaces and reinstates labor.”</span> <em>Journal of Economic Perspectives</em> 33(2): 3–30. DOI: <a href="https://doi.org/10.1257/jep.33.2.3">10.1257/jep.33.2.3</a>.
+</div>
+<div id="ref-andreadis2025" class="csl-entry" role="listitem">
+<strong>Andreadis, L.</strong>, <strong>E. Kalotychou</strong>, <strong>M. Chatzikonstantinou</strong>, <strong>C. Louca</strong>, <strong>C. A. Makridis</strong>. 2025. <span>“Local heterogeneity in artificial intelligence jobs over time and space.”</span> <em>AEA Papers and Proceedings</em> 115: 29–34. DOI: <a href="https://doi.org/10.1257/pandp.20251001">10.1257/pandp.20251001</a>.
+</div>
+<div id="ref-angrist2009mostly" class="csl-entry" role="listitem">
+<strong>Angrist, J. D.</strong>, <strong>J.-S. Pischke</strong>. 2009. <em>Mostly harmless econometrics: An empiricist’s companion</em> Princeton, NJ: Princeton University Press.
+</div>
+<div id="ref-modelsummary" class="csl-entry" role="listitem">
+<strong>Arel-Bundock, V.</strong> 2022. <span>“<span class="nocase">modelsummary</span>: Data and model summaries in <span>R</span>.”</span> <em>Journal of Statistical Software</em> 103(1): 1–23. DOI: <a href="https://doi.org/10.18637/jss.v103.i01">10.18637/jss.v103.i01</a>.
+</div>
+<div id="ref-autor2015" class="csl-entry" role="listitem">
+<strong>Autor, D. H.</strong> 2015. <span>“Why are there still so many jobs? The history and future of workplace automation.”</span> <em>Journal of Economic Perspectives</em> 29(3): 3–30. DOI: <a href="https://doi.org/10.1257/jep.29.3.3">10.1257/jep.29.3.3</a>.
+</div>
+<div id="ref-babina2024" class="csl-entry" role="listitem">
+<strong>Babina, T.</strong>, <strong>A. Fedyk</strong>, <strong>A. He</strong>, <strong>J. Hodson</strong>. 2024. <span>“Artificial intelligence, firm growth, and product innovation.”</span> <em>Journal of Financial Economics</em> 151(C): 103745. DOI: <a href="https://doi.org/10.1016/j.jfineco.2023.103745">10.1016/j.jfineco.2023.103745</a>.
+</div>
+<div id="ref-beckett2023" class="csl-entry" role="listitem">
+<strong>Beckett, E.</strong> 2023. <span>“Demand for <span>AI</span> skills continues climbing.”</span> Lightcast Blog. <a href="https://lightcast.io/">https://lightcast.io/</a>.
+</div>
+<div id="ref-fixest" class="csl-entry" role="listitem">
+<strong>Bergé, L.</strong> 2018. <span>“Efficient estimation of maximum likelihood models with multiple fixed-effects: The <span>R</span> package <span>FENmlm</span>.”</span> <em>CREA Discussion Papers</em> (13).
+</div>
+<div id="ref-beveridge1944" class="csl-entry" role="listitem">
+<strong>Beveridge, W. H.</strong> 1944. <em>Full employment in a free society</em> London: George Allen; Unwin.
+</div>
+<div id="ref-bogin2019" class="csl-entry" role="listitem">
+<strong>Bogin, A.</strong>, <strong>W. Doerner</strong>, <strong>W. Larson</strong>. 2019. <span>“Local house price dynamics: New indices and stylized facts.”</span> <em>Real Estate Economics</em> 47(2): 365–398. DOI: <a href="https://doi.org/10.1111/1540-6229.12233">10.1111/1540-6229.12233</a>.
+</div>
+<div id="ref-brynjolfsson2021" class="csl-entry" role="listitem">
+<strong>Brynjolfsson, E.</strong>, <strong>D. Rock</strong>, <strong>C. Syverson</strong>. 2021. <span>“The productivity <span>J</span>-curve: How intangibles complement general-purpose technologies.”</span> <em>American Economic Journal: Macroeconomics</em> 13(1): 333–372. DOI: <a href="https://doi.org/10.1257/mac.20180386">10.1257/mac.20180386</a>.
+</div>
+<div id="ref-cinelli2022" class="csl-entry" role="listitem">
+<strong>Cinelli, C.</strong>, <strong>C. Hazlett</strong>. 2020. <span>“Making sense of sensitivity: Extending omitted variable bias.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 82(1): 39–67. DOI: <a href="https://doi.org/10.1111/rssb.12348">10.1111/rssb.12348</a>.
+</div>
+<div id="ref-cunningham2021causal" class="csl-entry" role="listitem">
+<strong>Cunningham, S.</strong> 2021. <em>Causal inference: The mixtape</em> New Haven, CT: Yale University Press.
+</div>
+<div id="ref-usmap" class="csl-entry" role="listitem">
+<strong>Di Lorenzo, P.</strong> 2024. <em>Usmap: US maps including alaska and hawaii</em> <a href="https://CRAN.R-project.org/package=usmap">https://CRAN.R-project.org/package=usmap</a>.
+</div>
+<div id="ref-diamond2015" class="csl-entry" role="listitem">
+<strong>Diamond, P. A.</strong>, <strong>A. Sahin</strong>. 2015. <span>“Shifts in the beveridge curve.”</span> <em>Research in Economics</em> 69(1): 18–25.
+</div>
+<div id="ref-eloundou2024" class="csl-entry" role="listitem">
+<strong>Eloundou, T.</strong>, <strong>S. Manning</strong>, <strong>P. Mishkin</strong>, <strong>D. Rock</strong>. 2024. <span>“<span>GPTs</span> are <span>GPTs</span>: Labor market impact potential of <span>LLMs</span>.”</span> <em>Science</em> 384(6702): 1306–1308. DOI: <a href="https://doi.org/10.1126/science.adj0998">10.1126/science.adj0998</a>.
+</div>
+<div id="ref-gibbons2015spatial" class="csl-entry" role="listitem">
+<strong>Gibbons, S.</strong>, <strong>H. G. Overman</strong>, <strong>E. Patacchini</strong>. 2015. <span>“Spatial methods.”</span> <em>Handbook of Regional and Urban Economics</em> 5: 115–168.
+</div>
+<div id="ref-giczy2022" class="csl-entry" role="listitem">
+<strong>Giczy, A. V.</strong>, <strong>N. A. Pairolero</strong>, <strong>A. A. Toole</strong>. 2022. <span>“Identifying artificial intelligence (<span>AI</span>) invention: A novel <span>AI</span> patent dataset.”</span> <em>The Journal of Technology Transfer</em> 47(2): 476–505. DOI: <a href="https://doi.org/10.1007/s10961-021-09900-2">10.1007/s10961-021-09900-2</a>.
+</div>
+<div id="ref-holland1986" class="csl-entry" role="listitem">
+<strong>Holland, P. W.</strong> 1986. <span>“Statistics and causal inference.”</span> <em>Journal of the American Statistical Association</em> 81(396): 945–960. DOI: <a href="https://doi.org/10.1080/01621459.1986.10478354">10.1080/01621459.1986.10478354</a>.
+</div>
+<div id="ref-ihaka1996r" class="csl-entry" role="listitem">
+<strong>Ihaka, R.</strong>, <strong>R. Gentleman</strong>. 1996. <span>“R: A language for data analysis and graphics.”</span> <em>Journal of Computational and Graphical Statistics</em> 5(3): 299–314. DOI: <a href="https://doi.org/10.1080/10618600.1996.10474713">10.1080/10618600.1996.10474713</a>.
+</div>
+<div id="ref-kline2014" class="csl-entry" role="listitem">
+<strong>Kline, P.</strong>, <strong>E. Moretti</strong>. 2014. <span>“People, places, and public policy: Some simple welfare economics of local economic development programs.”</span> <em>Annual Review of Economics</em> 6: 629–662. DOI: <a href="https://doi.org/10.1146/annurev-economics-080213-041024">10.1146/annurev-economics-080213-041024</a>.
+</div>
+<div id="ref-kronmal1993spurious" class="csl-entry" role="listitem">
+<strong>Kronmal, R. A.</strong> 1993. <span>“Spurious correlation and the fallacy of the ratio standard revisited.”</span> <em>Journal of the Royal Statistical Society: Series A (Statistics in Society)</em> 156(3): 379–392. DOI: <a href="https://doi.org/10.2307/2983064">10.2307/2983064</a>.
+</div>
+<div id="ref-moretti2004" class="csl-entry" role="listitem">
+<strong>Moretti, E.</strong> 2004. <span>“Estimating the social return to higher education: Evidence from longitudinal and repeated cross-sectional data.”</span> <em>Journal of Econometrics</em> 121(1-2): 175–212. DOI: <a href="https://doi.org/10.1016/j.jeconom.2003.10.015">10.1016/j.jeconom.2003.10.015</a>.
+</div>
+<div id="ref-RCoreTeam" class="csl-entry" role="listitem">
+<strong>R Core Team</strong>. 2024. <em>R: A language and environment for statistical computing</em> Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-bls_laus" class="csl-entry" role="listitem">
+<strong>U.S. Bureau of Labor Statistics</strong>. 2024. <span>“Local area unemployment statistics (<span>LAUS</span>).”</span> <a href="https://www.bls.gov/lau/">https://www.bls.gov/lau/</a>.
+</div>
+<div id="ref-census_acs" class="csl-entry" role="listitem">
+<strong>U.S. Census Bureau</strong>. 2024a. <span>“American community survey (<span>ACS</span>) 5-year data.”</span> Accessed July 1, 2024. <a href="https://www.census.gov/data/datasets/time-series/econ/acs/acs-datasets.html">https://www.census.gov/data/datasets/time-series/econ/acs/acs-datasets.html</a>.
+</div>
+<div id="ref-census_cbp" class="csl-entry" role="listitem">
+<strong>U.S. Census Bureau</strong>. 2024b. <span>“County business patterns (<span>CBP</span>).”</span> Accessed July 1, 2024. <a href="https://www.census.gov/programs-surveys/cbp/data/datasets.html">https://www.census.gov/programs-surveys/cbp/data/datasets.html</a>.
+</div>
+<div id="ref-census_qwi" class="csl-entry" role="listitem">
+<strong>U.S. Census Bureau</strong>. 2024c. <span>“Quarterly workforce indicators (<span>QWI</span>).”</span> LEHD Program; Accessed July 1, 2024. <a href="https://lehd.ces.census.gov/data/">https://lehd.ces.census.gov/data/</a>.
+</div>
+<div id="ref-tidyverse" class="csl-entry" role="listitem">
+<strong>Wickham, H.</strong>, <strong>M. Averick</strong>, <strong>J. Bryan</strong>, <strong>W. Chang</strong>, <strong>L. D. McGowan</strong>, <strong>R. François</strong>, <strong>G. Grolemund</strong>, et al. 2019. <span>“Welcome to the <span>Tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4(43): 1686. DOI: <a href="https://doi.org/10.21105/joss.01686">10.21105/joss.01686</a>.
+</div>
+<div id="ref-wooldridge2005" class="csl-entry" role="listitem">
+<strong>Wooldridge, J. M.</strong> 2005. <span>“Unobserved heterogeneity and estimation of average partial effects.”</span> In <em>Identification and inference for econometric models: Essays in honor of thomas rothenberg</em>, Cambridge University Press.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
 <li id="fn1"><p>Solon High School, <a href="mailto:jacobkhaykin27@solonschools.net">jacobkhaykin27@solonschools.net</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
