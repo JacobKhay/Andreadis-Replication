@@ -1,5 +1,33 @@
 # Response to Reviewer Comments
 
+## Concern 1
+
+**Reviewer concern:** "First, the paper should explain much more clearly what exactly was replicated and how."
+
+**Revision made:** We added a workflow-transparency paragraph explaining that the reproduction begins from AKCLM's released intermediate replication materials, not from a complete reconstruction of the dataset from raw Lightcast, ACS, QWI, CBP, LAUS, FHFA, and patent sources. We also specify what was rerun for the tables and how Figure 1 was handled.
+
+**Where revised:** Replication.
+
+**Text added:** "Our reproduction begins from the intermediate replication materials released with AKCLM: the authors' `data.csv` and `replication_code.R` from the openICPSR archive. We do not reconstruct the full county-year dataset from the underlying raw sources such as Lightcast, ACS, QWI, CBP, LAUS, FHFA, and patent records. Instead, we treat AKCLM's released `data.csv` as the analysis-ready input and rerun the estimation and figure-construction steps from that point. For Tables 1 and 2, we recreate the variables, samples, standardization, weights, fixed effects, and model specifications from the published replication code, then compare the resulting estimates with the published tables. For Figure 1, we compare the published figure image with maps generated from the released data and the definitions stated in the article and code, because the available code does not reproduce the published Panel B map exactly."
+
+## Concern 2
+
+**Reviewer concern:** "Second, the paper should more directly follow JCRE's preferred replication format."
+
+**Revision made:** We revised the reproduction section so the original study's reported estimates and our replicated estimates are shown side-by-side in the same tables. This makes both matches and discrepancies visible directly in the table rather than only in prose.
+
+**Where revised:** Replication, Table 1.
+
+**Text added in table caption:** "AKCLM and replication estimates for the level of AI intensity."
+
+**Table design added:** Table 1 now contains columns labeled "Original," "Replication," and "Difference."
+
+**Where revised:** Replication, Table 2.
+
+**Text added in table caption:** "AKCLM and replication estimates for the growth of AI intensity."
+
+**Table design added:** Table 2 now contains columns labeled "Original," "Replication," and "Difference." This format highlights the Table 2 bachelor's-share mismatch directly. For example, column 1 now shows the published original value "0.0022 (0.0027)" next to the replication value "0.0196 (0.0250)" and a difference of "0.0174."
+
 ## Concern 3
 
 **Reviewer concern:** "Third, the unresolved discrepancies need more analysis."
