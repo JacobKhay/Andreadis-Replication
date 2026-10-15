@@ -1,0 +1,10 @@
+profiles:
+  anon:
+    author:
+      - name: Anonymous
+bibliography: references.bib
+csl: aea.csl
+link-citations: true
+citeproc: true
+nocite: '@*'
+      

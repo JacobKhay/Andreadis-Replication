@@ -1,0 +1,83 @@
+---
+title: "Response to Reviewer Comments"
+subtitle: "Replication of Andreadis et al. (2025)"
+bibliography: []
+suppress-bibliography: true
+nocite: ""
+format:
+  pdf:
+    documentclass: article
+    fontsize: 11pt
+    geometry:
+      - margin=1in
+---
+
+## Overview
+
+We thank the referees for their continued attention to this manuscript. Referee B recommends acceptance and requested no further changes. Referee A regards the round-one points as addressed apart from one substantive issue and three points of presentation. Below we describe the revisions made in response to each point, organized by reviewer and comment number.
+
+## Response to Editor
+
+**Source documentation for the disputed values:** Following the editor's request that the version information be included in the resubmission, the manuscript now identifies the exact document from which the "Original" column of the growth reproduction table is transcribed, and reproduces both the published and the preprint versions of the relevant table as appendix exhibits. This is set out under R1 below.
+
+## Response to Reviewer A
+
+### R1. Which Version of AKCLM Is Being Criticized
+
+**Reviewer A concern:** "Your central partial-reproduction claim (Table 4, abstract, conclusion) asserts that AKCLM's published Table 2 reports bachelor's-share coefficients of 0.0022 / -0.0035 / -0.0044 (Cols 1/4/5), differing ninefold from the released code's output. I cannot locate these values in any available version of AKCLM. Please state exactly which document your 'Original' column is transcribed from (version, DOI, page) and provide a page image of that table."
+
+**Revision made:** The "Original" column transcribes the published version of record, and the manuscript now identifies that version explicitly. The source is Andreadis, Kalotychou, Chatzikonstantinou, Louca and Makridis, "Local Heterogeneity in Artificial Intelligence Jobs over Time and Space," *AEA Papers and Proceedings* 115 (2025): 29–34, DOI 10.1257/pandp.20251001, Table 2 on journal page 33. The manuscript now names the version, page and DOI wherever the claim appears, records that the AEA conference preprint and the SSRN version instead agree with the released code, and reproduces both tables as appendix exhibits.
+
+**Where revised:** Replication, AKCLM Table 2 section; the note to the growth reproduction table; Abstract; Conclusion; Appendix.
+
+**Text added:** "The 'Original' column transcribes the published version of record — Andreadis et al. (2025), *AEA Papers and Proceedings* 115: 29–34, DOI 10.1257/pandp.20251001, Table 2 on page 33 — while the 'Replication' column reports our rerun of AKCLM's released code and data. A page image of that published table is reproduced in the appendix. Identifying the version matters here, because AKCLM circulated in more than one form and the bachelor's-share row differs between them."
+
+**Text added:** "This difference is specific to the published article, and it is worth stating which document each figure comes from. The preprint distributed through the AEA conference program, marked 'Forthcoming in AEA P&P 2025', reports 0.0196 (0.0250), -0.0322 (0.0292), and -0.0401 (0.0263) in the corresponding row of its Table 2. Those are exactly the values the released code produces. In the preprint, therefore, table and code agree and no discrepancy arises; the same is true of the SSRN version. A reader working from either of those documents will not reproduce the finding reported here."
+
+**Text added:** "The mechanical source of the difference is a change of scale. In the released data.csv the 2017 share_bac variable has a standard deviation of 0.0911, or 9.114 percentage points. Dividing each preprint coefficient by 9.114 returns the published coefficient in every column: 0.0196 gives 0.00215 against a published 0.0022, -0.0322 gives -0.00353 against -0.0035, and -0.0401 gives -0.00440 against -0.0044. The agreement holds to the displayed precision in all three columns. The published row is therefore expressed per percentage point of bachelor's share, whereas the released code z-scores share_bac14 and the preprint row is expressed per standard deviation. The row label reads 'Bachelor's share, z-score in 2017' in the published table, as it did in the preprint, so the published coefficient is reported on a different scale from the one its own label describes and from the one used by every other row of that table."
+
+**Figures added:** "Table 2 of the published version of record. Andreadis et al. (2025), *AEA Papers and Proceedings* 115: 29–34, journal page 33." and "Table 2 of the preprint distributed through the AEA conference program, marked 'Forthcoming in AEA P&P 2025', page 11."
+
+**Note on the substantive claim:** We continue to make no claim about how the rescaling arose. The authors did not respond to our question about this point, and we report only that the published row cannot be reproduced from the released code as labeled, and that the rescaling above reproduces the published values to the precision at which they are displayed.
+
+### R2. Figure 1: Table Font and Colour-Bin Cut-Offs
+
+**Reviewer A concern:** "(a) Table 5 is printed in an illegibly small font; (b) align the color-bin cut-offs of your replication maps with the published legend so the side-by-side comparison is informative."
+
+**Revision made (a):** The table had been styled with kableExtra's `scale_down` option, which wraps a table in a LaTeX `\resizebox` and shrinks it until each cell fits on one line. With three long text columns this reduced the effective type size to approximately 3 points. We removed the option and gave the three columns explicit widths, so that the evidence text wraps over several lines instead of being scaled down. The table now prints at 9 points.
+
+**Revision made (b):** The cut-offs already matched the published legend, but they were applied as strict inequalities on both sides of each interval. A county whose value fell exactly on a cut-off matched no interval, as did a county outside the range spanned by the outermost published labels, and such counties fell through to "No data." Four counties with valid Panel B values were rendered as missing on this account. The bins are now half-open intervals built on exactly the published cut-offs, with open-ended outermost bins, so that every county with a value is drawn in a colored bin and only genuinely missing values appear as "No data." The bin labels and their order are unchanged, so the replication legend remains identical to the published one.
+
+**Where revised:** Figure 1 and the code that constructs it; Table 5 of the manuscript.
+
+**Additional change:** So that the side-by-side comparison is easier to read, the key now appears beneath all four panels rather than only beneath the replication maps, and the legend type size has been increased from 9 to 14 points. The fill scale, guide and legend theme are defined once in the code and shared by the published-image panels and the reconstructed maps, so the keys are identical by construction.
+
+### R3. Weighting Extension: Table Font and Framing
+
+**Reviewer A concern:** "Table 10 (unweighted / log-population / raw-population comparison) is printed in an illegibly small font and must be reformatted. Optionally, consider framing the choice of weights with reference to Solon, Haider & Wooldridge (2015, Journal of Human Resources)."
+
+**Revision made:** As with Table 5, the table had been shrunk by `scale_down`, compounded by a specified size of 6 points; the effective type size was approximately 3.2 points. Two further factors made the table unnecessarily wide: each of the six column headers carried a "Level:" or "Growth:" prefix, and the goodness-of-fit block contained a full-width clustered-standard-error row. We removed the scaling option, shortened the column headers and carried the distinction in a spanning header, and moved the standard-error row into the table note. The note is now attached as a threeparttable footnote so that it wraps to the table width; previously it was emitted as a single non-wrapping row that stretched the table past the right margin. The table now prints at 7.5 points. All coefficients, standard errors and fit statistics are unchanged.
+
+**Where revised:** Table 10 and the code that produces it.
+
+**Revision made (framing):** We have taken up the suggestion. Solon, Haider and Wooldridge (2015) is now cited where the extension is motivated, and added to the bibliography.
+
+**Where revised:** Extension: Log-Population Weighting Analysis.
+
+**Text added:** "Solon, Haider and Wooldridge (2015) distinguish three motives for weighting when estimating causal effects — correcting for heteroskedasticity, correcting for endogenous sampling, and identifying average partial effects under unmodelled heterogeneity — and observe that each motive often fails to apply in the situations where practitioners assume it does. None of the three is our motive here: our purpose is descriptive sensitivity rather than correction for a known sampling scheme or a known error structure. Following their advice that it 'often is good practice to report both weighted and unweighted estimates,' we report the two side by side. They further note that, under model misspecification, weighted and unweighted estimators have different probability limits, so the contrast between them serves as a diagnostic for misspecification — of which failure to model heterogeneous effects is one example. We read the divergence reported below in that spirit, and the population-quartile split is our direct check on whether heterogeneity across county sizes accounts for it."
+
+### r1. Residual Label Inconsistency
+
+**Reviewer A concern:** "the figure labels still mix styles ('STEM Degrees' share', 'Turnover Rate %', 'House Price Growth' vs. sentence case elsewhere). Standardize across all figures and tables."
+
+**Revision made:** Every variable label across all figures and tables now draws from a single sentence-case set. The forms the referee identified no longer appear anywhere in the manuscript.
+
+**Where revised:** All figures and tables.
+
+**Labels standardized:** Bachelor's share; House price growth; Labor tightness; Patents per employee; STEM degrees share; ICT sector intensity; Manufacturing intensity; Turnover rate; Large establishments; Income, log. Among the forms replaced were "STEM Degrees' share", "STEM share" and "STEM degree share"; "Turnover Rate %"; "House Price Growth"; "ICT sector Intensity %" and "ICT intensity"; "Manufacturing Intensity %" and "Manufacturing"; "Patents per emp."; and "Labor Tightness".
+
+## Response to Reviewer B
+
+**Reviewer B comment:** "I thank the authors for engaging with my critiques. I think the new version is in good shape and is ready to be published."
+
+**Response:** We thank Referee B for the careful reading across both rounds. No changes were requested and none have been made on this account.

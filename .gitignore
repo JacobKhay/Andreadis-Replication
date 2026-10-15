@@ -15,3 +15,5 @@ fig-map*
 
 .DS_Store
 replication_files
+
+**/*.quarto_ipynb
